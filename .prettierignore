@@ -1,0 +1,9 @@
+out/
+dist/
+node_modules/
+package-lock.json
+resources/
+src/main/db/migrations/
+# Specifications and mock-ups are kept as written.
+docs/
+CLAUDE.md

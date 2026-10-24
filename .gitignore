@@ -12,3 +12,7 @@ out/
 data/
 backups/
 .env
+
+# Local key file of a development database
+*.key
+coverage/
