@@ -20,6 +20,13 @@ import type {
   TodayAppointment,
 } from './patients'
 import type {
+  ChooseLegacyFileResult,
+  LegacyAnalyzeResult,
+  LegacyImportRequest,
+  LegacyImportResult,
+} from './legacyImport'
+import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
+import type {
   ChangeCodeResult,
   DisableCodeResult,
   EnableCodeResult,
@@ -37,6 +44,13 @@ import type {
 export interface IpcInvokeContract {
   'app:get-startup-state': { args: []; result: StartupState }
   'app:get-today-summary': { args: []; result: TodaySummary }
+  'legacy-import:choose-file': { args: []; result: ChooseLegacyFileResult }
+  'legacy-import:analyze': { args: [fileId: string]; result: LegacyAnalyzeResult }
+  'legacy-import:run': { args: [request: LegacyImportRequest]; result: LegacyImportResult }
+  'reconcile:list-tasks': { args: []; result: ReconcileTasks }
+  'duplicates:compare': { args: [a: string, b: string]; result: MergeComparison | null }
+  'duplicates:ignore': { args: [a: string, b: string]; result: { ok: boolean } }
+  'duplicates:merge': { args: [request: MergeRequest]; result: MergeResult }
   'security:get-status': { args: []; result: SecurityStatus }
   'security:unlock': { args: [pin: string]; result: UnlockResult }
   'security:lock': { args: []; result: SecurityStatus }
@@ -103,6 +117,19 @@ export interface MeuOsteoApi {
   app: {
     getStartupState(): Promise<StartupState>
     getTodaySummary(): Promise<TodaySummary>
+  }
+  /** Reprise de l'historique (docs/MIGRATION.md). */
+  legacyImport: {
+    chooseFile(): Promise<ChooseLegacyFileResult>
+    analyze(fileId: string): Promise<LegacyAnalyzeResult>
+    run(request: LegacyImportRequest): Promise<LegacyImportResult>
+  }
+  /** « À rapprocher » and duplicates (R-19). */
+  reconcile: {
+    listTasks(): Promise<ReconcileTasks>
+    compareDuplicates(a: string, b: string): Promise<MergeComparison | null>
+    ignoreDuplicate(a: string, b: string): Promise<{ ok: boolean }>
+    mergeDuplicates(request: MergeRequest): Promise<MergeResult>
   }
   security: {
     getStatus(): Promise<SecurityStatus>

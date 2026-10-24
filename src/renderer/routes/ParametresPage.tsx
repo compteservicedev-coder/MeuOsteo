@@ -7,6 +7,7 @@ import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
 import { DeletedPatientsCard } from '../features/settings/DeletedPatientsCard'
+import { LegacyImportTab } from '../features/import/LegacyImportTab'
 import { SecurityTab } from '../features/settings/SecurityTab'
 import { cn } from '../lib/cn'
 import { EASE_SOFT, staggerItem } from '../lib/motion'
@@ -64,8 +65,6 @@ const TABS: TabDef[] = [
     id: 'donnees',
     label: 'Données & import',
     icon: 'database',
-    lot: 'lots 2 et 5',
-    summary: 'Reprise de l’historique Excel, export complet et export comptable.',
   },
 ]
 
@@ -138,10 +137,8 @@ export function ParametresPage() {
                       <SecurityTab />
                     ) : t.id === 'donnees' ? (
                       <div className="flex flex-col gap-4">
+                        <LegacyImportTab />
                         <DeletedPatientsCard />
-                        <Card title={t.label} description={`Disponible au ${t.lot}`}>
-                          <p className="text-[15px] text-ink-600">{t.summary}</p>
-                        </Card>
                       </div>
                     ) : (
                       <Card title={t.label} description={`Disponible au ${t.lot}`}>

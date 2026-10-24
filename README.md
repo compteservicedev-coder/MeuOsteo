@@ -12,7 +12,7 @@ Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopa
 | --------------------------- | -------------------------------------------------------------------- | ------- |
 | 0 · Socle                   | Projet, base chiffrée, IPC typé, interface de base, code d'accès, CI | ✅      |
 | 1 · Patients et fiche       | Recherche, fiche, séances, proches, journal, suppression             | ✅      |
-| 2 · Reprise de l'historique |                                                                      | à venir |
+| 2 · Reprise de l'historique | Import du `.xlsm` avec rapport, doublons R-19 et fusion              | ✅      |
 | 3 · Facturation             |                                                                      | à venir |
 | 4 · Planning et Doctolib    |                                                                      | à venir |
 | 5 · Pilotage et finitions   |                                                                      | à venir |
@@ -37,17 +37,18 @@ npm run seed      # base fictive : 200 patients, 600 séances (faker, locale fr)
 npm run dev       # application en mode développement (F12 : outils de développement)
 ```
 
-| Commande              | Rôle                                                                                                                     |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `npm run dev`         | Lance l'application avec rechargement à chaud                                                                            |
-| `npm run build`       | Compile `main`, `preload` et `renderer` dans `out/`                                                                      |
-| `npm run dist`        | Produit l'installateur dans `dist/` (`npm run dist -- --win --x64` sous Windows)                                         |
-| `npm test`            | Tests Vitest (règles métier, base, composants)                                                                           |
-| `npm run lint`        | ESLint                                                                                                                   |
-| `npm run typecheck`   | TypeScript strict, process main et renderer                                                                              |
-| `npm run format`      | Prettier                                                                                                                 |
-| `npm run seed`        | Remplit la base de développement avec des données fictives. Refuse une base déjà remplie, sauf `npm run seed -- --reset` |
-| `npm run db:generate` | Génère une migration Drizzle après une modification de `src/main/db/schema.ts`                                           |
+| Commande                 | Rôle                                                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`            | Lance l'application avec rechargement à chaud                                                                            |
+| `npm run build`          | Compile `main`, `preload` et `renderer` dans `out/`                                                                      |
+| `npm run dist`           | Produit l'installateur dans `dist/` (`npm run dist -- --win --x64` sous Windows)                                         |
+| `npm test`               | Tests Vitest (règles métier, base, composants)                                                                           |
+| `npm run lint`           | ESLint                                                                                                                   |
+| `npm run typecheck`      | TypeScript strict, process main et renderer                                                                              |
+| `npm run format`         | Prettier                                                                                                                 |
+| `npm run seed`           | Remplit la base de développement avec des données fictives. Refuse une base déjà remplie, sauf `npm run seed -- --reset` |
+| `npm run make:fake-xlsm` | Écrit un classeur MeuOsteo v1.04 fictif (`MeuOsteo_fictif.xlsm`) pour essayer l'import                                   |
+| `npm run db:generate`    | Génère une migration Drizzle après une modification de `src/main/db/schema.ts`                                           |
 
 En développement, les données vont dans `%APPDATA%\MeuOsteo-dev` (ou `~/.config/MeuOsteo-dev`), jamais dans le dossier de l'application installée : `npm run seed` ne peut pas toucher aux vraies données.
 

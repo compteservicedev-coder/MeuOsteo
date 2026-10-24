@@ -12,6 +12,17 @@ const api: MeuOsteoApi = {
     getStartupState: () => invoke('app:get-startup-state'),
     getTodaySummary: () => invoke('app:get-today-summary'),
   },
+  legacyImport: {
+    chooseFile: () => invoke('legacy-import:choose-file'),
+    analyze: (fileId) => invoke('legacy-import:analyze', fileId),
+    run: (request) => invoke('legacy-import:run', request),
+  },
+  reconcile: {
+    listTasks: () => invoke('reconcile:list-tasks'),
+    compareDuplicates: (a, b) => invoke('duplicates:compare', a, b),
+    ignoreDuplicate: (a, b) => invoke('duplicates:ignore', a, b),
+    mergeDuplicates: (request) => invoke('duplicates:merge', request),
+  },
   security: {
     getStatus: () => invoke('security:get-status'),
     unlock: (pin) => invoke('security:unlock', pin),

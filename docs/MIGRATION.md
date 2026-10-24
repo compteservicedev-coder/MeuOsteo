@@ -1,6 +1,6 @@
 # Reprise de l'historique depuis MeuOsteo v1.04 (.xlsm)
 
-> L'import s'exécute **uniquement sur le PC de l'utilisatrice**, depuis Paramètres > Données & import. Le fichier réel ne doit jamais aller dans le dépôt. Pour les tests, générer un `.xlsm` fictif de même structure (`scripts/make-fake-xlsm.ts`).
+> L'import s'exécute **uniquement sur le PC de l'utilisatrice**, depuis Paramètres > Données & import. Le fichier réel ne doit jamais aller dans le dépôt. Pour les tests, générer un `.xlsm` fictif de même structure : `npm run make:fake-xlsm -- [fichier] [--patients 299] [--seances 512]` (`scripts/make-fake-xlsm.ts`, données de `scripts/fakeLegacyWorkbook.ts`).
 
 ## Structure du fichier source (analysée)
 - **Feuille `TEMP_BDD`**, qui contient deux tableaux structurés :
@@ -45,3 +45,17 @@
 
 ## Tests
 Le fichier `.xlsm` fictif contient des cas pièges : date invalide, prix vide, code postal à 4 chiffres, sexe vide, situation avec accent, apostrophes. Les tests vérifient chaque transformation, ainsi que les comptes affichés dans le rapport.
+
+## Mise en œuvre (lot 2)
+- **Code** : règles pures dans `src/shared/domain/legacyImport.ts`, lecture exceljs dans `src/main/services/legacyWorkbook.ts`, import dans `src/main/services/legacyImport.ts`.
+- **Lecture** : les tableaux sont cherchés par leur nom (`Tb_patient`, `Tb_seance`) ; à défaut, par leur ligne d'en-têtes. Les colonnes sont lues par leur nom (casse et accents ignorés). Les cellules peuvent être du texte, une vraie date Excel, un nombre (téléphone sans le 0, code postal à 4 chiffres), une formule ou un lien `mailto:`.
+- **Dates de naissance** : si `ddn` est vide ou invalide, la date de l'identifiant `NomPrenomJJ/MM/AAAA` est reprise. Sinon, elle doit être saisie dans le rapport avant l'import (R-15 : obligatoire, entre 1900 et aujourd'hui).
+- **Dates de séance invalides ou absentes** : le rapport propose une date (année corrigée, « 1024 » → 2024, sinon la date de la séance valide la plus proche dans le tableau). L'utilisatrice peut saisir la bonne date ligne par ligne ; sinon la séance est importée à la date proposée et marquée « date à corriger » : réglage `import_dates_to_fix` (`{ id de séance: valeur lue dans le fichier }`), à afficher et à effacer depuis la fiche patient.
+- **Identifiant en double** : les séances vont à la première fiche ; la seconde est importée sans séance et proposée en doublon (R-19).
+- **Garde-fou** : refus si la base contient déjà des patients non supprimés, vérifié à l'analyse puis de nouveau dans la transaction.
+- **Journal et logs** : une ligne « Historique importé : N patients, M séances » (type Réglage). Les logs techniques ne contiennent que des comptes.
+
+## Doublons après l'import (R-19)
+- **Calcul** : les paires sont recalculées à chaque affichage (seules les fiches qui partagent une date de naissance sont comparées), ce qui remplace l'analyse de nuit : la liste est toujours à jour.
+- **Écran** : Planning > « À rapprocher » > « Comparer les fiches ». La fiche A est la plus ancienne (plus petit n° court), elle est conservée.
+- **Fusion** : une transaction qui reporte séances, factures, RDV Doctolib, contacts mémorisés, proches (R-25) et lignes de journal sur la fiche A, met les commentaires bout à bout, puis supprime la fiche B. Refusée si les deux fiches ont une séance non annulée le même jour (R-08), hors séances importées.

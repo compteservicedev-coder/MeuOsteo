@@ -5,7 +5,7 @@ import {
   type CommuneSuggestion,
 } from '@shared/domain/communes'
 import { formatIsoDateFr } from '@shared/domain/dates'
-import { DUPLICATE_CRITERION_LABELS } from '@shared/domain/duplicates'
+import { DUPLICATE_CRITERION_LABELS } from '@shared/domain/creationDuplicates'
 import {
   SITUATION_OPTIONS,
   ageLabel,

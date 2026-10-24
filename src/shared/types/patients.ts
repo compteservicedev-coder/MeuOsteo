@@ -1,4 +1,4 @@
-import type { DuplicateCriterion } from '../domain/duplicates'
+import type { DuplicateCriterion } from '../domain/creationDuplicates'
 import type { Sexe, Situation } from '../domain/patient'
 import type { PatientDraft, PatientErrors } from '../domain/patientValidation'
 import type { Relation } from '../domain/relatives'

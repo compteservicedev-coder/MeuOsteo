@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { suggestCommune, communeAfterCpChange } from './communes'
-import { findDuplicates } from './duplicates'
+import { findDuplicates } from './creationDuplicates'
 import { ageLabel, bannerSubtitle, formatPhone, situationLabel } from './patient'
 import {
   changedFieldNames,

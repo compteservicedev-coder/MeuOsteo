@@ -5,7 +5,7 @@
 import { and, eq, isNotNull, isNull, ne, or, sql } from 'drizzle-orm'
 import { ulid } from 'ulid'
 import { isoDateInParis } from '@shared/domain/dates'
-import { findDuplicates } from '@shared/domain/duplicates'
+import { findDuplicates } from '@shared/domain/creationDuplicates'
 import { deletedPatientSubject, patientJournal, type JournalLine } from '@shared/domain/journal'
 import { daysBeforePurge, isPurgeDue } from '@shared/domain/patientDeletion'
 import {
