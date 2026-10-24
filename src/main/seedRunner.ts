@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm'
 import { isoDateInParis } from '@shared/domain/dates'
 import { communes, patients } from './db/schema'
 import { clearBusinessData, seedDatabase } from './db/seed'
+import { seedDuplicates } from './db/seedDuplicates'
 import { appPaths } from './paths'
 import { startRuntime, stopRuntime } from './runtime'
 
@@ -39,9 +40,10 @@ export function runSeed(argv: string[]): number {
       today: isoDateInParis(new Date()),
       communes: db.select().from(communes).all(),
     })
+    const duplicates = seedDuplicates(db)
     write(`Base fictive créée dans ${appPaths.userData}`)
     write(
-      `${report.patients} patients, ${report.seances} séances, ${report.links} liens de proches, ${report.doctolibRdv} RDV Doctolib`,
+      `${report.patients} patients, ${report.seances} séances, ${report.links} liens de proches, ${report.doctolibRdv} RDV Doctolib, ${duplicates} doublons possibles`,
     )
     return 0
   } finally {

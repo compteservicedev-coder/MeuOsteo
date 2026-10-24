@@ -7,6 +7,8 @@ import { parseCommunesCsv } from './communes'
 import { countToReconcile } from './repositories/summaryRepository'
 import { patientLinks, patients, seances } from './schema'
 import { clearBusinessData, seedDatabase } from './seed'
+import { seedDuplicates } from './seedDuplicates'
+import { countDuplicatePairs } from './repositories/duplicateRepository'
 
 const communes = parseCommunesCsv(
   readFileSync(resolve(__dirname, '../../../resources/communes.csv'), 'utf8'),
@@ -57,5 +59,15 @@ describe('npm run seed (données fictives)', () => {
     ).toBe(0)
     seedDatabase(db, options)
     expect(db.select({ nom: patients.nom }).from(patients).all()).toEqual(first)
+  })
+})
+
+describe('npm run seed · doublons fictifs (R-19)', () => {
+  it('R-19 ajoute des paires visibles dans « À rapprocher »', () => {
+    const db = createTestDatabase()
+    seedDatabase(db, { patients: 40, seances: 60, today: '2026-10-24', communes })
+    const before = countDuplicatePairs(db)
+    expect(seedDuplicates(db)).toBe(2)
+    expect(countDuplicatePairs(db)).toBe(before + 2)
   })
 })

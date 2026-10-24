@@ -2,6 +2,7 @@ import { and, eq, inArray, ne, sql } from 'drizzle-orm'
 import type { TodaySummary } from '@shared/types/app'
 import type { AppDatabase } from '../client'
 import { doctolibRdv, seances } from '../schema'
+import { countDuplicatePairs } from './duplicateRepository'
 
 export function countAppointmentsOn(db: AppDatabase, isoDate: string): number {
   const row = db
@@ -28,7 +29,7 @@ export function getTodaySummary(
 ): TodaySummary {
   return {
     appointmentsToday: countAppointmentsOn(db, todayIso),
-    toReconcile: countToReconcile(db),
+    toReconcile: countToReconcile(db) + countDuplicatePairs(db),
     lastBackupAt,
   }
 }
