@@ -243,7 +243,7 @@ export function parsePrix(cell: RawCell): number | null | undefined {
   if (typeof cell === 'number')
     return cell >= 0 && cell < 10_000 ? Math.round(cell * 100) : undefined
   const text = cellText(cell)
-    .replace(/[€\s  ]/g, '')
+    .replace(/[€\s]/g, '') // \s covers non-breaking spaces
     .replace(',', '.')
   if (!text) return null
   return /^\d{1,4}(\.\d{1,2})?$/.test(text) ? Math.round(Number(text) * 100) : undefined

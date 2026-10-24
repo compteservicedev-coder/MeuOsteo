@@ -5,6 +5,7 @@ import {
   describeDuplicateReasons,
   duplicateReasons,
   findDuplicatePairs,
+  formatMergeValue,
   levenshtein,
   mergeComments,
   mergePatients,
@@ -169,5 +170,17 @@ describe('R-19 · fusion de deux fiches', () => {
     )
     // R is « parent » for A, so A is « enfant » for R, hence for Z: stored A→Z as « parent ».
     expect(swapped.add).toEqual([{ patientA: 'A', patientB: 'Z', relAToB: 'parent' }])
+  })
+})
+
+describe('R-19 · affichage de la comparaison', () => {
+  it('R-19 formate chaque champ comme dans la maquette', () => {
+    const p = record({ situation: 'marie', enfants: 0 })
+    expect(formatMergeValue(p, 'adresse')).toBe('22 av. Gambetta, 94160 Saint-Mandé')
+    expect(formatMergeValue(p, 'portable')).toBe('07 55 44 33 22')
+    expect(formatMergeValue(p, 'ddn')).toBe('22/07/1997')
+    expect(formatMergeValue(p, 'situation')).toBe('Marié(e)')
+    expect(formatMergeValue(p, 'enfants')).toBe('0')
+    expect(formatMergeValue(p, 'email')).toBe('')
   })
 })

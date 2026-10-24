@@ -299,3 +299,41 @@ export function relinkAfterMerge(
   }
   return { remove, add }
 }
+
+const SEXE_LABELS = { F: 'Femme', M: 'Homme' } as const
+const SITUATION_LABELS: Record<NonNullable<MergeablePatient['situation']>, string> = {
+  celibataire: 'Célibataire',
+  couple: 'En couple',
+  pacse: 'Pacsé(e)',
+  marie: 'Marié(e)',
+  divorce: 'Divorcé(e)',
+  veuf: 'Veuf(ve)',
+}
+
+/** « 06 12 34 56 78 » */
+export function formatPhoneFr(digits: string): string {
+  return digits.length === 10 ? digits.replace(/(\d{2})(?=\d)/g, '$1 ') : digits
+}
+
+/** Value of a field as shown in the merge window; empty string when not filled in. */
+export function formatMergeValue(p: MergeablePatient, field: MergeField): string {
+  switch (field) {
+    case 'ddn':
+      return p.ddn ? formatIsoDateFr(p.ddn) : ''
+    case 'sexe':
+      return p.sexe ? SEXE_LABELS[p.sexe] : ''
+    case 'situation':
+      return p.situation ? SITUATION_LABELS[p.situation] : ''
+    case 'enfants':
+      return p.enfants === null ? '' : String(p.enfants)
+    case 'adresse': {
+      const town = [p.cp, p.commune].filter(Boolean).join(' ')
+      return [p.adresse, town].filter(Boolean).join(', ')
+    }
+    case 'portable':
+    case 'fixe':
+      return p[field] ? formatPhoneFr(p[field]!) : ''
+    default:
+      return p[field] ?? ''
+  }
+}
