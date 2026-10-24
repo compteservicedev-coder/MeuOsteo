@@ -11,6 +11,8 @@ interface SegmentedProps<T> {
   options: ReadonlyArray<SegmentedOption<T>>
   value: T
   onChange: (value: T) => void
+  /** Read-only: the chosen option stays visible, the others are dimmed. */
+  disabled?: boolean
   className?: string
 }
 
@@ -20,6 +22,7 @@ export function Segmented<T extends string | number | null>({
   options,
   value,
   onChange,
+  disabled = false,
   className,
 }: SegmentedProps<T>) {
   return (
@@ -38,10 +41,13 @@ export function Segmented<T extends string | number | null>({
             key={String(option.value)}
             type="button"
             aria-pressed={active}
+            disabled={disabled}
             onClick={() => onChange(option.value)}
             className={cn(
               'btn min-h-[44px] rounded-[10px] px-3 text-[14px]',
-              active ? 'btn-primary pop' : 'btn-ink bg-transparent text-ink-600 hover:text-ink-900',
+              active
+                ? 'btn-primary pop disabled:!opacity-100'
+                : 'btn-ink bg-transparent text-ink-600 hover:text-ink-900',
             )}
           >
             {option.label}

@@ -4,6 +4,7 @@ import { AppLayout } from './components/layout/AppLayout'
 import { ToastProvider } from './components/toast/ToastProvider'
 import { AccessGate } from './features/access/AccessGate'
 import { DashboardPage } from './routes/DashboardPage'
+import { FichePage } from './routes/FichePage'
 import { FacturesPage } from './routes/FacturesPage'
 import { ParametresPage } from './routes/ParametresPage'
 import { PatientsPage } from './routes/PatientsPage'
@@ -17,6 +18,7 @@ const router = createHashRouter([
       { index: true, element: <Navigate to="/planning" replace /> },
       { path: 'planning', element: <PlanningPage /> },
       { path: 'patients', element: <PatientsPage /> },
+      { path: 'patients/:id', element: <FichePage /> },
       { path: 'factures', element: <FacturesPage /> },
       { path: 'tableau-de-bord', element: <DashboardPage /> },
       { path: 'parametres', element: <ParametresPage /> },

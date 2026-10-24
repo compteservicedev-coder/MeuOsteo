@@ -6,13 +6,18 @@ import { ensureCommunesLoaded } from './db/communes'
 import { DatabaseKeyError, loadOrCreateDatabaseKey } from './db/keyStore'
 import { addJournalLine } from './db/repositories/journalRepository'
 import { log } from './logger'
+import { runMaintenance } from './maintenance'
 import { appPaths } from './paths'
 import { AccessCodeService } from './services/accessCode'
+import { PatientService } from './services/patients'
+import { SeanceService } from './services/seances'
 import { createSecurityStore } from './services/securityStore'
 
 export interface Runtime {
   db: AppDatabase
   accessCode: AccessCodeService
+  patients: PatientService
+  seances: SeanceService
 }
 
 export type RuntimeResult = { ok: true; runtime: Runtime } | { ok: false; error: StartupError }
@@ -62,7 +67,14 @@ export function startRuntime({
     store: createSecurityStore(db),
     journal: (line) => addJournalLine(db, line),
   })
-  return { ok: true, runtime: { db, accessCode } }
+  const runtime = {
+    db,
+    accessCode,
+    patients: new PatientService(db),
+    seances: new SeanceService(db),
+  }
+  runMaintenance(runtime)
+  return { ok: true, runtime }
 }
 
 export function stopRuntime(runtime: Runtime): void {

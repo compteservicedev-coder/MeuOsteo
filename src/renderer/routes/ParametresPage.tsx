@@ -6,6 +6,7 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
+import { DeletedPatientsCard } from '../features/settings/DeletedPatientsCard'
 import { LegacyImportTab } from '../features/import/LegacyImportTab'
 import { SecurityTab } from '../features/settings/SecurityTab'
 import { cn } from '../lib/cn'
@@ -135,7 +136,10 @@ export function ParametresPage() {
                     {t.id === 'securite' ? (
                       <SecurityTab />
                     ) : t.id === 'donnees' ? (
-                      <LegacyImportTab />
+                      <div className="flex flex-col gap-4">
+                        <LegacyImportTab />
+                        <DeletedPatientsCard />
+                      </div>
                     ) : (
                       <Card title={t.label} description={`Disponible au ${t.lot}`}>
                         <p className="text-[15px] text-ink-600">{t.summary}</p>
