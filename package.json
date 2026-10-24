@@ -22,6 +22,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "seed": "electron-vite build && electron . --seed",
+    "make:fake-xlsm": "tsx scripts/make-fake-xlsm.ts",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {

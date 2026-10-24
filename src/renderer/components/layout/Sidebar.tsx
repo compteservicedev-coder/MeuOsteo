@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { isBackupRecent } from '@shared/domain/backup'
 import { formatElapsedFr } from '@shared/domain/dates'
 import type { TodaySummary } from '@shared/types/app'
 import { cn } from '../../lib/cn'
+import { useDataChanged } from '../../lib/dataEvents'
 import { Icon, type IconName } from '../ui/Icon'
 
 interface NavItem {
@@ -25,20 +26,20 @@ const SETTINGS_ITEM: NavItem = { to: '/parametres', label: 'Paramètres', icon: 
 /** Refreshes the badge and the backup indicator every minute. */
 function useShellSummary(): TodaySummary | null {
   const [summary, setSummary] = useState<TodaySummary | null>(null)
-  useEffect(() => {
-    let alive = true
-    const load = () =>
+  const load = useCallback(
+    () =>
       window.api.app
         .getTodaySummary()
-        .then((s) => alive && setSummary(s))
-        .catch(() => undefined) // refused while locked
+        .then(setSummary)
+        .catch(() => undefined), // refused while locked
+    [],
+  )
+  useEffect(() => {
     void load()
     const timer = window.setInterval(load, 60_000)
-    return () => {
-      alive = false
-      window.clearInterval(timer)
-    }
-  }, [])
+    return () => window.clearInterval(timer)
+  }, [load])
+  useDataChanged(load)
   return summary
 }
 

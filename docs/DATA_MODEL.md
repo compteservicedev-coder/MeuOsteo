@@ -97,7 +97,7 @@ Index unique partiel : un seul `seance_id` avec `statut = 'emise'`.
 `contact_key` (téléphone normalisé + e-mail en minuscules) PK, `patient_id`. Sert à « Mémoriser ce choix » (R-18).
 
 ## duplicate_ignored
-`patient_a`, `patient_b` (paire ordonnée) PK, `at`. Paire marquée « pas les mêmes personnes » (R-19).
+`patient_a`, `patient_b` (paire ordonnée) PK, `at`. Paire marquée « pas les mêmes personnes » (R-19). Les doublons possibles eux-mêmes ne sont pas stockés : ils sont recalculés à l'affichage.
 
 ## patient_links
 | colonne | type | notes |
@@ -124,6 +124,7 @@ Table clé / valeur (`key` TEXT PK, `value` TEXT JSON). Clés principales :
 - **Sécurité** : `security` (code activé, hash du code, sel, délai de verrouillage, hash de la clé de secours).
 - **Gmail** : `gmail` (adresse, mot de passe chiffré, libellé, fréquence, dernier UID par dossier).
 - **Sauvegarde et journal** : `backup` (dossier, nombre de copies, dernière date), `journal_retention_months`.
+- **Reprise de l'historique** : `import_dates_to_fix` (`{ id de séance: date lue dans le fichier }`), séances importées avec une « date à corriger » (MIGRATION.md). L'entrée est retirée quand la date est corrigée.
 
 ## communes
 Table chargée au premier lancement depuis `resources/communes.csv` (`commune;code_postal`, 35 576 lignes). Index sur `code_postal`.

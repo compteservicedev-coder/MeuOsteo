@@ -6,6 +6,7 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
+import { LegacyImportTab } from '../features/import/LegacyImportTab'
 import { SecurityTab } from '../features/settings/SecurityTab'
 import { cn } from '../lib/cn'
 import { EASE_SOFT, staggerItem } from '../lib/motion'
@@ -63,8 +64,6 @@ const TABS: TabDef[] = [
     id: 'donnees',
     label: 'Données & import',
     icon: 'database',
-    lot: 'lots 2 et 5',
-    summary: 'Reprise de l’historique Excel, export complet et export comptable.',
   },
 ]
 
@@ -135,6 +134,8 @@ export function ParametresPage() {
                   <Tabs.Content key={t.id} value={t.id} className="focus-visible:outline-none">
                     {t.id === 'securite' ? (
                       <SecurityTab />
+                    ) : t.id === 'donnees' ? (
+                      <LegacyImportTab />
                     ) : (
                       <Card title={t.label} description={`Disponible au ${t.lot}`}>
                         <p className="text-[15px] text-ink-600">{t.summary}</p>
