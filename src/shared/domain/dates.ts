@@ -43,3 +43,75 @@ export function formatElapsedFr(from: Date, now: Date): string {
   const days = Math.floor(hours / 24)
   return days === 1 ? 'il y a 1 jour' : `il y a ${days} jours`
 }
+
+const MONTHS_FR = [
+  'janvier',
+  'février',
+  'mars',
+  'avril',
+  'mai',
+  'juin',
+  'juillet',
+  'août',
+  'septembre',
+  'octobre',
+  'novembre',
+  'décembre',
+]
+
+/** `2026-10-09` → « 9 octobre 2026 » */
+export function formatIsoDateLongFr(isoDate: string): string {
+  const [y, m, d] = isoDate.split('-').map(Number) as [number, number, number]
+  return `${d} ${MONTHS_FR[m - 1]} ${y}`
+}
+
+function dayNumber(isoDate: string): number {
+  const [y, m, d] = isoDate.split('-').map(Number) as [number, number, number]
+  return Date.UTC(y, m - 1, d) / 86_400_000
+}
+
+/** Whole days from `from` to `to` (both `YYYY-MM-DD`). */
+export function daysBetween(from: string, to: string): number {
+  return Math.round(dayNumber(to) - dayNumber(from))
+}
+
+export function addDays(isoDate: string, days: number): string {
+  const date = new Date((dayNumber(isoDate) + days) * 86_400_000)
+  return date.toISOString().slice(0, 10)
+}
+
+/** Relative day of a session: « Aujourd’hui », « Demain », « Dans 6 jours », « Il y a 15 jours »… */
+export function formatRelativeDayFr(isoDate: string, today: string): string {
+  const n = daysBetween(today, isoDate)
+  if (n === 0) return 'Aujourd’hui'
+  if (n === 1) return 'Demain'
+  if (n > 1) return `Dans ${n} jours`
+  if (n === -1) return 'Hier'
+  if (n > -31) return `Il y a ${-n} jours`
+  const months = Math.round(-n / 30.4)
+  if (months < 12) return `Il y a ${months} mois`
+  const years = Math.floor(months / 12)
+  return years === 1 ? 'Il y a 1 an' : `Il y a ${years} ans`
+}
+
+/** Strict `YYYY-MM-DD` check (real calendar date). */
+export function isValidIsoDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const [y, m, d] = value.split('-').map(Number) as [number, number, number]
+  const date = new Date(Date.UTC(y, m - 1, d))
+  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d
+}
+
+/** `HH:mm` of the given instant, in Europe/Paris. */
+export function timeInParis(instant: Date): string {
+  return new Intl.DateTimeFormat('fr-FR', {
+    timeZone: APP_TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(instant)
+}
+
+/** « 24/10/2026 14:05 » for journal lines. */
+export function formatDateTimeFr(instant: Date): string {
+  return `${formatIsoDateFr(isoDateInParis(instant))} ${timeInParis(instant)}`
+}

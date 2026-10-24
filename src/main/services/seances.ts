@@ -1,0 +1,270 @@
+/**
+ * Sessions of a record (SPEC §5.2 – 5.3): R-02 validation, R-03 edition, R-06 cancellation,
+ * R-07 deletion and R-08 uniqueness. A session is not a journal event (R-20), except its deletion.
+ */
+import { and, eq, ne, sql } from 'drizzle-orm'
+import { ulid } from 'ulid'
+import { formatIsoDateFr, isValidIsoDate, isoDateInParis } from '@shared/domain/dates'
+import { patientJournal } from '@shared/domain/journal'
+import {
+  CANCEL_REASONS,
+  binAction,
+  compareSeancesDesc,
+  markDoneErrors,
+} from '@shared/domain/seance'
+import type {
+  CreateSeanceResult,
+  SeanceChanges,
+  SeanceFailure,
+  SeanceResult,
+  SeanceView,
+} from '@shared/types/patients'
+import type { AppDatabase, DbOrTx } from '../db/client'
+import { addJournalLine } from '../db/repositories/journalRepository'
+import { getSetting } from '../db/repositories/settingsRepository'
+import { patients, seances } from '../db/schema'
+import { DEFAULT_TARIFS_SETTING, tarifsSettingSchema } from './settingsSchemas'
+
+type SeanceRow = typeof seances.$inferSelect
+
+function toView(row: SeanceRow, invoice: { numero: string } | null): SeanceView {
+  return {
+    id: row.id,
+    patientId: row.patientId,
+    date: row.date,
+    heure: row.heure,
+    status: row.status,
+    source: row.source,
+    motif: row.motif,
+    anamnese: row.anamnese,
+    pratique: row.pratique,
+    tarifCents: row.tarifCents,
+    paiement: row.paiement,
+    doneAt: row.doneAt,
+    cancelReason: row.cancelReason,
+    cancelledAt: row.cancelledAt,
+    invoice,
+  }
+}
+
+/** Active invoices (`statut = 'emise'`) of the given sessions. */
+function invoicesBySeance(db: DbOrTx, ids: string[]): Map<string, { numero: string }> {
+  if (ids.length === 0) return new Map()
+  const rows = db.all<{ seance_id: string; numero: string }>(
+    sql`SELECT seance_id, numero FROM factures WHERE statut = 'emise' AND seance_id IN (${sql.join(
+      ids.map((id) => sql`${id}`),
+      sql`, `,
+    )})`,
+  )
+  return new Map(rows.map((r) => [r.seance_id, { numero: r.numero }]))
+}
+
+/** Sessions of a patient, most recent first (future ones on top). */
+export function listSeances(db: DbOrTx, patientId: string): SeanceView[] {
+  const rows = db.select().from(seances).where(eq(seances.patientId, patientId)).all()
+  const invoices = invoicesBySeance(
+    db,
+    rows.map((r) => r.id),
+  )
+  return rows.sort(compareSeancesDesc).map((r) => toView(r, invoices.get(r.id) ?? null))
+}
+
+export class SeanceService {
+  constructor(
+    private readonly db: AppDatabase,
+    private readonly now: () => Date = () => new Date(),
+  ) {}
+
+  private today(): string {
+    return isoDateInParis(this.now())
+  }
+
+  private load(id: string): { row: SeanceRow; view: SeanceView } | null {
+    const row = this.db.select().from(seances).where(eq(seances.id, id)).get()
+    if (!row) return null
+    return { row, view: toView(row, invoicesBySeance(this.db, [id]).get(id) ?? null) }
+  }
+
+  private reload(id: string): SeanceResult {
+    const loaded = this.load(id)
+    return loaded ? { ok: true, seance: loaded.view } : { ok: false, reason: 'not_found' }
+  }
+
+  /** R-08: another non-cancelled session of the patient that day. */
+  private sameDay(patientId: string, date: string, exceptId: string): SeanceRow | undefined {
+    return this.db
+      .select()
+      .from(seances)
+      .where(
+        and(
+          eq(seances.patientId, patientId),
+          eq(seances.date, date),
+          ne(seances.status, 'cancelled'),
+          ne(seances.id, exceptId),
+        ),
+      )
+      .get()
+  }
+
+  private defaultTarif(): number {
+    return getSetting(this.db, 'tarifs', tarifsSettingSchema, DEFAULT_TARIFS_SETTING).defaultCents
+  }
+
+  /**
+   * « Nouvelle » (R-08): opens today's session if there is one, otherwise creates a `planned`
+   * session with the `manual` source (« Hors Doctolib »).
+   */
+  createToday(patientId: string): CreateSeanceResult {
+    const patient = this.db
+      .select({ id: patients.id, deletedAt: patients.deletedAt })
+      .from(patients)
+      .where(eq(patients.id, patientId))
+      .get()
+    if (!patient || patient.deletedAt) return { ok: false, reason: 'not_found' }
+    const today = this.today()
+    const existing = this.sameDay(patientId, today, '')
+    if (existing) {
+      return { ok: true, seance: this.load(existing.id)!.view, existing: true }
+    }
+    const id = ulid()
+    this.db
+      .insert(seances)
+      .values({
+        id,
+        patientId,
+        date: today,
+        status: 'planned',
+        source: 'manual',
+        tarifCents: this.defaultTarif(),
+      })
+      .run()
+    return { ok: true, seance: this.load(id)!.view, existing: false }
+  }
+
+  /** Checks the changes against R-03 / R-04 / R-08 and returns the values to write. */
+  private checkChanges(
+    row: SeanceRow,
+    view: SeanceView,
+    changes: SeanceChanges,
+  ): SeanceFailure | Partial<SeanceRow> {
+    if (row.status === 'cancelled') return { ok: false, reason: 'not_editable' }
+    const invoiced = view.invoice !== null
+    const date = changes.date ?? row.date
+    const tarif = changes.tarifCents ?? row.tarifCents
+    // R-04: the unlock flow comes with invoicing (lot 3); until then both stay locked.
+    if (invoiced && (date !== row.date || tarif !== row.tarifCents)) {
+      return { ok: false, reason: 'locked' }
+    }
+    if (!isValidIsoDate(date)) return { ok: false, reason: 'invalid_date' }
+    if (row.status === 'done' && date > this.today()) return { ok: false, reason: 'invalid_date' }
+    if (date !== row.date) {
+      const other = this.sameDay(row.patientId, date, row.id)
+      if (other) return { ok: false, reason: 'same_day', existingId: other.id }
+    }
+    const values: Partial<SeanceRow> = { date, tarifCents: tarif }
+    if (changes.motif !== undefined) values.motif = changes.motif?.trim() || null
+    if (changes.anamnese !== undefined) values.anamnese = changes.anamnese || null
+    if (changes.pratique !== undefined) values.pratique = changes.pratique || null
+    if (changes.paiement !== undefined) values.paiement = changes.paiement
+    return values
+  }
+
+  /** « Enregistrer »: a planned session, or a done one in « Modifier » mode (R-03). */
+  save(id: string, changes: SeanceChanges): SeanceResult {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    const checked = this.checkChanges(loaded.row, loaded.view, changes)
+    if ('ok' in checked) return checked
+    this.db.update(seances).set(checked).where(eq(seances.id, id)).run()
+    return this.reload(id)
+  }
+
+  /** R-02 « ✓ Séance réalisée »: saves the changes, then locks the session as `done`. */
+  markDone(id: string, changes: SeanceChanges): SeanceResult {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    if (loaded.row.status !== 'planned') return { ok: false, reason: 'not_editable' }
+    const checked = this.checkChanges(loaded.row, loaded.view, changes)
+    if ('ok' in checked) return checked
+    const merged = { ...loaded.row, ...checked }
+    const errors = markDoneErrors(merged, this.today())
+    if (errors.length > 0) return { ok: false, reason: 'mark_done', errors }
+    this.db
+      .update(seances)
+      .set({ ...checked, status: 'done', doneAt: this.now().toISOString() })
+      .where(eq(seances.id, id))
+      .run()
+    return this.reload(id)
+  }
+
+  /** R-06: a reason is mandatory; the session stays visible, struck out, with its notes. */
+  cancel(id: string, reason: string): SeanceResult {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    if (binAction({ status: loaded.row.status, invoiced: loaded.view.invoice !== null }) !== 'cancel') {
+      return { ok: false, reason: 'not_editable' }
+    }
+    if (!(CANCEL_REASONS as readonly string[]).includes(reason)) {
+      return { ok: false, reason: 'not_editable' }
+    }
+    this.db
+      .update(seances)
+      .set({
+        status: 'cancelled',
+        cancelReason: reason,
+        cancelledAt: this.now().toISOString(),
+        prevStatus: loaded.row.status,
+      })
+      .where(eq(seances.id, id))
+      .run()
+    return this.reload(id)
+  }
+
+  /** « Rétablir la séance »: back to its previous status, unless the day is taken (R-08). */
+  restore(id: string): SeanceResult {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    const { row } = loaded
+    if (row.status !== 'cancelled') return { ok: false, reason: 'not_editable' }
+    const other = this.sameDay(row.patientId, row.date, row.id)
+    if (other) return { ok: false, reason: 'same_day', existingId: other.id }
+    this.db
+      .update(seances)
+      .set({ status: row.prevStatus ?? 'planned', cancelReason: null, cancelledAt: null, prevStatus: null })
+      .where(eq(seances.id, id))
+      .run()
+    return this.reload(id)
+  }
+
+  /**
+   * R-07: a done, non-invoiced session is deleted for good, with a journal line. An invoiced
+   * session cannot be deleted: its invoice must be deleted first (R-13).
+   */
+  delete(id: string): { ok: true } | SeanceFailure {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    if (loaded.view.invoice) return { ok: false, reason: 'invoiced' }
+    if (binAction({ status: loaded.row.status, invoiced: false }) !== 'delete') {
+      return { ok: false, reason: 'not_editable' }
+    }
+    const patient = this.db
+      .select({ nom: patients.nom, prenom: patients.prenom })
+      .from(patients)
+      .where(eq(patients.id, loaded.row.patientId))
+      .get()
+    this.db.transaction((tx) => {
+      tx.delete(seances).where(eq(seances.id, id)).run()
+      addJournalLine(
+        tx,
+        {
+          type: 'patient',
+          subject: patient ? `${patient.prenom} ${patient.nom}` : 'Patient',
+          action: patientJournal.seanceDeleted(formatIsoDateFr(loaded.row.date)),
+          patientId: loaded.row.patientId,
+        },
+        this.now(),
+      )
+    })
+    return { ok: true }
+  }
+}

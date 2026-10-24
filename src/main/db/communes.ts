@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import type { AppDatabase } from './client'
 import { communes } from './schema'
 
@@ -33,4 +33,15 @@ export function ensureCommunesLoaded(db: AppDatabase, readCsv: () => string): nu
     for (const row of rows) insert.run(row.commune, row.codePostal)
   })()
   return rows.length
+}
+
+/** Communes of a postal code (R-16). */
+export function communesForCp(db: AppDatabase, cp: string): string[] {
+  if (!/^\d{5}$/.test(cp)) return []
+  return db
+    .select({ commune: communes.commune })
+    .from(communes)
+    .where(eq(communes.codePostal, cp))
+    .all()
+    .map((r) => r.commune)
 }

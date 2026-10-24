@@ -1,5 +1,24 @@
 import type { LockAfterMinutes, PinChangeInput } from '../domain/accessCode'
+import type { PatientDraft } from '../domain/patientValidation'
+import type { Relation } from '../domain/relatives'
 import type { StartupState, TodaySummary } from './app'
+import type {
+  CreateSeanceResult,
+  DeletedPatientView,
+  DuplicateQuery,
+  DuplicateView,
+  JournalLineView,
+  LinkCandidate,
+  LinkResult,
+  PatientDetail,
+  PatientListItem,
+  PatientSearchResult,
+  SavePatientResult,
+  SeanceChanges,
+  SeanceFailure,
+  SeanceResult,
+  TodayAppointment,
+} from './patients'
 import type {
   ChangeCodeResult,
   DisableCodeResult,
@@ -34,6 +53,37 @@ export interface IpcInvokeContract {
   }
   'security:set-lock-after': { args: [minutes: LockAfterMinutes]; result: SecurityStatus }
   'security:skip-setup': { args: []; result: SecurityStatus }
+  'patients:search': { args: [query: string]; result: PatientSearchResult }
+  'patients:recent': { args: []; result: PatientListItem[] }
+  'patients:today': { args: []; result: TodayAppointment[] }
+  'patients:count': { args: []; result: number }
+  'patients:get': { args: [id: string]; result: PatientDetail | null }
+  'patients:create': { args: [draft: PatientDraft]; result: SavePatientResult }
+  'patients:update': { args: [id: string, draft: PatientDraft]; result: SavePatientResult }
+  'patients:duplicates': { args: [query: DuplicateQuery]; result: DuplicateView[] }
+  'patients:mark-opened': { args: [id: string]; result: void }
+  'patients:set-comment': {
+    args: [id: string, commentaire: string]
+    result: { updatedAt: string } | null
+  }
+  'patients:set-antecedents': { args: [id: string, tags: string[]]; result: string[] }
+  'patients:delete': { args: [id: string]; result: boolean }
+  'patients:restore': { args: [id: string]; result: boolean }
+  'patients:list-deleted': { args: []; result: DeletedPatientView[] }
+  'patients:journal': { args: [id: string]; result: JournalLineView[] }
+  'patients:link-candidates': { args: [id: string, query: string]; result: LinkCandidate[] }
+  'patients:add-link': {
+    args: [id: string, otherId: string, relation: Relation]
+    result: LinkResult
+  }
+  'patients:remove-link': { args: [id: string, otherId: string]; result: LinkResult }
+  'communes:by-cp': { args: [cp: string]; result: string[] }
+  'seances:create-today': { args: [patientId: string]; result: CreateSeanceResult }
+  'seances:save': { args: [id: string, changes: SeanceChanges]; result: SeanceResult }
+  'seances:mark-done': { args: [id: string, changes: SeanceChanges]; result: SeanceResult }
+  'seances:cancel': { args: [id: string, reason: string]; result: SeanceResult }
+  'seances:restore': { args: [id: string]; result: SeanceResult }
+  'seances:delete': { args: [id: string]; result: { ok: true } | SeanceFailure }
 }
 
 export type IpcChannel = keyof IpcInvokeContract
@@ -67,5 +117,36 @@ export interface MeuOsteoApi {
     skipSetup(): Promise<SecurityStatus>
     /** Returns an unsubscribe function. */
     onLocked(listener: () => void): () => void
+  }
+  patients: {
+    search(query: string): Promise<PatientSearchResult>
+    recent(): Promise<PatientListItem[]>
+    today(): Promise<TodayAppointment[]>
+    count(): Promise<number>
+    get(id: string): Promise<PatientDetail | null>
+    create(draft: PatientDraft): Promise<SavePatientResult>
+    update(id: string, draft: PatientDraft): Promise<SavePatientResult>
+    duplicates(query: DuplicateQuery): Promise<DuplicateView[]>
+    markOpened(id: string): Promise<void>
+    setComment(id: string, commentaire: string): Promise<{ updatedAt: string } | null>
+    setAntecedents(id: string, tags: string[]): Promise<string[]>
+    delete(id: string): Promise<boolean>
+    restore(id: string): Promise<boolean>
+    listDeleted(): Promise<DeletedPatientView[]>
+    journal(id: string): Promise<JournalLineView[]>
+    linkCandidates(id: string, query: string): Promise<LinkCandidate[]>
+    addLink(id: string, otherId: string, relation: Relation): Promise<LinkResult>
+    removeLink(id: string, otherId: string): Promise<LinkResult>
+  }
+  communes: {
+    byCp(cp: string): Promise<string[]>
+  }
+  seances: {
+    createToday(patientId: string): Promise<CreateSeanceResult>
+    save(id: string, changes: SeanceChanges): Promise<SeanceResult>
+    markDone(id: string, changes: SeanceChanges): Promise<SeanceResult>
+    cancel(id: string, reason: string): Promise<SeanceResult>
+    restore(id: string): Promise<SeanceResult>
+    delete(id: string): Promise<{ ok: true } | SeanceFailure>
   }
 }
