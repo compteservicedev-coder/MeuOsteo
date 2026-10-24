@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Planning et rapprochement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.lift:hover{transform:translateY(-3px)!important;box-shadow:0 2px 6px rgba(15,30,70,.06),0 18px 30px -14px rgba(15,30,70,.38)!important}
+.prim:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -10px rgba(31,79,216,.75)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.opt:hover{border-color:#3B6CF6!important;transform:translateY(-2px)}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.press:active{transform:scale(.97)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+.field{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.field:hover{border-color:#9DAECB!important}
+.field:focus{outline:none;border-color:#1F4FD8!important;box-shadow:0 0 0 4px rgba(31,79,216,.16)!important;background:#FFFFFF!important}
+.field.bad{border-color:#D92D20!important;box-shadow:0 0 0 4px rgba(217,45,32,.12)!important;background:#FFFBFA!important}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+button:disabled{cursor:not-allowed!important;opacity:.5}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}.d7{animation-delay:.4s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.pop{animation:pop .55s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes pop{0%{opacity:0;transform:scale(.7)}100%{opacity:1;transform:scale(1)}}
+.drop{animation:drop .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.fadeIn{animation:fadeIn .3s ease both}.fadeOut{animation:fadeOut .26s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+.zoomIn{animation:zoomIn .45s cubic-bezier(.2,.9,.3,1.1) both}.zoomOut{animation:zoomOut .26s ease both}
+@keyframes zoomIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}@keyframes zoomOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(12px) scale(.96)}}
+.shA{animation:shA .45s ease both}.shB{animation:shB .45s ease both}
+@keyframes shA{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@keyframes shB{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.swA{animation:swA .5s cubic-bezier(.2,.8,.2,1) both}.swB{animation:swB .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes swA{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes swB{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.wk:hover{background:#EEF4FF!important}
+.dayadd:hover{border-color:#3B6CF6!important;color:#1F4FD8!important;background:#EEF4FF!important}
+.slot:hover{border-color:#3B6CF6!important}
+.acc{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease}
+.acc.open{grid-template-rows:1fr;opacity:1}
+.spin{animation:spin .8s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.draw{stroke-dasharray:28;stroke-dashoffset:28;animation:draw .5s .1s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+.ping{animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(224,146,47,.55)}100%{box-shadow:0 0 0 8px rgba(224,146,47,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning<span style="margin-left: auto; font-size: 12px; font-weight: 800; background: #E0922F; color: #FFFFFF; padding: 1px 8px; border-radius: 999px">{{nTodo}}</span></a>
+<a href="Main.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · il y a 2 min</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 26px 28px; display: flex; flex-direction: column; gap: 18px">
+<div class="rise" style="position: relative; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div>
+<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.01em">Planning</h1>
+<p style="margin: 4px 0 0; color: #586380; font-size: 14px">{{rangeLabel}} · {{total}} rendez-vous</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<div style="display: flex; gap: 4px; padding: 4px; border-radius: 14px; background: #E2E8F2; box-shadow: inset 0 2px 4px rgba(15,30,70,0.1)">
+<button type="button" onClick="{{prevWk}}" aria-label="Semaine précédente" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px -2px rgba(15,30,70,0.3)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<button type="button" onClick="{{goToday}}" class="ez press btn ink" style="{{todayStyle}}">Aujourd'hui</button>
+<button type="button" onClick="{{nextWk}}" aria-label="Semaine suivante" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px -2px rgba(15,30,70,0.3)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></button>
+</div>
+<button type="button" onClick="{{toggleCal}}" aria-expanded="{{calOpen}}" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>{{calLabel}}<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+<button type="button" onClick="{{openRdvNew}}" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nouveau RDV</button>
+<button type="button" onClick="{{openBlock}}" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(224,146,47,0.4); background: linear-gradient(180deg, #FFFFFF, #FFF6EA); color: #7A4207; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(138,75,8,0.35)"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M6 18L18 6"></path></svg>Bloquer une période</button>
+<button type="button" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12a9 9 0 0 1 15.5-6.2"></path><path d="M21 4v5h-5M3 20v-5h5"></path></svg>Synchroniser</button>
+</div>
+<sc-if value="{{calOpen}}" hint-placeholder-val="{{ false }}">
+<div class="drop" role="dialog" aria-label="Choisir une semaine" style="position: absolute; top: calc(100% + 8px); right: 0; width: 330px; max-width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 20px; padding: 14px; box-shadow: 0 30px 60px -24px rgba(6,14,40,0.6), 0 0 0 1px rgba(15,30,70,0.06); display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 4px">
+<button type="button" onClick="{{prevMonth}}" aria-label="Mois précédent" class="ez press btn ink" style="width: 38px; height: 38px; border-radius: 10px; border: 0; background: #F0F4FA; color: #141B2D; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<span style="font-size: 15px; font-weight: 800">{{cal.title}}</span>
+<button type="button" onClick="{{nextMonth}}" aria-label="Mois suivant" class="ez press btn ink" style="width: 38px; height: 38px; border-radius: 10px; border: 0; background: #F0F4FA; color: #141B2D; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg></button>
+</div>
+<div aria-hidden="true" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); padding: 0 6px; font-size: 11px; font-weight: 800; color: #586380; text-align: center"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+<sc-for list="{{cal.weeks}}" as="w" hint-placeholder-count="5">
+<button type="button" onClick="{{w.pick}}" aria-label="{{w.aria}}" aria-pressed="{{w.on}}" class="ez press btn ink wk" style="{{w.style}}">
+<sc-for list="{{w.days}}" as="d" hint-placeholder-count="7"><span style="{{d.style}}">{{d.n}}<span aria-hidden="true" style="{{d.dot}}"></span></span></sc-for>
+</button>
+</sc-for>
+<p style="margin: 4px 0 0; font-size: 12px; color: #586380; line-height: 1.45">Choisissez une semaine : elle s'affiche avec la suivante. Point orange = jour bloqué.</p>
+</div>
+</sc-if>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+<div class="{{gridCls}}" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{weeks}}" as="w" hint-placeholder-count="2">
+<section aria-label="{{w.aria}}" style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 0 4px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 800">{{w.title}}</h2>
+<span style="font-size: 13px; color: #586380">{{w.sub}}</span>
+</div>
+<div style="overflow-x: auto; padding: 4px; margin: -4px">
+<div style="display: grid; grid-template-columns: repeat(6, minmax(112px, 1fr)); gap: 10px; min-width: 700px">
+<sc-for list="{{w.days}}" as="d" hint-placeholder-count="6">
+<div style="{{d.box}}">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 6px">
+<span style="{{d.labelStyle}}">{{d.label}}</span>
+<sc-if value="{{d.hasCount}}" hint-placeholder-val="{{ true }}"><span style="font-size: 11px; font-weight: 800; color: #17338F; background: #E6EEFF; padding: 1px 7px; border-radius: 999px">{{d.count}}</span></sc-if>
+</div>
+<sc-for list="{{d.items}}" as="r" hint-placeholder-count="3">
+<sc-if value="{{r.isBlock}}" hint-placeholder-val="{{ false }}">
+<div class="{{r.cls}}" style="{{r.style}}">
+<span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em">{{r.h}}</span>
+<span style="font-size: 12px; font-weight: 700; line-height: 1.3">{{r.nom}}</span>
+<button type="button" onClick="{{r.unblock}}" aria-label="{{r.aria}}" style="align-self: flex-start; margin-top: 2px; min-height: 28px; padding: 0 8px; border-radius: 8px; border: 1px solid rgba(138,75,8,0.25); background: rgba(255,255,255,0.7); color: #7A4207; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer">Débloquer</button>
+</div>
+</sc-if>
+<sc-if value="{{r.isRdv}}" hint-placeholder-val="{{ true }}">
+<a href="Fiche.dc.html" class="{{r.cls}}" style="{{r.style}}">
+<span style="font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums">{{r.h}}</span>
+<span style="font-size: 12px; font-weight: 700; line-height: 1.3">{{r.nom}}</span>
+<span style="font-size: 11px; line-height: 1.3; opacity: 0.85">{{r.motif}}</span>
+</a>
+</sc-if>
+</sc-for>
+<sc-if value="{{d.empty}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #8E99B3; padding: 4px 2px">Aucun RDV</span></sc-if>
+<sc-if value="{{d.canAdd}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{d.add}}" aria-label="{{d.addAria}}" class="ez press dayadd" style="margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-height: 32px; border-radius: 10px; border: 1px dashed #B7C2D6; background: transparent; color: #586380; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>RDV</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-for>
+</div>
+
+<aside aria-labelledby="h-todo" class="rise d3" style="flex: 1 1 290px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<h2 id="h-todo" style="margin: 0; padding: 18px 20px; font-size: 16px; font-weight: 800; border-bottom: 1px solid #EDF0F6; display: flex; align-items: center; gap: 10px">À rapprocher<span class="pop" style="font-size: 12px; font-weight: 800; color: #FFFFFF; background: linear-gradient(180deg, #E0922F, #B86A12); padding: 2px 8px; border-radius: 999px">{{nTodo}}</span></h2>
+<sc-for list="{{tasks}}" as="t" hint-placeholder-count="3">
+<div class="{{t.acc}}">
+<div style="overflow: hidden">
+<div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #EDF0F6">
+<span style="{{t.kindStyle}}">{{t.kind}}</span>
+<p style="margin: 0; font-weight: 800; font-size: 15px">{{t.title}}</p>
+<p style="margin: 0; font-size: 13px; color: #586380; line-height: 1.45">{{t.sub}}</p>
+<button type="button" onClick="{{t.open}}" class="{{t.btnCls}}" style="{{t.btnStyle}}">{{t.btn}}</button>
+</div>
+</div>
+</div>
+</sc-for>
+<div class="{{allDoneAcc}}">
+<div style="overflow: hidden">
+<div style="padding: 22px 20px; display: flex; align-items: center; gap: 10px; color: #0F4C45; font-weight: 700; font-size: 14px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>Tout est rattaché, aucun doublon.</div>
+</div>
+</div>
+<p style="margin: 0; padding: 12px 20px 16px; font-size: 12px; color: #586380; line-height: 1.5">Les rendez-vous sont rattachés automatiquement quand nom, téléphone et e-mail concordent. Seuls les cas ambigus arrivent ici.</p>
+</aside>
+</div>
+</main>
+
+<sc-if value="{{rdvOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 30; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="h-rdv" class="zoomIn" style="width: 100%; max-width: 640px; max-height: 100%; overflow-y: auto; box-sizing: border-box; background: #FFFFFF; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">Planning · hors Doctolib</p><h2 id="h-rdv" style="margin: 2px 0 0; font-size: 20px; font-weight: 800">Nouveau rendez-vous</h2></div>
+<button type="button" onClick="{{closeRdv}}" aria-label="Fermer" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 11px; border: 0; background: #F0F4FA; color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="r-q" style="font-size: 13px; font-weight: 600; color: #3A4560">Patient *</label>
+<sc-if value="{{rHasPatient}}" hint-placeholder-val="{{ false }}">
+<div class="pop" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 50px; padding: 6px 8px 6px 12px; border-radius: 12px; background: #EEF4FF; border: 2px solid #3B6CF6">
+<span style="display: flex; flex-direction: column"><span style="font-weight: 800">{{rf.nom}}</span><span style="font-size: 12px; color: #17338F">{{rPatientInfo}}</span></span>
+<button type="button" onClick="{{clearPatient}}" class="ez press btn ink" style="min-height: 36px; padding: 0 12px; border-radius: 10px; border: 0; background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #141B2D; cursor: pointer">Changer</button>
+</div>
+</sc-if>
+<sc-if value="{{rNoPatient}}" hint-placeholder-val="{{ true }}">
+<input id="r-q" type="search" value="{{rq}}" onInput="{{onRq}}" placeholder="Rechercher un patient…" class="field {{rc.nom}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{rCands}}" as="k" hint-placeholder-count="5"><button type="button" onClick="{{k.pick}}" class="ez press btn ink" style="min-height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #D4DBE8; background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #141B2D; cursor: pointer">{{k.nom}}</button></sc-for>
+<sc-if value="{{rCanNew}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{pickNew}}" class="ez press btn ink" style="min-height: 38px; padding: 0 12px; border-radius: 10px; border: 1px dashed #3B6CF6; background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #1F4FD8; cursor: pointer">+ Nouveau patient « {{rq}} »</button></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{re.nomOn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{re.nom}}</span></sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 170px; display: flex; flex-direction: column; gap: 6px"><label for="r-d" style="font-size: 13px; font-weight: 600; color: #3A4560">Date *</label><input id="r-d" type="date" value="{{rf.date}}" onInput="{{onRd}}" class="field {{rc.date}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="flex: 2 1 240px; display: flex; flex-direction: column; gap: 6px"><label for="r-m" style="font-size: 13px; font-weight: 600; color: #3A4560">Motif</label><input id="r-m" type="text" value="{{rf.motif}}" onInput="{{onRm}}" placeholder="ex. Suivi, Bilan…" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+</div>
+<sc-if value="{{re.dateOn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{re.date}}</span></sc-if>
+<span id="l-slot" style="font-size: 13px; font-weight: 600; color: #3A4560">Heure * <span style="font-weight: 500; color: #586380">· {{rDayLabel}}</span></span>
+<div role="group" aria-labelledby="l-slot" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px">
+<sc-for list="{{slots}}" as="s" hint-placeholder-count="20"><button type="button" onClick="{{s.pick}}" aria-pressed="{{s.on}}" disabled="{{s.dis}}" title="{{s.title}}" class="{{s.cls}}" style="{{s.style}}">{{s.h}}</button></sc-for>
+</div>
+<sc-if value="{{re.hOn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{re.h}}</span></sc-if>
+<sc-if value="{{re.dupOn}}" hint-placeholder-val="{{ false }}"><p class="drop" style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #FDECEC; color: #A3161C; font-size: 13px; font-weight: 700">{{re.dup}}</p></sc-if>
+<p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3A4560; padding: 10px 12px; border-radius: 12px; background: #FCF1E3"><strong style="color: #7A4207">Pensez à Doctolib :</strong> réservez aussi ce créneau dans Doctolib pour qu'un patient ne puisse pas le prendre en ligne. La séance « Hors Doctolib » est créée tout de suite dans la fiche patient.</p>
+<div style="display: flex; justify-content: flex-end; gap: 10px">
+<button type="button" onClick="{{closeRdv}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{saveRdv}}" class="{{rSaveCls}}" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">{{rSaveLabel}}</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{blockOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 30; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="h-block" class="zoomIn" style="width: 100%; max-width: 520px; max-height: 100%; overflow-y: auto; box-sizing: border-box; background: #FFFFFF; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h2 id="h-block" style="margin: 0; font-size: 20px; font-weight: 800">Bloquer une période</h2>
+<button type="button" onClick="{{closeBlock}}" aria-label="Fermer" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 11px; border: 0; background: #F0F4FA; color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px"><label for="b-from" style="font-size: 13px; font-weight: 600; color: #3A4560">Du</label><input id="b-from" type="date" value="{{bf.from}}" onInput="{{bfFrom}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px"><label for="b-to" style="font-size: 13px; font-weight: 600; color: #3A4560">Au</label><input id="b-to" type="date" value="{{bf.to}}" onInput="{{bfTo}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+</div>
+<span id="l-part" style="font-size: 13px; font-weight: 600; color: #3A4560">Créneau</span>
+<div role="group" aria-labelledby="l-part" style="display: flex; gap: 6px; padding: 5px; border-radius: 14px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{parts}}" as="o" hint-placeholder-count="3"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<span id="l-lab" style="font-size: 13px; font-weight: 600; color: #3A4560">Motif</span>
+<div role="group" aria-labelledby="l-lab" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{labels}}" as="o" hint-placeholder-count="4"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<sc-if value="{{bConflict}}" hint-placeholder-val="{{ false }}">
+<p class="drop" style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #FCF1E3; color: #7A4207; font-size: 13px; font-weight: 700">{{bConflictMsg}}</p>
+</sc-if>
+<p style="margin: 0; font-size: 13px; line-height: 1.5; color: #3A4560; padding: 10px 12px; border-radius: 12px; background: #E6EEFF">Pensez à bloquer aussi ces créneaux dans Doctolib pour que les patients ne puissent pas réserver : l'application ne peut pas le faire à votre place.</p>
+<div style="display: flex; justify-content: flex-end; gap: 10px">
+<button type="button" onClick="{{closeBlock}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{saveBlock}}" class="ez press btn" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 20px -10px rgba(184,106,18,0.9)">{{bSaveLabel}}</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{taskOn}}" hint-placeholder-val="{{ false }}">
+<div class="{{ovCls}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="h-task" class="{{dlgCls}}" style="width: 100%; max-width: 900px; max-height: 100%; overflow-y: auto; background: #F3F5F9; border-radius: 26px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7); display: flex; flex-direction: column">
+<div style="position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px 12px; background: linear-gradient(180deg, #F3F5F9 75%, rgba(243,245,249,0))">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">{{dlg.kicker}}</p>
+<h2 id="h-task" style="margin: 2px 0 0; font-size: 22px; font-weight: 800">{{dlg.title}}</h2>
+</div>
+<button type="button" onClick="{{closeTask}}" aria-label="Fermer" class="ez press btn ink soft" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+
+<sc-if value="{{tCreate}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 18px; padding: 4px 24px 24px; align-items: flex-start">
+<div style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<div style="background: linear-gradient(180deg, #EEFBFD, #E0F7FB); border: 1px solid rgba(14,165,198,0.25); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #0B4E5F">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase">Reçu de Doctolib</span>
+<span style="font-weight: 800; font-size: 16px; color: #141B2D">{{doc.name}}</span>
+<span>{{doc.when}}</span>
+<span>Motif : {{doc.motif}}</span>
+<span>{{doc.tel}}</span>
+<span style="word-break: break-all">{{doc.mail}}</span>
+<span style="font-size: 12px; color: #2C6E7E; padding-top: 6px; border-top: 1px solid rgba(14,165,198,0.2)">Extrait de l'e-mail de confirmation du 21/10 à 14:32</span>
+</div>
+<div class="drop" style="{{dupBox}}">
+<span style="display: flex; align-items: center; gap: 8px; font-weight: 800">{{dupTitle}}</span>
+<sc-for list="{{dupHits}}" as="h" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.75)">
+<span style="font-weight: 700; color: #141B2D">{{h.nom}}</span>
+<span style="font-size: 12px; color: #586380">{{h.info}}</span>
+<span style="font-size: 12px; font-weight: 700">{{h.why}}</span>
+<button type="button" onClick="{{h.link}}" class="ez press btn ink soft" style="align-self: flex-start; min-height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(15,30,70,0.1); background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #141B2D; cursor: pointer">C'est cette personne : rattacher</button>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="flex: 2 1 380px; min-width: 0; background: #FFFFFF; border-radius: 18px; padding: 18px; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+<label for="c-nom" style="font-size: 13px; font-weight: 600; color: #3A4560; display: flex; align-items: center; gap: 6px">Nom *<span style="font-size: 10px; font-weight: 800; color: #0B7F99; background: #E0F7FB; padding: 1px 6px; border-radius: 6px">DOCTOLIB</span></label>
+<input id="c-nom" type="text" value="{{cf.nom}}" onInput="{{cfOn.nom}}" class="field {{cfc.nom}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<sc-if value="{{cfe.nomOn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">Le nom est obligatoire</span></sc-if>
+</div>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+<label for="c-pre" style="font-size: 13px; font-weight: 600; color: #3A4560; display: flex; align-items: center; gap: 6px">Prénom *<span style="font-size: 10px; font-weight: 800; color: #0B7F99; background: #E0F7FB; padding: 1px 6px; border-radius: 6px">DOCTOLIB</span></label>
+<input id="c-pre" type="text" value="{{cf.prenom}}" onInput="{{cfOn.prenom}}" class="field {{cfc.prenom}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<sc-if value="{{cfe.prenomOn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">Le prénom est obligatoire</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+<label for="c-ddn" style="font-size: 13px; font-weight: 600; color: #3A4560">Date de naissance *</label>
+<input id="c-ddn" type="date" value="{{cf.ddn}}" onInput="{{cfOn.ddn}}" class="field {{cfc.ddn}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<span style="{{ddnHintStyle}}">{{ddnHint}}</span>
+</div>
+<div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+<label for="c-tel" style="font-size: 13px; font-weight: 600; color: #3A4560; display: flex; align-items: center; gap: 6px">Portable<span style="font-size: 10px; font-weight: 800; color: #0B7F99; background: #E0F7FB; padding: 1px 6px; border-radius: 6px">DOCTOLIB</span></label>
+<input id="c-tel" type="tel" value="{{cf.portable}}" onInput="{{cfOn.portable}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; font-variant-numeric: tabular-nums">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="c-mail" style="font-size: 13px; font-weight: 600; color: #3A4560; display: flex; align-items: center; gap: 6px">E-mail<span style="font-size: 10px; font-weight: 800; color: #0B7F99; background: #E0F7FB; padding: 1px 6px; border-radius: 6px">DOCTOLIB</span></label>
+<input id="c-mail" type="email" value="{{cf.mail}}" onInput="{{cfOn.mail}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+</div>
+<p style="margin: 0; font-size: 13px; color: #586380; line-height: 1.5">Le reste de la fiche (adresse, situation, profession…) pourra être complété pendant la séance. L'adresse sera demandée au moment de facturer.</p>
+<div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap">
+<button type="button" onClick="{{closeTask}}" class="ez press btn ink soft" style="min-height: 48px; padding: 0 18px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{saveCreate}}" class="{{createCls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">
+<sc-if value="{{busy}}" hint-placeholder-val="{{ false }}"><svg class="spin" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg></sc-if>Créer la fiche et rattacher le RDV</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{tMatch}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; background: linear-gradient(180deg, #EEFBFD, #E0F7FB); border: 1px solid rgba(14,165,198,0.25); border-radius: 18px; padding: 14px 18px; font-size: 14px; color: #0B4E5F">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase">Doctolib</span>
+<span style="font-weight: 800; color: #141B2D">J. Moreau</span>
+<span>Sam. 24/10 à 9:00</span>
+<span>06 22 33 44 55</span>
+<span>julie.moreau@exemple.fr</span>
+<span style="font-weight: 700; color: #7A4207; background: #FCF1E3; padding: 3px 10px; border-radius: 999px">Motif : Bilan enfant</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px">
+<sc-for list="{{cands}}" as="k" hint-placeholder-count="2">
+<button type="button" onClick="{{k.pick}}" aria-pressed="{{k.on}}" class="{{k.cls}}" style="{{k.style}}">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 17px; font-weight: 800">{{k.nom}}</span>
+<span style="{{k.radio}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
+</span>
+<span style="font-size: 13px; color: #3A4560">{{k.ddn}} · {{k.last}}</span>
+<span style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{k.crit}}" as="x" hint-placeholder-count="4"><span style="{{x.style}}">{{x.sign}} {{x.label}}</span></sc-for>
+</span>
+<span style="{{k.scoreStyle}}">{{k.score}}</span>
+<sc-if value="{{k.hasNote}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; line-height: 1.45; color: #7A4207">{{k.note}}</span></sc-if>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-radius: 16px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35)">
+<span style="display: flex; flex-direction: column; gap: 2px"><span id="l-rem" style="font-size: 14px; font-weight: 700">Mémoriser ce choix</span><span style="font-size: 12px; color: #586380">Les prochains RDV de ce contact Doctolib seront rattachés à la même fiche</span></span>
+<button type="button" role="switch" aria-checked="{{remember}}" aria-labelledby="l-rem" onClick="{{toggleRem}}" style="{{swStyle}}"><span style="{{knobStyle}}"></span></button>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px">
+<button type="button" onClick="{{noneMatch}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Aucune ne correspond : créer une fiche</button>
+<button type="button" onClick="{{doMatch}}" disabled="{{noChoice}}" class="ez press btn prim" style="min-height: 48px; padding: 0 20px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">{{matchLabel}}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{tMerge}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 4px 24px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: 140px repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch">
+<span></span>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 12px 14px; box-shadow: 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; color: #1F4FD8">FICHE A</span><span style="font-size: 13px; color: #3A4560">Créée le 12/01/2024 · 3 séances · dernière le 20/10/2026</span></div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 12px 14px; box-shadow: 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 800; color: #0B7F99">FICHE B</span><span style="font-size: 13px; color: #3A4560">Créée le 03/09/2026 depuis un RDV Doctolib · 1 séance</span></div>
+<sc-for list="{{mrows}}" as="m" hint-placeholder-count="7">
+<span style="display: flex; align-items: center; font-size: 13px; font-weight: 700; color: #3A4560">{{m.label}}</span>
+<sc-if value="{{m.same}}" hint-placeholder-val="{{ false }}">
+<div style="grid-column: span 2; display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #E3FAF5; color: #0F4C45; font-size: 14px; font-weight: 600"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>{{m.a}}<span style="margin-left: auto; font-size: 12px; opacity: 0.8">identique</span></div>
+</sc-if>
+<sc-if value="{{m.diff}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{m.pickA}}" aria-pressed="{{m.onA}}" class="{{m.clsA}}" style="{{m.styleA}}">{{m.a}}</button>
+<button type="button" onClick="{{m.pickB}}" aria-pressed="{{m.onB}}" class="{{m.clsB}}" style="{{m.styleB}}">{{m.b}}</button>
+</sc-if>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 14px 16px; border-radius: 16px; background: #E6EEFF; color: #17338F; font-size: 14px">
+<span style="font-weight: 800">Résultat : {{mergeName}}</span>
+<span>4 séances réunies</span>
+<span>Commentaires mis bout à bout</span>
+<span>Factures inchangées</span>
+</div>
+<sc-if value="{{mIdle}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px">
+<button type="button" onClick="{{notDup}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Ce ne sont pas les mêmes personnes</button>
+<button type="button" onClick="{{askMerge}}" class="ez press btn prim" style="min-height: 48px; padding: 0 20px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">Fusionner les fiches…</button>
+</div>
+</sc-if>
+<sc-if value="{{mConfirm}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-labelledby="t-merge" class="zoomIn" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 12px 12px 16px; border-radius: 16px; background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; color: #5A3205">
+<span id="t-merge" style="flex: 1 1 320px; font-size: 14px; font-weight: 700; line-height: 1.45">Fusion définitive : la fiche B disparaît, ses séances et son commentaire rejoignent la fiche conservée. Opération inscrite au journal.</span>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{backMerge}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Retour</button>
+<button type="button" onClick="{{doMerge}}" class="ez press btn" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 16px -8px rgba(184,106,18,0.9)">
+<sc-if value="{{busy}}" hint-placeholder-val="{{ false }}"><svg class="spin" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg></sc-if>Confirmer la fusion</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="drop" style="position: fixed; right: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px; background: linear-gradient(180deg, #17338F, #132A6B); color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 20px 40px -16px rgba(6,14,40,0.7)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      task: null, closing: false, busy: false, shake: 0, toast: '',
+      wk: 0, calOpen: false, cal: { y: 2026, m: 9 }, blockOpen: false,
+      manual: [], rdvOpen: false, rf: { nom: '', date: '', h: '', motif: '', isNew: false }, rq: '', rTried: false, rShake: 0,
+      bf: { from: '2026-11-02', to: '2026-11-06', part: 'day', label: 'Congés' },
+      blocks: [{ d: '2026-10-28', part: 'day', label: 'Formation' }, { d: '2026-10-30', part: 'pm', label: 'Absente' }],
+      ines: null, moreau: null, dupDone: false,
+      cf: null, cfFor: null, cTried: false,
+      choice: null, remember: true,
+      picks: { nom: 'B', mail: 'B', adresse: 'B', profession: 'B' }, mStep: 'idle'
+    };
+  }
+  componentWillUnmount() { [this.t1, this.t2, this.t3].forEach(clearTimeout); }
+  toastMsg(m) { clearTimeout(this.t3); this.setState({ toast: m }); this.t3 = setTimeout(() => this.setState({ toast: '' }), 3000); }
+  openTask(k, extra) { clearTimeout(this.t1); this.setState(Object.assign({ task: k, closing: false, busy: false, mStep: 'idle' }, extra || {})); }
+  closeTask() { clearTimeout(this.t1); this.setState({ closing: true }); this.t1 = setTimeout(() => this.setState({ task: null, closing: false, busy: false }), 260); }
+  openCreate(forWho) {
+    const cf = forWho === 'moreau'
+      ? { nom: 'Moreau', prenom: '', ddn: '', portable: '06 22 33 44 55', mail: 'julie.moreau@exemple.fr' }
+      : { nom: 'Garnier', prenom: 'Inès', ddn: '', portable: '06 48 12 77 30', mail: 'ines.garnier@exemple.fr' };
+    this.openTask('create', { cf, cfFor: forWho, cTried: false });
+  }
+  renderVals() {
+    const st = this.state;
+    const TODAY = '2026-10-24';
+    const digits = s => (s || '').replace(/\D/g, '');
+    const existing = [
+      { nom: 'Garnier', prenom: 'Hélène', ddn: '02/04/1961', tel: '06 70 11 22 33', mail: 'h.garnier@exemple.fr' },
+      { nom: 'Moreau', prenom: 'Julie', ddn: '12/05/1988', tel: '06 22 33 44 55', mail: 'julie.moreau@exemple.fr' },
+      { nom: 'Moreau', prenom: 'Jules', ddn: '03/02/2015', tel: '06 22 33 44 55', mail: '' },
+      { nom: 'Roux', prenom: 'Camille', ddn: '12/03/1992', tel: '06 01 02 03 04', mail: 'camille.roux@exemple.fr' }
+    ];
+
+    // Planning
+    const base = 'display: flex; flex-direction: column; gap: 2px; padding: 9px 10px; border-radius: 12px; text-decoration: none; min-height: 44px; ';
+    const card = k => base + ({
+      off: 'background: #FFFFFF; border: 1px dashed #8E99B3; text-decoration: line-through; color: #586380',
+      neu: 'background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; color: #5A3205; box-shadow: inset 0 1px 0 #FFFFFF, 0 6px 14px -8px rgba(138,75,8,0.5)',
+      past: 'background: linear-gradient(180deg, #F7F9FC, #EDF1F7); border: 1px solid #E1E6EF; color: #3A4560; box-shadow: inset 0 1px 0 #FFFFFF, 0 3px 8px -6px rgba(15,30,70,0.3)',
+      ok: 'background: linear-gradient(180deg, #E3FAF5, #C9F2EA); border: 1px solid #9FE6D9; color: #0F4C45; box-shadow: inset 0 1px 0 #FFFFFF, 0 6px 14px -8px rgba(23,51,143,0.4)',
+      man: 'background: linear-gradient(180deg, #FFFFFF, #EEF4FF); border: 1px dashed #8FA9F5; color: #17338F; box-shadow: inset 0 1px 0 #FFFFFF, 0 6px 14px -8px rgba(31,79,216,0.45)'
+    })[k];
+    const inesName = st.ines ? st.ines : 'Inès Garnier';
+    const moreauName = st.moreau || 'J. Moreau';
+    const DAYN = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'];
+    const MON = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    const MONL = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    const toD = s => { const p = s.split('-').map(Number); return new Date(Date.UTC(p[0], p[1] - 1, p[2])); };
+    const toS = d => d.toISOString().slice(0, 10);
+    const add = (s, n) => { const d = toD(s); d.setUTCDate(d.getUTCDate() + n); return toS(d); };
+    const dnum = s => parseInt(s.slice(8), 10);
+    const dm = s => dnum(s) + ' ' + MON[parseInt(s.slice(5, 7), 10) - 1];
+    const BASE = '2026-10-19';
+    const fixed = {
+      '2026-10-19': [['9:00', 'Léa Fontaine', 'Sciatalgie'], ['11:00', 'Hugo Bernard', 'Sport · genou'], ['15:30', 'Manon Petit', 'Suivi grossesse']],
+      '2026-10-20': [['9:30', 'Sophie Lambert', 'Migraines'], ['14:00', 'Antoine Dubois', 'Lombalgie'], ['16:30', 'Nora Haddad', 'Bilan']],
+      '2026-10-21': [['10:00', 'Julien Morel', 'Cervicalgie'], ['11:30', 'Élise Martin', 'Nourrisson'], ['14:30', 'Karim Benali', 'Épaule']],
+      '2026-10-22': [['9:00', 'Clara Simon', 'Dorsalgie'], ['10:30', 'Lucas Faure', 'Sport'], ['16:00', 'Rose Leroy', 'Suivi']],
+      '2026-10-23': [['9:00', 'Julien Morel', 'Suivi'], ['10:30', inesName, st.ines ? 'Première consult.' : 'À rapprocher', st.ines ? 'ok' : 'neu', !!st.ines], ['14:00', 'Thomas Girard', 'Nourrisson']],
+      '2026-10-24': [['9:00', moreauName, st.moreau ? 'Bilan enfant' : 'À rapprocher', st.moreau ? 'ok' : 'neu', !!st.moreau], ['10:30', 'Alice Girard', 'Annulé par e-mail', 'off'], ['11:30', 'Camille Roux', 'Lombalgie']],
+      '2026-10-26': [['9:00', 'Hugo Bernard', 'Suivi genou'], ['10:30', 'Manon Petit', 'Suivi grossesse'], ['17:00', 'Léa Fontaine', 'Sciatalgie']],
+      '2026-10-27': [['9:30', 'Antoine Dubois', 'Lombalgie'], ['14:00', 'Nora Haddad', 'Suivi']],
+      '2026-10-28': [],
+      '2026-10-29': [['9:00', 'Karim Benali', 'Épaule'], ['11:00', 'Clara Simon', 'Dorsalgie'], ['15:30', 'Inès Garnier', 'Suivi'], ['18:00', 'Rose Leroy', 'Suivi']],
+      '2026-10-30': [['9:00', 'Thomas Girard', 'Nourrisson'], ['10:30', 'Camille Roux', 'Suivi lombalgie']],
+      '2026-10-31': [['9:30', 'Sophie Lambert', 'Migraines']]
+    };
+    const POOL = ['Julien Morel', 'Sophie Lambert', 'Léa Fontaine', 'Hugo Bernard', 'Manon Petit', 'Antoine Dubois', 'Clara Simon', 'Lucas Faure', 'Rose Leroy', 'Karim Benali', 'Élise Martin', 'Nora Haddad', 'Thomas Girard', 'Camille Roux'];
+    const MOT = ['Suivi', 'Lombalgie', 'Cervicalgie', 'Bilan', 'Sport', 'Migraines', 'Nourrisson', 'Dorsalgie'];
+    const HOURS = ['9:00', '10:30', '11:30', '14:00', '15:30', '17:00', '18:00'];
+    const hm = h => { const p = h.split(':').map(Number); return p[0] * 60 + p[1]; };
+    const dayRdv = iso => {
+      const man = st.manual.filter(m => m.d === iso).map(m => [m.h, m.nom, (m.motif || 'RDV') + ' · hors Doctolib', 'man', m.fresh]);
+      return dayRdvBase(iso).concat(man).sort((a, b) => hm(a[0]) - hm(b[0]));
+    };
+    const dayRdvBase = iso => {
+      if (fixed[iso]) return fixed[iso];
+      const seed = parseInt(iso.replace(/-/g, ''), 10);
+      let n = (seed % 4) + 1; if (toD(iso).getUTCDay() === 6) n = Math.min(n, 2);
+      const out = [];
+      for (let i = 0; i < n; i++) out.push([HOURS[Math.min(HOURS.length - 1, (seed % 2) + i * 2)], POOL[(seed + i * 5) % POOL.length], MOT[(seed + i * 3) % MOT.length]]);
+      return out;
+    };
+    const hourNum = h => parseInt(h.split(':')[0], 10);
+    const blkCard = 'display: flex; flex-direction: column; gap: 1px; padding: 7px 9px; border-radius: 11px; border: 1px dashed #E0B57A; color: #7A4207; background: repeating-linear-gradient(135deg, #FBEEDC 0 6px, #FFF8EE 6px 12px)';
+    const mon0 = add(BASE, 7 * st.wk);
+    let total = 0;
+    const weeks = [0, 1].map(w => {
+      const mon = add(mon0, 7 * w); const sat = add(mon, 5);
+      let cnt = 0;
+      const days = DAYN.map((dn, i) => {
+        const iso = add(mon, i);
+        const bl = st.blocks.filter(b => b.d === iso);
+        const full = bl.find(b => b.part === 'day'); const am = bl.find(b => b.part === 'am'); const pm = bl.find(b => b.part === 'pm');
+        const rd = dayRdv(iso);
+        cnt += rd.filter(r => r[3] !== 'off').length;
+        const items = [];
+        const blockItem = (b, lab) => ({ isBlock: true, isRdv: false, h: lab, nom: b.label, style: blkCard, cls: 'pop', aria: 'Débloquer ' + lab.toLowerCase() + ' du ' + dm(iso), unblock: () => { this.setState({ blocks: st.blocks.filter(x => x !== b) }); this.toastMsg(lab + ' du ' + dm(iso) + ' débloqué'); } });
+        if (full) items.push(blockItem(full, 'Journée bloquée'));
+        if (am) items.push(blockItem(am, 'Matin bloqué'));
+        rd.forEach(r => {
+          const kind = r[3] || (iso < TODAY ? 'past' : 'ok');
+          items.push({ isBlock: false, isRdv: true, h: r[0], nom: r[1], motif: r[2], style: card(kind).replace('padding: 9px 10px', 'padding: 7px 9px').replace('min-height: 44px', 'min-height: 40px'), cls: 'ez press lift' + (r[4] ? ' pop' : '') });
+        });
+        if (pm) items.push(blockItem(pm, 'Après-midi bloqué'));
+        const isToday = iso === TODAY; const past = iso < TODAY;
+        return {
+          label: dn + ' ' + dnum(iso) + (dnum(iso) === 1 ? ' ' + MON[parseInt(iso.slice(5, 7), 10) - 1] : ''),
+          labelStyle: 'font-size: 13px; font-weight: 800; ' + (isToday ? 'color: #0B7F99' : past ? 'color: #586380' : 'color: #141B2D'),
+          count: rd.filter(r => r[3] !== 'off').length, hasCount: rd.length > 0, empty: items.length === 0,
+          canAdd: iso >= TODAY && !full, addAria: 'Ajouter un rendez-vous le ' + dn + ' ' + dm(iso),
+          add: () => this.setState({ rdvOpen: true, rf: { nom: '', date: iso, h: '', motif: '', isNew: false }, rq: '', rTried: false }),
+          items,
+          box: 'display: flex; flex-direction: column; gap: 6px; padding: 10px 8px; border-radius: 14px; min-height: 150px; box-sizing: border-box; ' +
+            (isToday ? 'background: #FFFFFF; border: 2px solid #0EA5C6; box-shadow: 0 0 0 4px rgba(14,165,198,0.12), 0 18px 36px -18px rgba(23,51,143,0.55)'
+              : full ? 'background: repeating-linear-gradient(135deg, rgba(251,238,220,0.7) 0 8px, rgba(255,255,255,0.7) 8px 16px); border: 1px dashed #E0B57A'
+              : 'background: rgba(255,255,255,0.78); border: 1px solid rgba(15,30,70,0.05); box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 24px -18px rgba(15,30,70,0.35)') +
+            (past ? '; opacity: 0.72' : '')
+        };
+      });
+      total += cnt;
+      const sameM = mon.slice(5, 7) === sat.slice(5, 7);
+      const range = (sameM ? dnum(mon) : dm(mon)) + ' au ' + dm(sat);
+      return {
+        title: mon === BASE ? 'Cette semaine' : mon === add(BASE, 7) ? 'Semaine prochaine' : mon === add(BASE, -7) ? 'Semaine dernière' : 'Semaine du ' + dm(mon),
+        sub: range + ' · ' + cnt + ' RDV', aria: 'Semaine du ' + range, days
+      };
+    });
+    const rangeLabel = dm(mon0) + ' → ' + dm(add(mon0, 12)) + ' ' + add(mon0, 12).slice(0, 4);
+    // calendrier
+    const cy = st.cal.y, cmo = st.cal.m;
+    const first = toS(new Date(Date.UTC(cy, cmo, 1)));
+    const wd = (toD(first).getUTCDay() + 6) % 7;
+    let wstart = add(first, -wd);
+    const calWeeks = [];
+    while (true) {
+      const ws = wstart;
+      const sel = ws === mon0 || ws === add(mon0, 7);
+      const diff = Math.round((toD(ws) - toD(BASE)) / (7 * 864e5));
+      const days = [0, 1, 2, 3, 4, 5, 6].map(i => {
+        const iso = add(ws, i); const inM = parseInt(iso.slice(5, 7), 10) - 1 === cmo; const isT = iso === TODAY;
+        const hasB = st.blocks.some(b => b.d === iso);
+        return {
+          n: dnum(iso),
+          style: 'position: relative; display: flex; align-items: center; justify-content: center; height: 34px; border-radius: 9px; font-size: 13px; font-weight: ' + (isT ? '800' : '600') + '; ' +
+            (isT ? 'background: linear-gradient(180deg, #22C3D6, #0EA5C6); color: #FFFFFF' : sel ? 'color: #17338F' : inM ? 'color: #141B2D' : 'color: #B7C2D6'),
+          dot: hasB ? 'position: absolute; bottom: 3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #E0922F' : 'display: none'
+        };
+      });
+      calWeeks.push({
+        days, on: sel, aria: 'Afficher la semaine du ' + dm(ws),
+        style: 'display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0; width: 100%; padding: 2px 6px; border: 0; border-radius: 12px; font: inherit; cursor: pointer; ' + (sel ? 'background: #E6EEFF; box-shadow: inset 0 0 0 2px rgba(59,108,246,0.35)' : 'background: transparent'),
+        pick: () => this.setState({ wk: diff, calOpen: false, swapW: (st.swapW || 0) + 1 })
+      });
+      wstart = add(ws, 7);
+      if (parseInt(wstart.slice(5, 7), 10) - 1 !== cmo || wstart.slice(0, 4) !== String(cy)) { if (toD(wstart) > toD(first)) break; }
+    }
+    // blocage
+    const bf = st.bf;
+    let nDays = 0, nConf = 0;
+    if (bf.from && bf.to && bf.from <= bf.to) {
+      for (let d = bf.from, k = 0; d <= bf.to && k < 60; d = add(d, 1), k++) {
+        if (toD(d).getUTCDay() === 0) continue;
+        nDays++;
+        nConf += dayRdv(d).filter(r => r[3] !== 'off' && (bf.part === 'day' || (bf.part === 'am' ? hourNum(r[0]) < 13 : hourNum(r[0]) >= 13))).length;
+      }
+    }
+    const segB = on => 'flex: 1 1 0; min-height: 40px; padding: 0 12px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border: 0; ' +
+      (on ? 'background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF; box-shadow: 0 8px 16px -8px rgba(184,106,18,0.9)' : 'background: transparent; color: #3A4560');
+    const chipB = on => 'min-height: 38px; padding: 0 12px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' +
+      (on ? 'border: 0; background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF' : 'border: 1px solid #E9C9A0; background: #FFF6EA; color: #7A4207');
+    const setBf = (k, v) => this.setState({ bf: Object.assign({}, st.bf, { [k]: v }) });
+    // nouveau RDV
+    const rf = st.rf;
+    const setRf = (k, v) => this.setState({ rf: Object.assign({}, st.rf, { [k]: v }) });
+    const foldS = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const allP = POOL.concat(['Inès Garnier', 'Julie Moreau', 'Jules Moreau', 'Paul Lefèvre', 'Alice Girard']).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a.localeCompare(b, 'fr'));
+    const rqf = foldS(st.rq.trim());
+    const rCandsRaw = rqf ? allP.filter(n => foldS(n).includes(rqf)).slice(0, 6) : allP.slice(0, 6);
+    const dayList = rf.date ? dayRdv(rf.date).filter(r => r[3] !== 'off') : [];
+    const blks = rf.date ? st.blocks.filter(b => b.d === rf.date) : [];
+    const SLOTS = []; for (let m = 9 * 60; m <= 18 * 60 + 30; m += 30) SLOTS.push(Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0'));
+    const slotInfo = h => {
+      const t = hm(h);
+      const busy = dayList.find(r => Math.abs(hm(r[0]) - t) < 60);
+      const bl = blks.find(b => b.part === 'day' || (b.part === 'am' ? t < 13 * 60 : t >= 13 * 60));
+      return busy ? 'Pris · ' + busy[1] : bl ? 'Bloqué · ' + bl.label : '';
+    };
+    const rErr = {};
+    if (!rf.nom) rErr.nom = 'Choisissez un patient';
+    if (!rf.date) rErr.date = 'Choisissez une date'; else if (rf.date < TODAY) rErr.date = 'La date est passée';
+    else if (toD(rf.date).getUTCDay() === 0) rErr.date = 'Le cabinet est fermé le dimanche';
+    if (!rf.h) rErr.h = 'Choisissez une heure'; else if (slotInfo(rf.h)) rErr.h = 'Créneau indisponible : ' + slotInfo(rf.h);
+    if (rf.nom && rf.date && dayList.some(r => r[1] === rf.nom)) rErr.dup = rf.nom + ' a déjà un RDV ce jour-là : une seule séance par patient et par jour.';
+    const rShow = k => st.rTried && !!rErr[k];
+
+    // Tasks
+    const kindSt = (bg, fg) => 'align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: ' + bg + '; color: ' + fg;
+    const btnP = 'min-height: 44px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 18px -10px rgba(31,79,216,0.8)';
+    const btnS = 'min-height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)';
+    const tasksRaw = [
+      { done: !!st.ines, kind: 'Nouveau patient', kindStyle: kindSt('#E0F7FB', '#0B5F73'), title: 'Inès Garnier', sub: 'RDV ven. 23/10 à 10:30 · aucune fiche ne correspond au nom, au téléphone ni à l’e-mail', btn: 'Créer la fiche', btnStyle: btnP, btnCls: 'ez press btn prim', open: () => this.openCreate('ines') },
+      { done: !!st.moreau, kind: 'Plusieurs fiches possibles', kindStyle: kindSt('#FCF1E3', '#8A4B08'), title: 'J. Moreau', sub: 'RDV sam. 24/10 à 9:00 · 2 fiches partagent ce nom et ce téléphone', btn: 'Choisir la fiche', btnStyle: btnS, btnCls: 'ez press btn ink soft', open: () => this.openTask('match', { choice: null }) },
+      { done: st.dupDone, kind: 'Doublon possible', kindStyle: kindSt('#FDECEC', '#A3161C'), title: 'Sophie Lambert · Sophie Lambert-Durand', sub: 'Même date de naissance et même portable', btn: 'Comparer les fiches', btnStyle: btnS, btnCls: 'ez press btn ink soft', open: () => this.openTask('merge', { picks: { nom: 'B', mail: 'B', adresse: 'B', profession: 'B' } }) }
+    ];
+    const tasks = tasksRaw.map(t => Object.assign({}, t, { acc: t.done ? 'acc' : 'acc open' }));
+    const nTodo = tasksRaw.filter(t => !t.done).length;
+
+    // Create
+    const cf = st.cf || { nom: '', prenom: '', ddn: '', portable: '', mail: '' };
+    const cErr = { nom: !cf.nom.trim(), prenom: !cf.prenom.trim(), ddn: !cf.ddn || cf.ddn > TODAY };
+    const showErr = k => st.cTried && cErr[k];
+    const setCf = k => ev => {
+      let val = ev.target.value;
+      if (k === 'portable') val = val.replace(/\D/g, '').slice(0, 10).replace(/(\d{2})(?=\d)/g, '$1 ');
+      this.setState({ cf: Object.assign({}, st.cf, { [k]: val }) });
+    };
+    const hits = existing.map(p => {
+      const why = [];
+      if (cf.nom && p.nom.toLowerCase() === cf.nom.trim().toLowerCase()) why.push('même nom');
+      if (digits(cf.portable).length === 10 && digits(p.tel) === digits(cf.portable)) why.push('même téléphone');
+      if (cf.mail && p.mail && p.mail.toLowerCase() === cf.mail.trim().toLowerCase()) why.push('même e-mail');
+      const ddnIso = p.ddn.split('/').reverse().join('-');
+      if (cf.ddn && ddnIso === cf.ddn) why.push('même date de naissance');
+      return { p, why };
+    }).filter(h => h.why.length).map(h => ({
+      nom: h.p.prenom + ' ' + h.p.nom, info: 'Née le ' + h.p.ddn + ' · ' + h.p.tel, why: 'Point commun : ' + h.why.join(', '),
+      link: () => {
+        const who = h.p.prenom + ' ' + h.p.nom;
+        if (st.cfFor === 'moreau') this.setState({ moreau: who }); else this.setState({ ines: who });
+        this.closeTask(); this.toastMsg('RDV rattaché à la fiche de ' + who);
+      }
+    }));
+    const dupWarn = hits.length > 0;
+    const doc = st.cfFor === 'moreau'
+      ? { name: 'J. Moreau', when: 'Sam. 24/10 à 9:00', motif: 'Bilan enfant', tel: '06 22 33 44 55', mail: 'julie.moreau@exemple.fr' }
+      : { name: 'Inès Garnier', when: 'Ven. 23/10 à 10:30', motif: 'Première consultation', tel: '06 48 12 77 30', mail: 'ines.garnier@exemple.fr' };
+
+    // Match
+    const cand = [
+      { id: 'julie', nom: 'Julie Moreau', ddn: 'Née le 12/05/1988 (38 ans)', last: 'dernière séance 14/09/2026', crit: [['Nom', true], ['Initiale J.', true], ['Téléphone', true], ['E-mail', true]], score: 'Correspondance forte (4/4)', strong: true, note: '' },
+      { id: 'jules', nom: 'Jules Moreau', ddn: 'Né le 03/02/2015 (11 ans)', last: 'dernière séance 02/06/2026', crit: [['Nom', true], ['Initiale J.', true], ['Téléphone', true], ['E-mail', false]], score: 'Correspondance partielle (3/4)', strong: false, note: 'Le téléphone est celui de sa mère et le motif « Bilan enfant » évoque plutôt Jules : à vérifier.' }
+    ];
+    const cands = cand.map(k => {
+      const on = st.choice === k.id;
+      return {
+        nom: k.nom, ddn: k.ddn, last: k.last, score: k.score, hasNote: !!k.note, note: k.note, on,
+        cls: on ? 'ez press btn pop' : 'ez press btn ink opt',
+        style: 'display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 18px; font: inherit; text-align: left; cursor: pointer; color: #141B2D; background: #FFFFFF; ' +
+          (on ? 'border: 2px solid #3B6CF6; box-shadow: 0 0 0 4px rgba(59,108,246,0.15), 0 18px 34px -18px rgba(31,79,216,0.7)' : 'border: 2px solid transparent; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35)'),
+        radio: 'width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; ' + (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8)' : 'background: #FFFFFF; border: 2px solid #CDD5E3'),
+        scoreStyle: 'font-size: 13px; font-weight: 800; ' + (k.strong ? 'color: #0F4C45' : 'color: #8A4B08'),
+        crit: k.crit.map(([l, ok]) => ({ label: l, sign: ok ? '✓' : '✗', style: 'font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; ' + (ok ? 'background: #E3FAF5; color: #0F4C45' : 'background: #FDECEC; color: #A3161C') })),
+        pick: () => this.setState({ choice: k.id })
+      };
+    });
+    const chosen = cand.find(k => k.id === st.choice);
+    const swOn = st.remember;
+
+    // Merge
+    const A = { nom: 'Lambert', prenom: 'Sophie', ddn: '22/07/1997', portable: '07 55 44 33 22', mail: '(vide)', adresse: '22 av. Gambetta, 94160 Saint-Mandé', profession: 'Étudiante' };
+    const B = { nom: 'Lambert-Durand', prenom: 'Sophie', ddn: '22/07/1997', portable: '07 55 44 33 22', mail: 'sophie.ld@exemple.fr', adresse: '5 rue de Picpus, 75012 Paris', profession: 'Infirmière' };
+    const labels = { nom: 'Nom', prenom: 'Prénom', ddn: 'Naissance', portable: 'Portable', mail: 'E-mail', adresse: 'Adresse', profession: 'Profession' };
+    const optSt = on => 'min-height: 46px; padding: 8px 14px; border-radius: 12px; font: inherit; font-size: 14px; text-align: left; cursor: pointer; color: #141B2D; ' +
+      (on ? 'font-weight: 700; background: #EEF4FF; border: 2px solid #3B6CF6; box-shadow: 0 8px 18px -12px rgba(31,79,216,0.8)' : 'font-weight: 500; background: #FFFFFF; border: 2px solid #E1E6EF; color: #586380');
+    const mrows = Object.keys(labels).map(k => {
+      const same = A[k] === B[k]; const pk = st.picks[k] || 'A';
+      return {
+        label: labels[k], same, diff: !same, a: A[k], b: B[k],
+        onA: pk === 'A', onB: pk === 'B', styleA: optSt(pk === 'A'), styleB: optSt(pk === 'B'),
+        clsA: pk === 'A' ? 'ez press btn pop' : 'ez press btn ink opt', clsB: pk === 'B' ? 'ez press btn pop' : 'ez press btn ink opt',
+        pickA: () => this.setState({ picks: Object.assign({}, st.picks, { [k]: 'A' }) }),
+        pickB: () => this.setState({ picks: Object.assign({}, st.picks, { [k]: 'B' }) })
+      };
+    });
+    const mergeName = A.prenom + ' ' + (st.picks.nom === 'A' ? A.nom : B.nom);
+
+    const titles = {
+      create: { kicker: 'Rapprochement · nouveau patient', title: st.cfFor === 'moreau' ? 'Créer une fiche pour J. Moreau' : 'Créer la fiche d’Inès Garnier' },
+      match: { kicker: 'Rapprochement · plusieurs fiches possibles', title: 'À quelle fiche rattacher ce rendez-vous ?' },
+      merge: { kicker: 'Doublon possible', title: 'Comparer et fusionner deux fiches' }
+    };
+
+    return {
+      weeks, total, rangeLabel, tasks, nTodo,
+      rdvOn: st.rdvOpen,
+      openRdvNew: () => this.setState({ rdvOpen: true, calOpen: false, rf: { nom: '', date: TODAY, h: '', motif: '', isNew: false }, rq: '', rTried: false }),
+      closeRdv: () => this.setState({ rdvOpen: false }),
+      rf, rq: st.rq, onRq: ev => this.setState({ rq: ev.target.value }),
+      rHasPatient: !!rf.nom, rNoPatient: !rf.nom,
+      rPatientInfo: rf.isNew ? 'Nouveau patient : la fiche sera à compléter (date de naissance…)' : 'Fiche existante',
+      rCands: rCandsRaw.map(n => ({ nom: n, pick: () => this.setState({ rf: Object.assign({}, st.rf, { nom: n, isNew: false }) }) })),
+      rCanNew: !!rqf && !allP.some(n => foldS(n) === rqf),
+      pickNew: () => this.setState({ rf: Object.assign({}, st.rf, { nom: st.rq.trim(), isNew: true }) }),
+      clearPatient: () => this.setState({ rf: Object.assign({}, st.rf, { nom: '', isNew: false }) }),
+      onRd: ev => this.setState({ rf: Object.assign({}, st.rf, { date: ev.target.value, h: '' }) }),
+      onRm: ev => setRf('motif', ev.target.value),
+      rDayLabel: rf.date ? (dayList.length ? dayList.length + ' RDV ce jour-là' : 'journée libre') + (blks.length ? ' · ' + blks.map(b => ({ day: 'journée', am: 'matin', pm: 'après-midi' })[b.part] + ' bloqué(e)').join(', ') : '') : 'choisissez une date',
+      slots: SLOTS.map(h => {
+        const info = slotInfo(h); const on = rf.h === h;
+        return {
+          h, on, dis: !!info, title: info || 'Libre',
+          cls: on ? 'ez press btn pop' : 'ez press btn ink slot',
+          style: 'min-height: 40px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums; ' +
+            (on ? 'border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: 0 6px 14px -8px rgba(31,79,216,0.9)'
+              : info ? 'border: 1px solid #E1E6EF; background: repeating-linear-gradient(135deg, #F3F5F9 0 5px, #FFFFFF 5px 10px); color: #8E99B3; text-decoration: line-through'
+              : 'border: 1px solid #D4DBE8; background: #FFFFFF; color: #141B2D'),
+          pick: () => { if (!info) setRf('h', h); }
+        };
+      }),
+      rc: { nom: rShow('nom') ? 'bad' : '', date: rShow('date') ? 'bad' : '' },
+      re: { nom: rErr.nom || '', nomOn: rShow('nom'), date: rErr.date || '', dateOn: rShow('date'), h: rErr.h || '', hOn: rShow('h'), dup: rErr.dup || '', dupOn: !!rErr.dup },
+      rSaveLabel: rf.h && rf.date ? 'Ajouter le RDV · ' + dm(rf.date) + ' à ' + rf.h : 'Ajouter le RDV',
+      rSaveCls: 'ez press btn prim' + (st.rShake ? (st.rShake % 2 ? ' shA' : ' shB') : ''),
+      saveRdv: () => {
+        if (Object.keys(rErr).length) { this.setState({ rTried: true, rShake: st.rShake + 1 }); return; }
+        const m = { d: rf.date, h: rf.h, nom: rf.nom, motif: rf.motif.trim(), fresh: true };
+        const wkTo = Math.floor(Math.round((toD(rf.date) - toD(BASE)) / 864e5) / 7);
+        const visible = wkTo === st.wk || wkTo === st.wk + 1;
+        this.setState({ manual: st.manual.concat([m]), rdvOpen: false, wk: visible ? st.wk : wkTo, swapW: visible ? (st.swapW || 0) : (st.swapW || 0) + 1 });
+        this.toastMsg('RDV ajouté : ' + rf.nom + ', ' + dm(rf.date) + ' à ' + rf.h + ' · pensez à le réserver dans Doctolib');
+      },
+      gridCls: (st.swapW || 0) % 2 ? 'swB' : 'swA',
+      prevWk: () => this.setState({ wk: st.wk - 1, swapW: (st.swapW || 0) + 1 }),
+      nextWk: () => this.setState({ wk: st.wk + 1, swapW: (st.swapW || 0) + 1 }),
+      goToday: () => this.setState({ wk: 0, swapW: (st.swapW || 0) + 1, cal: { y: 2026, m: 9 } }),
+      todayStyle: 'min-height: 40px; padding: 0 12px; border-radius: 10px; border: 0; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; ' + (st.wk === 0 ? 'background: transparent; color: #586380' : 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF'),
+      calOpen: st.calOpen, toggleCal: () => this.setState({ calOpen: !st.calOpen, cal: { y: parseInt(mon0.slice(0, 4), 10), m: parseInt(mon0.slice(5, 7), 10) - 1 } }),
+      calLabel: MONL[parseInt(mon0.slice(5, 7), 10) - 1] + ' ' + mon0.slice(0, 4),
+      cal: { title: MONL[cmo] + ' ' + cy, weeks: calWeeks },
+      prevMonth: () => this.setState({ cal: cmo === 0 ? { y: cy - 1, m: 11 } : { y: cy, m: cmo - 1 } }),
+      nextMonth: () => this.setState({ cal: cmo === 11 ? { y: cy + 1, m: 0 } : { y: cy, m: cmo + 1 } }),
+      blockOn: st.blockOpen, openBlock: () => this.setState({ blockOpen: true, calOpen: false }), closeBlock: () => this.setState({ blockOpen: false }),
+      bf, bfFrom: ev => setBf('from', ev.target.value), bfTo: ev => setBf('to', ev.target.value),
+      parts: [['day', 'Journée'], ['am', 'Matin'], ['pm', 'Après-midi']].map(([k, l]) => ({ label: l, on: bf.part === k, style: segB(bf.part === k), cls: bf.part === k ? 'ez press btn pop' : 'ez press btn ink', pick: () => setBf('part', k) })),
+      labels: ['Congés', 'Formation', 'Absente', 'Rendez-vous perso'].map(l => ({ label: l, on: bf.label === l, style: chipB(bf.label === l), cls: bf.label === l ? 'ez press btn pop' : 'ez press btn ink', pick: () => setBf('label', l) })),
+      bConflict: nConf > 0, bConflictMsg: nConf + (nConf > 1 ? ' rendez-vous existent' : ' rendez-vous existe') + ' sur cette période : pensez à les déplacer.',
+      bSaveLabel: nDays ? 'Bloquer ' + nDays + (nDays > 1 ? ' jours' : ' jour') : 'Bloquer',
+      saveBlock: () => {
+        if (!nDays) return;
+        const nb = [];
+        for (let d = bf.from, k = 0; d <= bf.to && k < 60; d = add(d, 1), k++) { if (toD(d).getUTCDay() !== 0) nb.push({ d, part: bf.part, label: bf.label }); }
+        const wkFrom = Math.floor(Math.round((toD(bf.from) - toD(BASE)) / 864e5) / 7);
+        this.setState({ blocks: st.blocks.concat(nb), blockOpen: false, wk: wkFrom, swapW: (st.swapW || 0) + 1 });
+        this.toastMsg(nb.length + (nb.length > 1 ? ' jours bloqués' : ' jour bloqué') + ' · ' + bf.label.toLowerCase());
+      }, allDoneAcc: nTodo === 0 ? 'acc open' : 'acc',
+      taskOn: !!st.task, ovCls: st.closing ? 'fadeOut' : 'fadeIn', dlgCls: st.closing ? 'zoomOut' : 'zoomIn',
+      dlg: titles[st.task] || { kicker: '', title: '' },
+      closeTask: () => this.closeTask(),
+      tCreate: st.task === 'create', tMatch: st.task === 'match', tMerge: st.task === 'merge',
+      busy: st.busy,
+      // create
+      doc, cf, cfOn: { nom: setCf('nom'), prenom: setCf('prenom'), ddn: setCf('ddn'), portable: setCf('portable'), mail: setCf('mail') },
+      cfc: { nom: showErr('nom') ? 'bad' : '', prenom: showErr('prenom') ? 'bad' : '', ddn: showErr('ddn') ? 'bad' : '' },
+      cfe: { nomOn: showErr('nom'), prenomOn: showErr('prenom') },
+      ddnHint: showErr('ddn') ? 'Obligatoire : Doctolib ne la transmet pas, demandez-la au patient' : 'Doctolib ne la transmet pas : à demander au patient',
+      ddnHintStyle: 'font-size: 12px; ' + (showErr('ddn') ? 'color: #B42318; font-weight: 600' : 'color: #586380'),
+      dupHits: hits,
+      dupTitle: dupWarn ? (hits.length + (hits.length > 1 ? ' fiches ressemblantes' : ' fiche ressemblante') + ' : vérifiez avant de créer') : 'Aucune fiche existante ne correspond (nom, téléphone, e-mail, naissance)',
+      dupBox: 'display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 18px; font-size: 13px; ' + (dupWarn ? 'background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; color: #5A3205' : 'background: #E3FAF5; border: 1px solid #9FE6D9; color: #0F4C45'),
+      createCls: 'ez press btn prim' + (st.shake ? (st.shake % 2 ? ' shA' : ' shB') : ''),
+      saveCreate: () => {
+        if (st.busy) return;
+        if (cErr.nom || cErr.prenom || cErr.ddn) { this.setState({ cTried: true, shake: st.shake + 1 }); return; }
+        this.setState({ busy: true });
+        clearTimeout(this.t2);
+        this.t2 = setTimeout(() => {
+          const who = cf.prenom.trim() + ' ' + cf.nom.trim();
+          if (st.cfFor === 'moreau') this.setState({ moreau: who, busy: false }); else this.setState({ ines: who, busy: false });
+          this.closeTask();
+          this.toastMsg('Fiche de ' + who + ' créée · RDV rattaché · inscrit au journal');
+        }, 800);
+      },
+      // match
+      cands, noChoice: !st.choice,
+      matchLabel: chosen ? 'Rattacher à ' + chosen.nom : 'Choisissez une fiche',
+      remember: swOn, toggleRem: () => this.setState({ remember: !st.remember }),
+      swStyle: 'position: relative; width: 56px; height: 32px; flex-shrink: 0; border-radius: 999px; border: 0; padding: 0; cursor: pointer; transition: background .3s ease; ' + (swOn ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2)' : 'background: #D4DBE8; box-shadow: inset 0 2px 4px rgba(15,30,70,0.18)'),
+      knobStyle: 'position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 999px; background: linear-gradient(180deg, #FFFFFF, #EDF2F9); box-shadow: 0 3px 8px rgba(0,0,0,0.25); transition: transform .38s cubic-bezier(.3,1.5,.5,1); transform: translateX(' + (swOn ? '24px' : '0') + ')',
+      doMatch: () => {
+        if (!chosen) return;
+        this.setState({ moreau: chosen.nom });
+        this.closeTask();
+        this.toastMsg('RDV du 24/10 rattaché à ' + chosen.nom + (st.remember ? ' · choix mémorisé' : ''));
+      },
+      noneMatch: () => this.openCreate('moreau'),
+      // merge
+      mrows, mergeName,
+      mIdle: st.mStep === 'idle', mConfirm: st.mStep === 'confirm',
+      askMerge: () => this.setState({ mStep: 'confirm' }),
+      backMerge: () => this.setState({ mStep: 'idle' }),
+      notDup: () => { this.setState({ dupDone: true }); this.closeTask(); this.toastMsg('Noté : ces deux fiches ne seront plus signalées'); },
+      doMerge: () => {
+        if (st.busy) return;
+        this.setState({ busy: true });
+        clearTimeout(this.t2);
+        this.t2 = setTimeout(() => {
+          this.setState({ dupDone: true, busy: false });
+          this.closeTask();
+          this.toastMsg('Fiches fusionnées : ' + mergeName + ' · 4 séances · inscrit au journal');
+        }, 900);
+      },
+      toastOn: !!st.toast, toast: st.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Accueil et recherche patient</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.lift:hover{transform:translateY(-3px)!important;box-shadow:0 2px 6px rgba(15,30,70,.06),0 22px 40px -16px rgba(15,30,70,.32)!important}
+.prim:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -10px rgba(31,79,216,.75)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.row:hover{background:#EEF4FF!important;transform:translateX(4px)}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.press:active{transform:scale(.965)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+.sbox:focus-within{box-shadow:0 0 0 4px rgba(31,79,216,.18),0 24px 50px -20px rgba(15,30,70,.45)!important;border-color:#1F4FD8!important}
+.field{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.field:hover{border-color:#9DAECB!important}
+.field:focus{outline:none;border-color:#1F4FD8!important;box-shadow:0 0 0 4px rgba(31,79,216,.16)!important;background:#FFFFFF!important}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}.d7{animation-delay:.4s}.d8{animation-delay:.46s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.drop{animation:drop .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 860px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning</a>
+<a href="Main.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · il y a 2 min</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px 32px; display: flex; flex-direction: column; gap: 22px">
+
+<div class="rise" style="position: relative; overflow: hidden; border-radius: 24px; padding: 28px 30px 78px; background: linear-gradient(135deg, #2B5BE8 0%, #17338F 100%); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 24px 44px -20px rgba(23,51,143,0.75)">
+<div aria-hidden="true" style="position: absolute; right: -70px; top: -110px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.07)"></div>
+<div aria-hidden="true" style="position: absolute; right: 120px; bottom: -140px; width: 240px; height: 240px; border-radius: 50%; background: rgba(255,255,255,0.05)"></div>
+<div style="position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<div>
+<p style="margin: 0; font-size: 14px; color: #C7D6FB">Vendredi 23 octobre 2026</p>
+<h1 style="margin: 4px 0 0; font-size: 30px; font-weight: 800; letter-spacing: -0.01em">Patients</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #DCE6FD">4 rendez-vous aujourd'hui · 312 patients suivis</p>
+</div>
+<a href="Fiche.dc.html" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 14px; background: linear-gradient(180deg, #FFFFFF, #EAF0FB); color: #17338F; font-weight: 700; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 22px -10px rgba(0,0,0,0.45)">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nouveau patient</a>
+</div>
+</div>
+
+<div class="rise d2" style="margin: -66px 22px 0; position: relative; display: flex; flex-direction: column; gap: 8px">
+<label for="srch" style="font-size: 13px; font-weight: 600; color: #DCE6FD; padding-left: 4px">Rechercher un patient</label>
+<div class="sbox ez" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.06); border-radius: 16px; padding: 0 18px; min-height: 60px; box-shadow: 0 2px 4px rgba(15,30,70,0.05), 0 22px 44px -22px rgba(15,30,70,0.45)">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<input id="srch" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="Nom, prénom, téléphone, commune ou métier…" style="flex-grow: 1; border: 0; font: inherit; font-size: 17px; background: transparent; color: #141B2D; min-width: 0; outline: none">
+<span style="font-size: 12px; font-weight: 600; color: #586380; background: #EDF2F9; padding: 5px 9px; border-radius: 8px; box-shadow: inset 0 -1px 0 rgba(15,30,70,0.1)">Ctrl K</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start">
+
+<section aria-labelledby="h-res" class="rise d3" style="flex: 999 1 480px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #EDF0F6">
+<h2 id="h-res" style="margin: 0; font-size: 16px; font-weight: 700">{{listTitle}}</h2>
+<span style="font-size: 13px; font-weight: 600; color: #17338F; background: #E6EEFF; padding: 4px 10px; border-radius: 999px">{{count}} résultat(s)</span>
+</div>
+<div style="overflow-x: auto">
+<div style="min-width: 560px; padding: 6px 8px 10px">
+<div style="display: grid; grid-template-columns: 2fr 0.7fr 1.4fr 1.4fr 1.2fr; gap: 12px; padding: 10px 14px; font-size: 12px; font-weight: 600; color: #586380; text-transform: uppercase; letter-spacing: 0.05em">
+<span>Patient</span><span>Âge</span><span>Commune</span><span>Portable</span><span>Dernière séance</span>
+</div>
+<sc-for list="{{rows}}" as="p" hint-placeholder-count="6">
+<a href="Fiche.dc.html" class="{{p.cls}}" style="display: grid; grid-template-columns: 2fr 0.7fr 1.4fr 1.4fr 1.2fr; gap: 12px; align-items: center; min-height: 56px; padding: 0 14px; border-radius: 12px; color: #141B2D; text-decoration: none; font-size: 15px">
+<span style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(145deg, #E8F0FF, #CCDBFF); color: #17338F; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; box-shadow: inset 0 1px 0 #FFFFFF, 0 3px 8px -3px rgba(23,51,143,0.35)">{{p.ini}}</span><span style="display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 600">{{p.nom}}</span><span style="{{p.proStyle}}">{{p.profession}}</span></span></span>
+<span style="color: #3A4560">{{p.age}}</span>
+<span style="color: #3A4560">{{p.commune}}</span>
+<span style="color: #3A4560; font-variant-numeric: tabular-nums">{{p.tel}}</span>
+<span style="color: #3A4560; font-variant-numeric: tabular-nums">{{p.last}}</span>
+</a>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="padding: 28px 14px; color: #586380; font-size: 15px">Aucun patient trouvé. <a href="Fiche.dc.html" style="font-weight: 600">Créer une fiche</a></div>
+</sc-if>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="h-today" class="rise d4" style="flex: 1 1 300px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #EDF0F6">
+<h2 id="h-today" style="margin: 0; font-size: 16px; font-weight: 700">Aujourd'hui</h2>
+<a href="Planning.dc.html" style="font-size: 13px; font-weight: 700; text-decoration: none">Planning →</a>
+</div>
+<div style="padding: 8px 10px 4px; display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{today}}" as="r" hint-placeholder-count="4">
+<a href="Fiche.dc.html" class="{{r.cls}}" style="display: flex; gap: 14px; align-items: center; min-height: 62px; padding: 8px 12px; border-radius: 14px; text-decoration: none; color: #141B2D">
+<span style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 54px; height: 44px; border-radius: 12px; background: linear-gradient(180deg, #F3F7FC, #E6EDF7); box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 6px -2px rgba(15,30,70,0.2); font-weight: 800; font-size: 14px; color: #17338F; font-variant-numeric: tabular-nums">{{r.h}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+<span style="font-weight: 600; font-size: 15px">{{r.nom}}</span>
+<span style="font-size: 13px; color: #586380">{{r.motif}}</span>
+</span>
+<sc-if value="{{r.isNew}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; font-weight: 700; color: #8A4B08; background: linear-gradient(180deg, #FFF6EA, #FBE8CF); padding: 4px 9px; border-radius: 999px; box-shadow: inset 0 1px 0 #FFFFFF, 0 2px 6px -2px rgba(138,75,8,0.35)">Nouveau</span>
+</sc-if>
+</a>
+</sc-for>
+</div>
+<p style="margin: 0; padding: 12px 22px 16px; font-size: 12px; color: #586380; display: flex; align-items: center; gap: 8px"><span class="pulse" aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #0EA5C6"></span>Synchronisé avec Doctolib via Gmail · il y a 3 min</p>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: '' };
+  }
+  renderVals() {
+    const all = [
+      { nom: 'Camille Roux', age: '34 ans', commune: 'Vincennes', tel: '06 01 02 03 04', last: '23/10/2026', profession: 'Graphiste' },
+      { nom: 'Julien Morel', age: '41 ans', commune: 'Montreuil', tel: '06 11 22 33 44', last: '21/10/2026', profession: 'Développeur informatique' },
+      { nom: 'Sophie Lambert', age: '29 ans', commune: 'Saint-Mandé', tel: '07 55 44 33 22', last: '20/10/2026', profession: 'Infirmière' },
+      { nom: 'Thomas Girard', age: '8 mois', commune: 'Vincennes', tel: '06 98 76 54 32', last: '16/10/2026', profession: '' },
+      { nom: 'Léa Fontaine', age: '57 ans', commune: 'Fontenay-sous-Bois', tel: '06 45 67 89 01', last: '14/10/2026', profession: 'Infirmière libérale' },
+      { nom: 'Hugo Bernard', age: '16 ans', commune: 'Nogent-sur-Marne', tel: '07 12 13 14 15', last: '09/10/2026', profession: 'Lycéen' },
+      { nom: 'Manon Petit', age: '38 ans', commune: 'Montreuil', tel: '06 20 30 40 50', last: '02/10/2026', profession: 'Professeure des écoles' },
+      { nom: 'Antoine Dubois', age: '72 ans', commune: 'Saint-Maur', tel: '06 70 80 90 10', last: '25/09/2026', profession: 'Retraité (maçon)' }
+    ];
+    const q = (this.state.q || '').toLowerCase().trim();
+    const norm = s => s.toLowerCase().replace(/\s/g, '');
+    const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const qf = fold(q);
+    const hits = q ? all.filter(p => fold(p.nom + ' ' + p.commune + ' ' + p.profession).includes(qf) || (norm(q).replace(/\D/g, '').length > 1 && norm(p.tel).includes(norm(q)))) : all;
+    hits.forEach(p => { const m = !!q && fold(p.profession).includes(qf); p.proStyle = 'font-size: 12px; ' + (m ? 'color: #17338F; font-weight: 700; background: #E6EEFF; padding: 0 6px; border-radius: 6px; align-self: flex-start' : 'color: #586380'); });
+    const rows = hits.map((p, i) => ({ ...p, ini: p.nom.split(' ').map(w => w[0]).join(''), cls: 'ez press row rise d' + Math.min(i + 3, 8) }));
+    return {
+      q: this.state.q,
+      onQ: e => this.setState({ q: e.target.value }),
+      rows,
+      count: rows.length,
+      empty: rows.length === 0,
+      listTitle: q ? 'Résultats' : 'Consultés récemment',
+      today: [
+        { h: '9:00', nom: 'Julien Morel', motif: 'Cervicalgie · suivi', isNew: false },
+        { h: '10:30', nom: 'Inès Garnier', motif: 'Première consultation', isNew: true },
+        { h: '14:00', nom: 'Thomas Girard', motif: 'Nourrisson · bilan', isNew: false },
+        { h: '17:30', nom: 'Camille Roux', motif: 'Lombalgie · suivi', isNew: false }
+      ].map((r, i) => ({ ...r, cls: 'ez press row rise d' + (i + 4) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

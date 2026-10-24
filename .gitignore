@@ -1,0 +1,14 @@
+node_modules/
+dist/
+out/
+*.db
+*.db-*
+*.mosave
+*.xlsm
+*.xlsx
+!tests/fixtures/**/*.xlsx
+*.eml
+!tests/fixtures/**/*.eml
+data/
+backups/
+.env

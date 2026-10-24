@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Paramètres</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.prim:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -10px rgba(31,79,216,.75)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.tab:hover{background:#E6EEFF!important;color:#17338F!important}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.press:active{transform:scale(.97)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+.field{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.field:hover{border-color:#9DAECB!important}
+.field:focus{outline:none;border-color:#1F4FD8!important;box-shadow:0 0 0 4px rgba(31,79,216,.16)!important;background:#FFFFFF!important}
+.field.bad{border-color:#D92D20!important;box-shadow:0 0 0 4px rgba(217,45,32,.12)!important}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+button:disabled{cursor:not-allowed!important;opacity:.5}
+.bar{transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
+.swA{animation:swA .45s cubic-bezier(.2,.8,.2,1) both}.swB{animation:swB .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes swA{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes swB{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.pop{animation:pop .45s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes pop{0%{transform:scale(.9)}100%{transform:scale(1)}}
+.drop{animation:drop .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.shA{animation:shA .45s ease both}.shB{animation:shB .45s ease both}
+@keyframes shA{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@keyframes shB{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.spin{animation:spin .8s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.draw{stroke-dasharray:28;stroke-dashoffset:28;animation:draw .55s .1s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 1100px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning</a>
+<a href="Main.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · {{lastBkShort}}</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 26px 28px; display: flex; flex-direction: column; gap: 18px">
+<div class="rise">
+<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.01em">Paramètres</h1>
+<p style="margin: 4px 0 0; color: #586380; font-size: 14px">Réglés une fois, utilisés partout dans l'application.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+<div role="tablist" aria-label="Rubriques des paramètres" aria-orientation="vertical" class="rise d1" style="flex: 1 1 210px; display: flex; flex-wrap: wrap; flex-direction: column; gap: 4px; padding: 8px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); box-shadow: inset 0 1px 0 #FFFFFF, 0 14px 30px -18px rgba(15,30,70,0.3)">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="7">
+<button type="button" role="tab" id="{{t.tid}}" aria-selected="{{t.on}}" aria-controls="panel" onClick="{{t.pick}}" class="{{t.cls}}" style="{{t.style}}">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.d}}"></path></svg>
+<span style="flex-grow: 1; text-align: left">{{t.label}}</span>
+<sc-if value="{{t.hasBadge}}" hint-placeholder-val="{{ false }}"><span style="{{t.badgeStyle}}">{{t.badge}}</span></sc-if>
+</button>
+</sc-for>
+</div>
+
+<section id="panel" role="tabpanel" aria-labelledby="{{panelTid}}" class="{{swapCls}}" style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+<sc-if value="{{tSec}}" hint-placeholder-val="{{ true }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 14px">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Code d'accès</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Demandé à l'ouverture et après une période d'inactivité</p></div>
+<button type="button" role="switch" aria-checked="{{codeOn}}" aria-label="Activer le code d'accès" onClick="{{toggleCode}}" style="{{swCode}}"><span style="{{knobCode}}"></span></button>
+</div>
+<sc-if value="{{codeOn}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px">
+<label for="lockAfter" style="font-size: 13px; font-weight: 600; color: #3A4560">Verrouiller après</label>
+<select id="lockAfter" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"><option>5 minutes d'inactivité</option><option selected>15 minutes d'inactivité</option><option>30 minutes d'inactivité</option><option>Jamais (seulement à l'ouverture)</option></select>
+</div>
+<sc-if value="{{noPinForm}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{openPin}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Modifier le code…</button>
+</sc-if>
+</div>
+<sc-if value="{{pinForm}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 16px; background: #F3F7FC; box-shadow: inset 0 1px 3px rgba(15,30,70,0.08)">
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="p0" style="font-size: 13px; font-weight: 600; color: #3A4560">Code actuel</label><input id="p0" type="password" inputmode="numeric" autocomplete="current-password" value="{{pin.cur}}" onInput="{{pinCur}}" class="field {{pinC.cur}}" style="font: inherit; font-size: 18px; letter-spacing: 0.3em; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #FFFFFF"></div>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="p1" style="font-size: 13px; font-weight: 600; color: #3A4560">Nouveau code</label><input id="p1" type="password" inputmode="numeric" autocomplete="new-password" value="{{pin.n1}}" onInput="{{pinN1}}" class="field {{pinC.n1}}" style="font: inherit; font-size: 18px; letter-spacing: 0.3em; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #FFFFFF"></div>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px"><label for="p2" style="font-size: 13px; font-weight: 600; color: #3A4560">Confirmation</label><input id="p2" type="password" inputmode="numeric" autocomplete="new-password" value="{{pin.n2}}" onInput="{{pinN2}}" class="field {{pinC.n2}}" style="font: inherit; font-size: 18px; letter-spacing: 0.3em; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #FFFFFF"></div>
+</div>
+<span style="{{pinMsgStyle}}">{{pinMsg}}</span>
+<div style="display: flex; justify-content: flex-end; gap: 8px">
+<button type="button" onClick="{{closePin}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{savePin}}" class="{{pinBtnCls}}" style="min-height: 44px; padding: 0 16px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 18px -10px rgba(31,79,216,0.8)">Enregistrer le nouveau code</button>
+</div>
+</div>
+</sc-if>
+</sc-if>
+<p style="margin: 0; display: flex; gap: 8px; font-size: 13px; line-height: 1.5; color: #0F4C45; padding: 12px 14px; border-radius: 14px; background: #E3FAF5"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>La base de données est chiffrée sur cet ordinateur. Le code protège l'ouverture de l'application ; en cas d'oubli, une clé de secours (à imprimer à l'installation) permet de le réinitialiser.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{tMail}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Messagerie Gmail</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Lecture des e-mails Doctolib et envoi des factures</p></div>
+<span style="{{mailStatusStyle}}"><span aria-hidden="true" class="{{mailDotCls}}" style="{{mailDot}}"></span>{{mailStatus}}</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px">
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><label for="gm" style="font-size: 13px; font-weight: 600; color: #3A4560">Adresse Gmail</label><input id="gm" type="email" value="cabinet.osteo@gmail.com" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><label for="pw" style="font-size: 13px; font-weight: 600; color: #3A4560">Mot de passe d'application</label><input id="pw" type="password" value="abcdefghijklmnop" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end">
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px"><label for="lbl" style="font-size: 13px; font-weight: 600; color: #3A4560">Libellé Gmail à lire</label><input id="lbl" type="text" value="Doctolib" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px"><label for="freq" style="font-size: 13px; font-weight: 600; color: #3A4560">Vérifier les e-mails</label><select id="freq" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"><option>Toutes les 5 minutes</option><option>Toutes les 15 minutes</option><option>Au démarrage seulement</option></select></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" onClick="{{test}}" class="{{testCls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)"><sc-if value="{{testing}}" hint-placeholder-val="{{ false }}"><svg class="spin" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg></sc-if>{{testLabel}}</button>
+<button type="button" onClick="{{toggleMail}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(194,39,45,0.25); background: linear-gradient(180deg, #FFFFFF, #FFF5F5); font: inherit; font-weight: 700; font-size: 14px; color: #A3161C; cursor: pointer">{{mailToggleLabel}}</button>
+</div>
+<sc-if value="{{tested}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="drop" style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: linear-gradient(180deg, #E3FAF5, #C9F2EA); color: #0F4C45; font-size: 14px; font-weight: 600">
+<span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>Connexion à Gmail réussie</span>
+<span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>214 e-mails Doctolib trouvés sous le libellé</span>
+<span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>E-mail de test envoyé à cabinet.osteo@gmail.com</span>
+</div>
+</sc-if>
+<details style="border-radius: 14px; background: #F3F7FC; padding: 12px 14px; font-size: 14px; line-height: 1.55; color: #3A4560">
+<summary style="cursor: pointer; font-weight: 700; color: #141B2D">Comment créer le mot de passe d'application (5 min)</summary>
+<ol style="margin: 10px 0 0; padding-left: 20px">
+<li>Activer la validation en deux étapes sur le compte Google.</li>
+<li>Ouvrir la page « Mots de passe des applications » du compte Google, créer « MeuOsteo » et copier le code de 16 lettres.</li>
+<li>Dans Gmail, créer un filtre : expéditeur Doctolib → appliquer le libellé « Doctolib ».</li>
+</ol>
+</details>
+</div>
+</sc-if>
+
+<sc-if value="{{tCab}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Cabinet</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Apparaît sur chaque facture</p></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c1" style="font-size: 13px; font-weight: 600; color: #3A4560">Prénom et nom</label><input id="c1" type="text" placeholder="[Prénom NOM]" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c2" style="font-size: 13px; font-weight: 600; color: #3A4560">Titre</label><input id="c2" type="text" value="Ostéopathe D.O." class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c3" style="font-size: 13px; font-weight: 600; color: #3A4560">Adresse du cabinet</label><input id="c3" type="text" placeholder="[Adresse, code postal, ville]" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c4" style="font-size: 13px; font-weight: 600; color: #3A4560">Téléphone</label><input id="c4" type="tel" placeholder="[Téléphone]" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c5" style="font-size: 13px; font-weight: 600; color: #3A4560">N° ADELI</label><input id="c5" type="text" placeholder="[9 chiffres]" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="c6" style="font-size: 13px; font-weight: 600; color: #3A4560">SIRET</label><input id="c6" type="text" placeholder="[14 chiffres]" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+<div style="width: 180px; height: 64px; border: 1px dashed #B7C2D6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #586380; background: #F7F9FC">Signature</div>
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Ajouter une image de signature</button>
+</div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<h2 style="margin: 0; font-size: 17px; font-weight: 800">Facturation &amp; tarifs</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 600; color: #3A4560">Prochain numéro</span><span style="display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 12px; border-radius: 12px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08); font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#586380" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>2026-0143</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="t1" style="font-size: 13px; font-weight: 600; color: #3A4560">Tarif par défaut</label><input id="t1" type="text" value="60 €" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="t2" style="font-size: 13px; font-weight: 600; color: #3A4560">Autres tarifs</label><input id="t2" type="text" value="Gratuit, 50 €, 55 €, 65 €" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="tva" style="font-size: 13px; font-weight: 600; color: #3A4560">Mention en pied de facture</label><input id="tva" type="text" value="TVA non applicable, article 261-4-1° du CGI." class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="tpl" style="font-size: 13px; font-weight: 600; color: #3A4560">Modèle de l'e-mail d'envoi</label><textarea id="tpl" rows="4" class="field" style="font: inherit; font-size: 14px; line-height: 1.5; border: 1px solid #D4DBE8; border-radius: 12px; padding: 10px 12px; resize: vertical; color: #141B2D; background: #F7F9FC">Bonjour {prénom},
+
+Veuillez trouver ci-joint votre note d'honoraires pour la séance du {date}.
+
+Bien cordialement,</textarea><span style="font-size: 12px; color: #586380">{prénom} et {date} sont remplacés automatiquement</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{tAgenda}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Agenda</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Affichage du planning et valeurs par défaut des séances</p></div>
+<span id="l-days" style="font-size: 13px; font-weight: 600; color: #3A4560">Jours de consultation</span>
+<div role="group" aria-labelledby="l-days" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{days}}" as="o" hint-placeholder-count="7"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="a1" style="font-size: 13px; font-weight: 600; color: #3A4560">Ouverture</label><input id="a1" type="time" value="09:00" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="a2" style="font-size: 13px; font-weight: 600; color: #3A4560">Fermeture</label><input id="a2" type="time" value="19:00" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="a3" style="font-size: 13px; font-weight: 600; color: #3A4560">Durée d'une séance</label><select id="a3" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"><option>45 min</option><option selected>1 h</option><option>1 h 15</option></select></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="a4" style="font-size: 13px; font-weight: 600; color: #3A4560">Planning affiché</label><select id="a4" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"><option>1 semaine</option><option selected>2 semaines</option></select></div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; padding-top: 6px; border-top: 1px solid #EDF0F6">
+<span id="l-auto" style="font-size: 15px">Rattacher automatiquement les RDV quand nom, téléphone et e-mail concordent</span>
+<button type="button" role="switch" aria-checked="{{autoOn}}" aria-labelledby="l-auto" onClick="{{toggleAuto}}" style="{{swAuto}}"><span style="{{knobAuto}}"></span></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{tBk}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Sauvegarde</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Copie chiffrée de la base, à chaque fermeture</p></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<div style="flex: 3 1 280px; display: flex; flex-direction: column; gap: 6px"><label for="bk" style="font-size: 13px; font-weight: 600; color: #3A4560">Dossier de sauvegarde</label><input id="bk" type="text" value="D:\Sauvegardes MeuOsteo" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"></div>
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Parcourir…</button>
+</div>
+<p style="margin: 0; font-size: 14px; color: #3A4560">30 dernières copies conservées · dernière : {{lastBk}}</p>
+<div style="height: 10px; border-radius: 999px; background: #EDF2F9; box-shadow: inset 0 2px 3px rgba(15,30,70,0.1); overflow: hidden"><div class="bar" style="{{barStyle}}"></div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" onClick="{{backup}}" class="{{bkCls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)"><sc-if value="{{bkRunning}}" hint-placeholder-val="{{ false }}"><svg class="spin" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg></sc-if>{{bkLabel}}</button>
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Restaurer une sauvegarde…</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{tLog}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="flex: 1 1 260px"><h2 style="margin: 0; font-size: 17px; font-weight: 800">Journal d'activité</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Patients, factures, déverrouillages et réglages sensibles</p></div>
+<div role="group" aria-label="Filtrer le journal" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{logFilters}}" as="o" hint-placeholder-count="5"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{logRows}}" as="l" hint-placeholder-count="6">
+<div class="{{l.cls}}" style="display: flex; gap: 12px; align-items: flex-start; padding: 11px 4px; border-top: 1px solid #EDF0F6">
+<span aria-hidden="true" style="{{l.dot}}"></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 1.4"><strong>{{l.who}}</strong> · {{l.txt}}</span><span style="font-size: 12px; color: #586380">{{l.kind}}</span></span>
+<span style="font-size: 12px; color: #586380; white-space: nowrap; font-variant-numeric: tabular-nums">{{l.t}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; justify-content: space-between">
+<div style="flex: 0 1 220px; display: flex; flex-direction: column; gap: 6px"><label for="ret" style="font-size: 13px; font-weight: 600; color: #3A4560">Conservation</label><select id="ret" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC"><option>12 mois</option><option selected>24 mois</option><option>36 mois</option></select></div>
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Exporter le journal (CSV)</button>
+</div>
+<p style="margin: 0; font-size: 12px; color: #586380">Une ligne par action, jamais de contenu médical · environ 20 Ko par an</p>
+</div>
+</sc-if>
+
+<sc-if value="{{tData}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<div><h2 style="margin: 0; font-size: 17px; font-weight: 800">Reprise de l'historique</h2><p style="margin: 2px 0 0; font-size: 13px; color: #586380">Importer les patients et séances de l'ancien outil Excel</p></div>
+<sc-if value="{{impIdle}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{runImport}}" class="ez press btn prim" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"></path></svg>Choisir le fichier MeuOsteo (.xlsm)…</button>
+</sc-if>
+<sc-if value="{{impRun}}" hint-placeholder-val="{{ false }}">
+<div class="drop" role="status" style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #F3F7FC; font-size: 14px; font-weight: 700"><svg class="spin" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg>Analyse de MeuOsteo_v1.04.xlsm…</div>
+</sc-if>
+<sc-if value="{{impDone}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: linear-gradient(180deg, #E3FAF5, #C9F2EA); color: #0F4C45; font-size: 14px">
+<span style="font-weight: 800">Prêt à importer : 299 patients · 512 séances</span>
+<span>2 dates invalides à corriger (années « 1024 » et « 4444 »)</span>
+<span>4 doublons possibles envoyés dans « À rapprocher »</span>
+<span>Champ « praticien » vide partout : ignoré</span>
+<button type="button" onClick="{{confirmImport}}" class="ez press btn prim" style="align-self: flex-start; margin-top: 4px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer">Importer</button>
+</div>
+</sc-if>
+</div>
+<div style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 1px 0 #FFFFFF, 0 16px 36px -18px rgba(15,30,70,0.25)">
+<h2 style="margin: 0; font-size: 17px; font-weight: 800">Export &amp; application</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Exporter toutes les données (Excel)</button>
+<button type="button" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Exporter les factures pour le comptable</button>
+</div>
+<p style="margin: 0; font-size: 13px; color: #586380">MeuOsteo 2.0.0 · à jour · données sur cet ordinateur uniquement</p>
+</div>
+</sc-if>
+
+</section>
+</div>
+</main>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="drop" style="position: fixed; right: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px; background: linear-gradient(180deg, #17338F, #132A6B); color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 20px 40px -16px rgba(6,14,40,0.7)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tab: 'sec', swap: 0, toast: '',
+      codeOn: true, pinForm: false, pin: { cur: '', n1: '', n2: '' }, pinTried: false, pinShake: 0, code: '1234',
+      mailOn: true, test: 'idle', autoOn: true,
+      days: { L: true, Ma: true, Me: true, J: true, V: true, S: true, D: false },
+      bk: 'idle', lf: 'all', imp: 'idle',
+      log: [
+        { t: '24/10/2026 10:41', k: 'pat', who: 'Inès Garnier', txt: 'Patient créé (depuis un RDV Doctolib)' },
+        { t: '23/10/2026 17:52', k: 'fac', who: 'Julien Morel', txt: 'Facture 2026-0142 émise (60 €) · envoyée par e-mail' },
+        { t: '23/10/2026 09:16', k: 'fac', who: 'Lucas Faure', txt: 'Facture 2026-0140 modifiée : tarif 55 € → 60 €' },
+        { t: '23/10/2026 09:15', k: 'lock', who: 'Lucas Faure', txt: 'Séance du 22/10 déverrouillée · motif : changement de tarif' },
+        { t: '21/10/2026 18:30', k: 'pat', who: 'Karim Benali', txt: 'Fiche modifiée : portable, e-mail' },
+        { t: '30/09/2026 10:02', k: 'fac', who: 'Hugo Bernard', txt: 'Facture 2026-0118 supprimée' },
+        { t: '12/09/2026 14:20', k: 'pat', who: 'Patient n° 148', txt: 'Patient supprimé (2 séances) · factures conservées' },
+        { t: '02/09/2026 08:05', k: 'set', who: 'Réglages', txt: 'Connexion Gmail configurée' }
+      ]
+    };
+  }
+  componentWillUnmount() { [this.ta, this.tb, this.tc, this.tt].forEach(clearTimeout); }
+  toastMsg(m) { clearTimeout(this.tt); this.setState({ toast: m }); this.tt = setTimeout(() => this.setState({ toast: '' }), 2800); }
+  stamp() { const d = new Date(); const z = n => String(n).padStart(2, '0'); return z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); }
+  logIt(k, who, txt) { this.setState({ log: [{ t: this.stamp(), k, who, txt, fresh: true }].concat(this.state.log) }); }
+  renderVals() {
+    const st = this.state;
+    const sw = on => 'position: relative; width: 56px; height: 32px; flex-shrink: 0; border-radius: 999px; border: 0; padding: 0; cursor: pointer; transition: background .3s ease; ' +
+      (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 6px 14px -8px rgba(31,79,216,0.9)' : 'background: #D4DBE8; box-shadow: inset 0 2px 4px rgba(15,30,70,0.18)');
+    const knob = on => 'position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 999px; background: linear-gradient(180deg, #FFFFFF, #EDF2F9); box-shadow: 0 3px 8px rgba(0,0,0,0.25); transition: transform .38s cubic-bezier(.3,1.5,.5,1); transform: translateX(' + (on ? '24px' : '0') + ')';
+    const seg = on => 'min-height: 36px; padding: 0 12px; border-radius: 9px; border: 0; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' +
+      (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 6px 14px -8px rgba(31,79,216,0.9)' : 'background: transparent; color: #3A4560');
+    const go = k => { if (k !== st.tab) this.setState({ tab: k, swap: st.swap + 1 }); };
+    const TABS = [
+      ['sec', 'Sécurité', 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4'],
+      ['mail', 'Messagerie Gmail', 'M3 7l9 6 9-6M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z'],
+      ['cab', 'Cabinet & factures', 'M6 2h9l5 5v15H6zM14 2v6h6M9 13h8M9 17h6'],
+      ['agenda', 'Agenda', 'M3 10h18M8 3v4M16 3v4M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z'],
+      ['bk', 'Sauvegarde', 'M12 3v12M7 10l5 5 5-5M4 21h16'],
+      ['log', 'Journal', 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2'],
+      ['data', 'Données & import', 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3']
+    ];
+    const tabs = TABS.map(([k, l, d]) => {
+      const on = st.tab === k;
+      const badge = k === 'mail' ? (st.mailOn ? 'Connecté' : 'Déconnecté') : k === 'sec' ? (st.codeOn ? 'Actif' : 'Inactif') : '';
+      const good = (k === 'mail' && st.mailOn) || (k === 'sec' && st.codeOn);
+      return {
+        label: l, d, on, tid: 'tab-' + k, hasBadge: !!badge, badge,
+        badgeStyle: 'font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; ' + (on ? 'background: rgba(255,255,255,0.2); color: #FFFFFF' : good ? 'background: #E3FAF5; color: #0F4C45' : 'background: #FDECEC; color: #A3161C'),
+        cls: on ? 'ez press btn' : 'ez press btn ink tab',
+        style: 'display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 0 12px; border-radius: 12px; border: 0; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; ' +
+          (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 20px -12px rgba(31,79,216,0.9)' : 'background: transparent; color: #3A4560'),
+        pick: () => go(k)
+      };
+    });
+
+    // code
+    const p = st.pin;
+    const onlyDigits = v => v.replace(/\D/g, '').slice(0, 6);
+    const setPin = k => ev => this.setState({ pin: Object.assign({}, st.pin, { [k]: onlyDigits(ev.target.value) }) });
+    const e = {};
+    if (p.cur !== st.code) e.cur = 'Code actuel incorrect';
+    if (p.n1.length < 4) e.n1 = 'Le nouveau code doit faire 4 à 6 chiffres';
+    else if (p.n1 === st.code) e.n1 = 'Le nouveau code doit être différent de l\u2019actuel';
+    if (!e.n1 && p.n2 !== p.n1) e.n2 = 'La confirmation ne correspond pas';
+    const firstErr = e.cur || e.n1 || e.n2;
+    const showE = st.pinTried;
+    // backup
+    const bkPct = st.bk === 'idle' ? '0%' : '100%';
+    const L = { pat: ['Patient', '#3B6CF6', 'rgba(59,108,246,0.15)'], fac: ['Facture', '#14B8A6', 'rgba(20,184,166,0.15)'], lock: ['Verrouillage', '#E0922F', 'rgba(224,146,47,0.18)'], set: ['Réglage', '#8E99B3', 'rgba(142,153,179,0.2)'] };
+    const dayKeys = [['L', 'Lun.'], ['Ma', 'Mar.'], ['Me', 'Mer.'], ['J', 'Jeu.'], ['V', 'Ven.'], ['S', 'Sam.'], ['D', 'Dim.']];
+
+    return {
+      tabs, panelTid: 'tab-' + st.tab, swapCls: st.swap % 2 ? 'swB' : 'swA',
+      tSec: st.tab === 'sec', tMail: st.tab === 'mail', tCab: st.tab === 'cab', tAgenda: st.tab === 'agenda', tBk: st.tab === 'bk', tLog: st.tab === 'log', tData: st.tab === 'data',
+      // sécurité
+      codeOn: st.codeOn, swCode: sw(st.codeOn), knobCode: knob(st.codeOn),
+      toggleCode: () => { const v = !st.codeOn; this.setState({ codeOn: v, pinForm: false }); this.logIt('set', 'Réglages', v ? 'Code d\u2019accès activé' : 'Code d\u2019accès désactivé'); this.toastMsg(v ? 'Code d\u2019accès activé' : 'Code d\u2019accès désactivé'); },
+      pinForm: st.pinForm, noPinForm: !st.pinForm,
+      openPin: () => this.setState({ pinForm: true, pin: { cur: '', n1: '', n2: '' }, pinTried: false }),
+      closePin: () => this.setState({ pinForm: false }),
+      pin: p, pinCur: setPin('cur'), pinN1: setPin('n1'), pinN2: setPin('n2'),
+      pinC: { cur: showE && e.cur ? 'bad' : '', n1: showE && e.n1 ? 'bad' : '', n2: showE && e.n2 ? 'bad' : '' },
+      pinMsg: showE && firstErr ? firstErr : 'Code de la maquette : 1234 · 4 à 6 chiffres',
+      pinMsgStyle: 'font-size: 13px; ' + (showE && firstErr ? 'color: #B42318; font-weight: 700' : 'color: #586380'),
+      pinBtnCls: 'ez press btn prim' + (st.pinShake ? (st.pinShake % 2 ? ' shA' : ' shB') : ''),
+      savePin: () => {
+        if (firstErr) { this.setState({ pinTried: true, pinShake: st.pinShake + 1 }); return; }
+        this.setState({ code: p.n1, pinForm: false });
+        this.logIt('set', 'Réglages', 'Code d\u2019accès modifié');
+        this.toastMsg('Nouveau code enregistré · demandé dès la prochaine ouverture');
+      },
+      // mail
+      mailStatus: st.mailOn ? 'Connecté · synchro il y a 3 min' : 'Déconnecté',
+      mailStatusStyle: 'display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; ' + (st.mailOn ? 'color: #0F4C45; background: #E3FAF5' : 'color: #A3161C; background: #FDECEC'),
+      mailDot: 'width: 8px; height: 8px; border-radius: 50%; background: ' + (st.mailOn ? '#14B8A6' : '#C2272D'), mailDotCls: st.mailOn ? 'pulse' : '',
+      mailToggleLabel: st.mailOn ? 'Déconnecter Gmail' : 'Reconnecter',
+      toggleMail: () => { const v = !st.mailOn; this.setState({ mailOn: v, test: 'idle' }); this.logIt('set', 'Réglages', v ? 'Connexion Gmail rétablie' : 'Connexion Gmail supprimée'); this.toastMsg(v ? 'Gmail reconnecté' : 'Gmail déconnecté · la synchro Doctolib est en pause'); },
+      testing: st.test === 'running', tested: st.test === 'done',
+      testLabel: st.test === 'running' ? 'Test en cours…' : st.test === 'done' ? 'Tester à nouveau' : 'Tester la connexion',
+      testCls: st.test === 'running' ? 'ez btn' : 'ez press btn prim',
+      test: () => { if (st.test === 'running') return; this.setState({ test: 'running', mailOn: true }); clearTimeout(this.ta); this.ta = setTimeout(() => this.setState({ test: 'done' }), 1400); },
+      // agenda
+      days: dayKeys.map(([k, l]) => ({ label: l, on: st.days[k], style: 'min-height: 40px; padding: 0 14px; border-radius: 11px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; ' + (st.days[k] ? 'border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF' : 'border: 1px solid #D4DBE8; background: #FFFFFF; color: #586380'), cls: st.days[k] ? 'ez press btn pop' : 'ez press btn ink', pick: () => this.setState({ days: Object.assign({}, st.days, { [k]: !st.days[k] }) }) })),
+      autoOn: st.autoOn, swAuto: sw(st.autoOn), knobAuto: knob(st.autoOn), toggleAuto: () => this.setState({ autoOn: !st.autoOn }),
+      // sauvegarde
+      bkRunning: st.bk === 'running',
+      bkLabel: st.bk === 'running' ? 'Sauvegarde en cours…' : st.bk === 'done' ? 'Sauvegardé à l\u2019instant' : 'Sauvegarder maintenant',
+      bkCls: st.bk === 'running' ? 'ez btn' : 'ez press btn prim',
+      lastBk: st.bk === 'done' ? 'à l\u2019instant' : 'aujourd\u2019hui 19:02', lastBkShort: st.bk === 'done' ? 'à l\u2019instant' : 'il y a 2 min',
+      barStyle: 'height: 100%; border-radius: 999px; background: linear-gradient(90deg, #22C3D6, #1F4FD8); box-shadow: 0 0 12px rgba(34,195,214,0.6); width: ' + bkPct + (st.bk === 'idle' ? '; transition: none' : ''),
+      backup: () => { if (st.bk === 'running') return; this.setState({ bk: 'idle' }); clearTimeout(this.tb); this.tb = setTimeout(() => { this.setState({ bk: 'running' }); this.tb = setTimeout(() => this.setState({ bk: 'done' }), 1300); }, 30); },
+      // journal
+      logFilters: [['all', 'Tout'], ['pat', 'Patients'], ['fac', 'Factures'], ['lock', 'Déverrouillages'], ['set', 'Réglages']].map(([k, l]) => ({ label: l, on: st.lf === k, style: seg(st.lf === k), cls: st.lf === k ? 'ez press btn pop' : 'ez press btn ink', pick: () => this.setState({ lf: k }) })),
+      logRows: st.log.filter(l => st.lf === 'all' || l.k === st.lf).map((l, i) => Object.assign({}, l, {
+        kind: L[l.k][0], cls: l.fresh ? 'pop' : 'rise d' + Math.min(i + 1, 6),
+        dot: 'width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: ' + L[l.k][1] + '; box-shadow: 0 0 0 4px ' + L[l.k][2]
+      })),
+      // données
+      impIdle: st.imp === 'idle', impRun: st.imp === 'running', impDone: st.imp === 'done',
+      runImport: () => { this.setState({ imp: 'running' }); clearTimeout(this.tc); this.tc = setTimeout(() => this.setState({ imp: 'done' }), 1400); },
+      confirmImport: () => { this.setState({ imp: 'idle' }); this.logIt('set', 'Réglages', 'Historique importé : 299 patients, 512 séances'); this.toastMsg('Historique importé · 299 patients, 512 séances'); },
+      toastOn: !!st.toast, toast: st.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

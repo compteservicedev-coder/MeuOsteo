@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Tableau de bord</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.lift:hover{transform:translateY(-3px)!important;box-shadow:0 2px 6px rgba(15,30,70,.06),0 22px 40px -16px rgba(15,30,70,.32)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.row:hover{background:#EEF4FF!important;transform:translateX(4px)}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.bar{transition:filter .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.col:hover .bar{filter:brightness(1.12) saturate(1.1)}
+.col:hover .val{opacity:1;transform:translateY(0)}
+.val{opacity:.0;transform:translateY(6px);transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.val.on{opacity:1;transform:none}
+.press:active{transform:scale(.965)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}.d7{animation-delay:.4s}.d8{animation-delay:.46s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.grow{transform-origin:bottom;animation:grow 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.acc{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease}
+.acc.open{grid-template-rows:1fr;opacity:1}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning</a>
+<a href="Main.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · il y a 2 min</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px">
+<div class="rise">
+<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.01em">Tableau de bord</h1>
+<p style="margin: 4px 0 0; color: #586380; font-size: 14px">Octobre 2026 · données fictives de démonstration</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+<div class="ez lift rise d1" style="position: relative; overflow: hidden; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; background: linear-gradient(140deg, #2B5BE8, #17338F); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 18px 36px -18px rgba(23,51,143,0.8)">
+<div aria-hidden="true" style="position: absolute; right: -30px; top: -40px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.08)"></div>
+<span style="font-size: 13px; color: #C7D6FB">Séances ce mois</span>
+<span style="font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums">{{k1}}</span>
+<span style="font-size: 13px; color: #DCE6FD">+4 vs septembre</span>
+</div>
+<div class="ez lift rise d2" style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<span style="font-size: 13px; color: #586380">Chiffre d'affaires</span>
+<span style="font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums">{{k2}}</span>
+<span style="font-size: 13px; color: #3A4560">Année : 21 540 €</span>
+</div>
+<div class="ez lift rise d3" style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<span style="font-size: 13px; color: #586380">Nouveaux patients</span>
+<span style="font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums">{{k3}}</span>
+<span style="font-size: 13px; color: #3A4560">312 au total</span>
+</div>
+<div class="ez lift rise d4" style="background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; border-radius: 20px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 1px 0 #FFFFFF, 0 14px 30px -18px rgba(138,75,8,0.5)">
+<span style="font-size: 13px; color: #7A4207">En attente de paiement</span>
+<span style="font-size: 32px; font-weight: 800; color: #5A3205; font-variant-numeric: tabular-nums">{{pendingTotal}}</span>
+<span style="font-size: 13px; color: #7A4207">{{pendingCount}}</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-labelledby="h-ca" class="rise d5" style="flex: 999 1 460px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap">
+<h2 id="h-ca" style="margin: 0; font-size: 16px; font-weight: 800">Chiffre d'affaires mensuel</h2>
+<span style="font-size: 13px; color: #586380">12 derniers mois · survolez une barre</span>
+</div>
+<div role="img" aria-label="Chiffre d'affaires mensuel de novembre 2025 à octobre 2026, entre 1 500 et 2 280 euros" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; align-items: end; height: 220px; border-bottom: 1px solid #D4DBE8; background: repeating-linear-gradient(180deg, transparent 0, transparent 54px, #EDF0F6 54px, #EDF0F6 55px)">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="12">
+<div class="col" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%; cursor: default">
+<span class="{{b.valCls}}" style="font-size: 11px; font-weight: 700; color: #17338F; background: #E6EEFF; padding: 2px 6px; border-radius: 6px; font-variant-numeric: tabular-nums; white-space: nowrap">{{b.v}}</span>
+<div class="bar grow" style="{{b.style}}"></div>
+</div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="12">
+<span style="font-size: 12px; color: #586380; text-align: center">{{b.m}}</span>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="h-wait" class="rise d6" style="flex: 1 1 300px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<h2 id="h-wait" style="margin: 0; padding: 18px 20px; font-size: 16px; font-weight: 800; border-bottom: 1px solid #EDF0F6">Paiements en attente</h2>
+<sc-for list="{{pending}}" as="p" hint-placeholder-count="3">
+<div class="{{p.acc}}">
+<div style="overflow: hidden">
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid #EDF0F6; min-height: 60px">
+<div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<a href="Fiche.dc.html" style="font-weight: 700; font-size: 15px; text-decoration: none; color: #141B2D">{{p.nom}}</a>
+<span style="font-size: 13px; color: #586380">{{p.info}}</span>
+</div>
+<button type="button" onClick="{{p.pay}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 13px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Marquer reçu</button>
+</div>
+</div>
+</div>
+</sc-for>
+<div class="{{noneAcc}}">
+<div style="overflow: hidden">
+<p style="margin: 0; padding: 18px 20px; font-size: 14px; color: #17338F; font-weight: 700">Tout est réglé.</p>
+</div>
+</div>
+</section>
+</div>
+
+<section aria-labelledby="h-fac" class="rise d7" style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 14px 34px -16px rgba(15,30,70,0.22)">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid #EDF0F6; flex-wrap: wrap">
+<h2 id="h-fac" style="margin: 0; font-size: 16px; font-weight: 800">Dernières factures</h2>
+<button type="button" class="ez press btn ink soft" style="min-height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 13px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Exporter l'année (CSV)</button>
+</div>
+<div style="overflow-x: auto">
+<div style="min-width: 560px; padding: 6px 8px 8px">
+<sc-for list="{{factures}}" as="f" hint-placeholder-count="4">
+<a href="Facture.dc.html" class="ez press row" style="display: grid; grid-template-columns: 1.2fr 1fr 2fr 1fr 1fr; gap: 12px; align-items: center; min-height: 50px; padding: 0 14px; border-radius: 12px; color: #141B2D; text-decoration: none; font-size: 14px">
+<span style="font-weight: 700; font-variant-numeric: tabular-nums">{{f.n}}</span>
+<span style="color: #3A4560; font-variant-numeric: tabular-nums">{{f.d}}</span>
+<span>{{f.nom}}</span>
+<span style="font-variant-numeric: tabular-nums">{{f.m}}</span>
+<span style="font-size: 12px; font-weight: 700; color: #17338F; background: #E6EEFF; padding: 4px 10px; border-radius: 999px; justify-self: start">{{f.s}}</span>
+</a>
+</sc-for>
+</div>
+</div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { paid: {}, p: 1 };
+  }
+  componentDidMount() {
+    if (typeof requestAnimationFrame !== 'function') return;
+    this.setState({ p: 0 });
+    const t0 = Date.now();
+    const tick = () => {
+      const x = Math.min(1, (Date.now() - t0) / 1100);
+      this.setState({ p: 1 - Math.pow(1 - x, 3) });
+      if (x < 1) this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+  componentWillUnmount() { if (this.raf) cancelAnimationFrame(this.raf); }
+  renderVals() {
+    const p = this.state.p;
+    const fmt = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const data = [['Nov.', 1860], ['Déc.', 1500], ['Janv.', 1920], ['Févr.', 2040], ['Mars', 2160], ['Avr.', 1980], ['Mai', 2100], ['Juin', 2220], ['Juil.', 1680], ['Août', 1560], ['Sept.', 2040], ['Oct.', 2280]];
+    const max = 2400;
+    const last = data.length - 1;
+    const bars = data.map(([m, v], i) => ({
+      m, v: fmt(v) + ' €',
+      valCls: i === last ? 'val on' : 'val',
+      style: 'width: 100%; max-width: 40px; border-radius: 8px 8px 3px 3px; animation-delay: ' + (0.25 + i * 0.05).toFixed(2) + 's; height: ' + Math.round(v / max * 180) + 'px; ' +
+        (i === last ? 'background: linear-gradient(180deg, #22C3D6, #1F4FD8); box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 18px -8px rgba(31,79,216,0.8)'
+                    : 'background: linear-gradient(180deg, #B5EDE4, #6FD6C6); box-shadow: inset 0 1px 0 rgba(255,255,255,0.5)')
+    }));
+    const all = [
+      { id: 'a', nom: 'Hugo Bernard', info: 'Séance du 09/10 · 60 € · virement', amount: 60 },
+      { id: 'b', nom: 'Nora Haddad', info: 'Séance du 20/10 · 60 € · virement', amount: 60 },
+      { id: 'c', nom: 'Camille Roux', info: 'Séance du 02/02 · 60 € · virement', amount: 60 }
+    ];
+    const left = all.filter(x => !this.state.paid[x.id]);
+    const total = left.reduce((s, x) => s + x.amount, 0);
+    return {
+      k1: fmt(38 * p),
+      k2: fmt(2280 * p) + ' €',
+      k3: fmt(6 * p),
+      bars,
+      pending: all.map(x => ({ ...x, acc: this.state.paid[x.id] ? 'acc' : 'acc open', pay: () => this.setState({ paid: { ...this.state.paid, [x.id]: true } }) })),
+      noneAcc: left.length === 0 ? 'acc open' : 'acc',
+      pendingTotal: fmt(total * p) + ' €',
+      pendingCount: left.length + ' séance(s)',
+      factures: [
+        { n: '2026-0142', d: '23/10/2026', nom: 'Camille Roux', m: '60,00 €', s: 'Envoyée' },
+        { n: '2026-0141', d: '22/10/2026', nom: 'Rose Leroy', m: '60,00 €', s: 'Imprimée' },
+        { n: '2026-0140', d: '22/10/2026', nom: 'Lucas Faure', m: '60,00 €', s: 'Envoyée' },
+        { n: '2026-0139', d: '22/10/2026', nom: 'Clara Simon', m: '55,00 €', s: 'Envoyée' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

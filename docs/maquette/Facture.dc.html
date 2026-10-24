@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Factures émises</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.lift:hover{transform:translateY(-3px)!important;box-shadow:0 2px 6px rgba(15,30,70,.06),0 22px 40px -16px rgba(15,30,70,.32)!important}
+.prim:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -10px rgba(31,79,216,.75)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.row:hover{background:#EEF4FF!important}
+.hcol:hover{background:#E6EEFF!important;color:#17338F!important}
+.chip:hover{background:#D9E5FF!important}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.press:active{transform:scale(.97)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+.sbox:focus-within{box-shadow:0 0 0 4px rgba(31,79,216,.16),0 10px 24px -16px rgba(15,30,70,.4)!important;border-color:#1F4FD8!important}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.swA{animation:swA .45s cubic-bezier(.2,.8,.2,1) both}.swB{animation:swB .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes swA{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@keyframes swB{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.pop{animation:pop .45s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes pop{0%{transform:scale(.88)}100%{transform:scale(1)}}
+.drop{animation:drop .4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.acc{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1),opacity .3s ease}
+.acc.open{grid-template-rows:1fr;opacity:1}
+.chev{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.chev.shut{transform:rotate(-90deg)}
+.draw{stroke-dasharray:28;stroke-dashoffset:28;animation:draw .5s .1s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 980px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning</a>
+<a href="Main.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · il y a 2 min</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 24px 28px; display: flex; flex-direction: column; gap: 16px">
+<sc-if value="{{fromFiche}}" hint-placeholder-val="{{ false }}">
+<a href="Fiche.dc.html" class="ez press" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; text-decoration: none; min-height: 36px; padding: 0 12px 0 8px; border-radius: 10px; align-self: flex-start; background: rgba(255,255,255,0.75); box-shadow: 0 2px 8px -4px rgba(15,30,70,0.3)"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>Fiche de {{patientFilter}}</a>
+</sc-if>
+<div class="rise" style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div>
+<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.01em">{{title}}</h1>
+<p style="margin: 4px 0 0; color: #586380; font-size: 14px">Cliquez sur un titre de colonne pour trier, filtrer ou regrouper</p>
+</div>
+<button type="button" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"></path></svg>Exporter la sélection</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px">
+<div class="ez lift rise d1" style="position: relative; overflow: hidden; border-radius: 18px; padding: 14px 18px; display: flex; flex-direction: column; gap: 2px; background: linear-gradient(140deg, #2B5BE8, #17338F); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 18px 36px -18px rgba(23,51,143,0.8)">
+<div aria-hidden="true" style="position: absolute; right: -30px; top: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(34,195,214,0.45), rgba(34,195,214,0) 70%)"></div>
+<span style="font-size: 13px; color: #C7D6FB">Factures affichées</span>
+<span style="font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums">{{kN}}</span>
+</div>
+<div class="ez lift rise d2" style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 18px; padding: 14px 18px; display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 1px 0 #FFFFFF, 0 14px 30px -16px rgba(15,30,70,0.22)">
+<span style="font-size: 13px; color: #586380">Total facturé</span>
+<span style="font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums">{{kTotal}}</span>
+</div>
+<div class="ez lift rise d3" style="background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; border-radius: 18px; padding: 14px 18px; display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 1px 0 #FFFFFF, 0 14px 30px -18px rgba(138,75,8,0.5)">
+<span style="font-size: 13px; color: #7A4207">En attente de règlement</span>
+<span style="font-size: 26px; font-weight: 800; color: #5A3205; font-variant-numeric: tabular-nums">{{kWait}}</span>
+</div>
+<div class="ez lift rise d4" style="background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 18px; padding: 14px 18px; display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 1px 0 #FFFFFF, 0 14px 30px -16px rgba(15,30,70,0.22)">
+<span style="font-size: 13px; color: #586380">Supprimées</span>
+<span style="font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums">{{kAv}}</span>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+
+<section aria-labelledby="h-reg" class="rise d4" style="flex: 999 1 540px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 20px; overflow: hidden; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 16px 36px -18px rgba(15,30,70,0.25)">
+<h2 id="h-reg" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Liste des factures</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 16px 10px">
+<div class="sbox ez" style="flex: 1 1 220px; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D4DBE8; background: #F7F9FC">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+<label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Rechercher une facture</label>
+<input id="q" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="Patient ou N° de facture" style="flex-grow: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 15px; color: #141B2D; outline: none">
+</div>
+<div role="group" aria-label="Année" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{years}}" as="o" hint-placeholder-count="3"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+</div>
+
+<sc-if value="{{hasChips}}" hint-placeholder-val="{{ true }}">
+<div class="drop" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0 16px 10px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="1">
+<button type="button" onClick="{{c.remove}}" aria-label="{{c.aria}}" class="ez press chip pop" style="display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 8px 0 12px; border-radius: 999px; border: 0; background: #E6EEFF; color: #17338F; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{c.label}}<span aria-hidden="true" style="width: 20px; height: 20px; border-radius: 50%; background: rgba(23,51,143,0.12); display: inline-flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></span></button>
+</sc-for>
+<button type="button" onClick="{{clearAll}}" class="ez press" style="min-height: 34px; padding: 0 10px; border: 0; background: transparent; color: #586380; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: underline">Tout effacer</button>
+</div>
+</sc-if>
+
+<div style="overflow-x: auto">
+<div style="min-width: 660px; padding: 0 8px 10px">
+<div style="display: grid; grid-template-columns: 1.1fr 0.95fr 1.5fr 0.85fr 1.05fr 0.9fr; gap: 6px; padding: 4px 4px 6px; border-top: 1px solid #EDF0F6; border-bottom: 1px solid #EDF0F6">
+<sc-for list="{{heads}}" as="h" hint-placeholder-count="6">
+<button type="button" onClick="{{h.toggle}}" aria-expanded="{{h.open}}" class="ez press hcol" style="{{h.style}}">
+<span>{{h.label}}</span>
+<sc-if value="{{h.hasSort}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" class="pop" style="font-size: 12px">{{h.sortSign}}</span></sc-if>
+<sc-if value="{{h.filtered}}" hint-placeholder-val="{{ false }}"><svg class="pop" aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18l-7 9v6l-4 2v-8z"></path></svg></sc-if>
+<sc-if value="{{h.grouped}}" hint-placeholder-val="{{ false }}"><svg class="pop" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 6h16M8 12h12M8 18h12M4 12h.01M4 18h.01"></path></svg></sc-if>
+<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="margin-left: auto; opacity: 0.6"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+</sc-for>
+</div>
+
+<sc-if value="{{panelOn}}" hint-placeholder-val="{{ false }}">
+<div class="drop" role="region" aria-label="{{panel.aria}}" style="margin: 8px 4px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(180deg, #F7F9FF, #EEF3FF); border: 1px solid rgba(31,79,216,0.15); box-shadow: 0 14px 30px -20px rgba(31,79,216,0.6); display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #586380">Trier</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{panel.sorts}}" as="o" hint-placeholder-count="2"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+</div>
+<sc-if value="{{panel.canGroup}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #586380">Regrouper</span>
+<button type="button" onClick="{{panel.toggleGroup}}" aria-pressed="{{panel.grouped}}" class="{{panel.groupCls}}" style="{{panel.groupStyle}}">{{panel.groupLabel}}</button>
+</div>
+</sc-if>
+<sc-if value="{{panel.canFilter}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><span style="font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #586380">Filtrer</span><sc-if value="{{panel.filtered}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{panel.clearFilter}}" style="border: 0; background: transparent; color: #1F4FD8; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; padding: 4px">Effacer le filtre</button></sc-if></span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{panel.values}}" as="v" hint-placeholder-count="4">
+<button type="button" onClick="{{v.toggle}}" aria-pressed="{{v.on}}" class="{{v.cls}}" style="{{v.style}}"><span aria-hidden="true" style="{{v.box}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>{{v.label}}<span style="font-size: 12px; opacity: 0.7">{{v.count}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<button type="button" onClick="{{closePanel}}" aria-label="Fermer le menu de colonne" class="ez press btn ink" style="margin-left: auto; width: 38px; height: 38px; border-radius: 11px; border: 0; background: #FFFFFF; color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px -5px rgba(15,30,70,0.35)"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="1">
+<sc-if value="{{g.head}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{g.toggle}}" aria-expanded="{{g.open}}" class="ez press btn ink" style="display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; margin-top: 8px; padding: 0 12px; border: 0; border-radius: 12px; background: linear-gradient(180deg, #F3F7FC, #EAF0FA); font: inherit; color: #141B2D; cursor: pointer; text-align: left">
+<svg class="{{g.chev}}" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+<span style="font-size: 14px; font-weight: 800">{{g.label}}</span>
+<span style="font-size: 12px; font-weight: 800; color: #17338F; background: #E6EEFF; padding: 2px 8px; border-radius: 999px">{{g.count}}</span>
+<span style="margin-left: auto; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums">{{g.total}}</span>
+</button>
+</sc-if>
+<div class="{{g.acc}}">
+<div style="overflow: hidden">
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="6">
+<button type="button" onClick="{{r.pick}}" aria-current="{{r.cur}}" class="{{r.cls}}" style="{{r.style}}">
+<span style="font-weight: 800; font-variant-numeric: tabular-nums">{{r.n}}</span>
+<span style="font-variant-numeric: tabular-nums; opacity: 0.85">{{r.d}}</span>
+<span style="font-weight: 600">{{r.nom}}</span>
+<span style="text-align: right; font-weight: 700; font-variant-numeric: tabular-nums">{{r.mFmt}}</span>
+<span><span style="{{r.badge}}">{{r.stLabel}}</span></span>
+<span style="font-size: 13px; opacity: 0.85">{{r.envKind}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<p class="drop" style="margin: 0; padding: 26px 12px; font-size: 15px; color: #586380">Aucune facture ne correspond. <button type="button" onClick="{{clearAll}}" style="border: 0; background: transparent; color: #1F4FD8; font: inherit; font-weight: 700; cursor: pointer; padding: 0">Effacer les filtres</button></p>
+</sc-if>
+</div>
+</div>
+</section>
+
+<aside aria-labelledby="h-det" class="rise d5" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+<div class="{{swapCls}}" style="display: flex; flex-direction: column; gap: 14px">
+<article aria-label="Aperçu de la facture sélectionnée" style="position: relative; background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 4px rgba(15,30,70,0.06), 0 26px 50px -26px rgba(15,30,70,0.45); padding: 24px 24px; display: flex; flex-direction: column; gap: 14px; font-size: 13px; line-height: 1.5; overflow: hidden">
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; height: 5px; background: linear-gradient(90deg, #22C3D6, #3B6CF6, #1F4FD8)"></div>
+<div style="display: flex; justify-content: space-between; gap: 10px">
+<div><p style="margin: 0; font-weight: 800">[Prénom NOM]</p><p style="margin: 0; color: #586380">Ostéopathe D.O.</p></div>
+<div style="text-align: right"><p id="h-det" style="margin: 0; font-size: 15px; font-weight: 800; color: #1F4FD8">{{s.kind}}</p><p style="margin: 0; font-weight: 700">N° {{s.n}}</p><p style="margin: 0; color: #586380">{{s.d}}</p></div>
+</div>
+<div style="background: #F3F7FC; border-radius: 8px; padding: 10px 12px"><p style="margin: 0; font-weight: 700">{{s.nom}}</p><p style="margin: 0; color: #3A4560">{{s.addr}}</p></div>
+<div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid #E1E6EF; border-bottom: 1px solid #E1E6EF"><span>{{s.line}}</span><span style="font-weight: 800; font-variant-numeric: tabular-nums">{{s.mFmt}}</span></div>
+<p style="margin: 0; color: #3A4560">{{s.regl}}</p>
+<sc-if value="{{s.cancelled}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" class="pop" style="position: absolute; right: 20px; top: 90px; transform: rotate(-12deg); padding: 6px 12px; border: 3px solid #C2272D; border-radius: 10px; color: #C2272D; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; background: rgba(255,255,255,0.88)">SUPPRIMÉE</div>
+</sc-if>
+</article>
+<div style="background: #FFFFFF; border-radius: 18px; padding: 14px 16px; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Séance</span><a href="Fiche.dc.html" style="font-weight: 700; text-decoration: none">{{s.seance}} · ouvrir →</a></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Statut</span><span style="{{s.badge}}">{{s.stLabel}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Envoi</span><span style="font-weight: 600; text-align: right">{{s.env}}</span></div>
+<sc-if value="{{s.hasRef}}" hint-placeholder-val="{{ false }}"><div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Lien</span><span style="font-weight: 700">{{s.ref}}</span></div></sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" class="ez press btn ink soft" style="flex: 1 1 90px; min-height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">PDF</button>
+<button type="button" onClick="{{resend}}" class="ez press btn ink soft" style="flex: 1 1 110px; min-height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Renvoyer</button>
+<button type="button" class="ez press btn ink soft" style="flex: 1 1 90px; min-height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Imprimer</button>
+</div>
+<sc-if value="{{s.isWait}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{markPaid}}" class="ez press btn prim" style="min-height: 46px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">Marquer le virement comme reçu</button>
+</sc-if>
+<sc-if value="{{s.canAvoir}}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{noConfirm}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{askAvoir}}" class="ez press btn ink soft" style="min-height: 44px; border-radius: 12px; border: 1px solid rgba(194,39,45,0.3); background: linear-gradient(180deg, #FFFFFF, #FFF5F5); font: inherit; font-weight: 700; font-size: 14px; color: #A3161C; cursor: pointer">Supprimer la facture…</button>
+</sc-if>
+<sc-if value="{{confirmAvoir}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-labelledby="t-av" class="drop" style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: linear-gradient(180deg, #FFF5F5, #FDE8E8); border: 1px solid rgba(194,39,45,0.25)">
+<span id="t-av" style="font-size: 14px; font-weight: 800; color: #7A1015">Supprimer la facture {{s.n}} ({{s.mFmtAbs}}) ?</span>
+<span style="font-size: 13px; color: #5A1A1D">Elle restera visible dans la liste, barrée, avec la mention « supprimée ». La séance pourra être refacturée. Inscrit au journal.</span>
+<div style="display: flex; gap: 8px; justify-content: flex-end">
+<button type="button" onClick="{{cancelAvoir}}" class="ez press btn ink soft" style="min-height: 42px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Retour</button>
+<button type="button" onClick="{{doAvoir}}" class="ez press btn" style="min-height: 42px; padding: 0 14px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer">Supprimer</button>
+</div>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</sc-if>
+</aside>
+</div>
+</main>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="drop" style="position: fixed; right: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px; background: linear-gradient(180deg, #17338F, #132A6B); color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 20px 40px -16px rgba(6,14,40,0.7)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"patientFilter":{"editor":null},"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const pf = (props && props.patientFilter) || '';
+    const A = { 'Julien Morel': '12 av. de Paris, 93100 Montreuil', 'Rose Leroy': '3 rue Diderot, 94300 Vincennes', 'Lucas Faure': '27 rue de Fontenay, 94300 Vincennes', 'Clara Simon': '5 bd de la Libération, 94160 Saint-Mandé', 'Karim Benali': '41 rue Roublot, 94120 Fontenay-sous-Bois', 'Élise Martin': '9 rue des Laitières, 94300 Vincennes', 'Nora Haddad': '18 rue Raspail, 93100 Montreuil', 'Antoine Dubois': '2 av. Foch, 94100 Saint-Maur-des-Fossés', 'Camille Roux': '8 rue des Lilas, 94300 Vincennes', 'Hugo Bernard': '6 Grande Rue, 94130 Nogent-sur-Marne', 'Léa Fontaine': '14 rue Dalayrac, 94120 Fontenay-sous-Bois', 'Sophie Lambert': '22 av. Gambetta, 94160 Saint-Mandé' };
+    const mk = (n, d, nom, seance, m, pay, st, env, extra) => Object.assign({ n, d, nom, seance, m, pay, st, env, addr: A[nom] || '' }, extra || {});
+    this.state = {
+      q: '', year: pf ? 'all' : '2026', sort: { k: 'date', dir: 'desc' }, group: null,
+      filters: pf ? { nom: [pf] } : {}, openCol: null, collapsed: {},
+      sel: null, swap: 0, confirm: false, toast: '', nextAv: 2,
+      list: [
+        mk('2026-0142', '23/10/2026', 'Julien Morel', '23/10/2026', 60, 'Chèque', 'ok', 'E-mail · 23/10 à 17:52'),
+        mk('2026-0141', '22/10/2026', 'Rose Leroy', '22/10/2026', 60, 'Espèces', 'ok', 'Imprimée'),
+        mk('2026-0140', '22/10/2026', 'Lucas Faure', '22/10/2026', 60, 'Virement', 'wait', 'E-mail · 22/10 à 11:04'),
+        mk('2026-0139', '22/10/2026', 'Clara Simon', '22/10/2026', 55, 'Chèque', 'ok', 'E-mail · 22/10 à 09:41'),
+        mk('2026-0138', '21/10/2026', 'Karim Benali', '21/10/2026', 60, 'Virement', 'ok', 'E-mail · 21/10 à 15:12'),
+        mk('2026-0137', '21/10/2026', 'Élise Martin', '21/10/2026', 50, 'Chèque', 'ok', 'Imprimée'),
+        mk('2026-0136', '20/10/2026', 'Nora Haddad', '20/10/2026', 60, 'Virement', 'wait', 'E-mail · 20/10 à 16:47'),
+        mk('2026-0135', '20/10/2026', 'Antoine Dubois', '20/10/2026', 60, 'Chèque', 'ok', 'Imprimée'),
+        mk('2026-0131', '09/10/2026', 'Camille Roux', '09/10/2026', 60, 'Chèque', 'ok', 'E-mail · 09/10 à 18:20'),
+        mk('2026-0118', '28/09/2026', 'Hugo Bernard', '28/09/2026', 60, 'Chèque', 'cancel', 'E-mail · 28/09 à 12:30', { ref: 'Supprimée le 30/09/2026' }),
+        mk('2026-0077', '11/06/2026', 'Camille Roux', '11/06/2026', 60, 'Virement', 'ok', 'E-mail · 11/06 à 19:05'),
+        mk('2026-0076', '11/06/2026', 'Léa Fontaine', '11/06/2026', 55, 'Chèque', 'ok', 'Imprimée'),
+        mk('2025-0211', '14/10/2025', 'Sophie Lambert', '14/10/2025', 55, 'Chèque', 'ok', 'Imprimée'),
+        mk('2025-0204', '02/10/2025', 'Léa Fontaine', '02/10/2025', 55, 'Chèque', 'ok', 'E-mail · 02/10 à 17:15'),
+        mk('2025-0198', '18/09/2025', 'Camille Roux', '18/09/2025', 55, 'Espèces', 'ok', 'Imprimée')
+      ]
+    };
+  }
+  componentWillUnmount() { clearTimeout(this.t); }
+  toastMsg(m) { clearTimeout(this.t); this.setState({ toast: m }); this.t = setTimeout(() => this.setState({ toast: '' }), 2800); }
+  renderVals() {
+    const st = this.state;
+    const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    const iso = d => d.split('/').reverse().join('-');
+    const month = d => { const p = d.split('/'); return MONTHS[parseInt(p[1], 10) - 1] + ' ' + p[2]; };
+    const eur = v => (v < 0 ? '−' : '') + Math.abs(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',00 €';
+    const eur0 = v => (v < 0 ? '−' : '') + Math.abs(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+    const ST = {
+      ok: { label: 'Acquittée', badge: 'background: #E3FAF5; color: #0F4C45' },
+      wait: { label: 'En attente', badge: 'background: #FCF1E3; color: #8A4B08' },
+      cancel: { label: 'Supprimée', badge: 'background: #FDECEC; color: #A3161C' },
+      avoir: { label: 'Avoir', badge: 'background: #E6EEFF; color: #17338F' }
+    };
+    const badge = k => 'display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; ' + ST[k].badge;
+    const envKind = x => x.env.split(' · ')[0];
+    const COLS = [
+      { k: 'n', label: 'N°', grp: false, filt: false, sorts: ['Croissant', 'Décroissant'] },
+      { k: 'date', label: 'Émise le', grp: true, filt: true, sorts: ['Plus anciennes', 'Plus récentes'] },
+      { k: 'nom', label: 'Patient', grp: true, filt: true, sorts: ['A → Z', 'Z → A'] },
+      { k: 'm', label: 'Montant', grp: true, filt: true, sorts: ['Croissant', 'Décroissant'], right: true },
+      { k: 'st', label: 'Statut', grp: true, filt: true, sorts: ['A → Z', 'Z → A'] },
+      { k: 'env', label: 'Envoi', grp: true, filt: true, sorts: ['A → Z', 'Z → A'] }
+    ];
+    const disp = (x, k) => k === 'n' ? x.n : k === 'date' ? month(x.d) : k === 'nom' ? x.nom : k === 'm' ? eur(x.m) : k === 'st' ? ST[x.st].label : envKind(x);
+    const skey = (x, k) => k === 'date' ? iso(x.d) : k === 'm' ? x.m : k === 'n' ? x.n : disp(x, k);
+    const gkey = (x, k) => k === 'date' ? iso(x.d).slice(0, 7) : k === 'm' ? x.m : disp(x, k);
+
+    const q = st.q.trim().toLowerCase();
+    const base = st.list.filter(x => x.st !== 'avoir' && (st.year === 'all' || x.d.slice(-4) === st.year) && (!q || x.nom.toLowerCase().includes(q) || x.n.toLowerCase().includes(q)));
+    const pass = (x, except) => Object.keys(st.filters).every(k => k === except || !st.filters[k] || !st.filters[k].length || st.filters[k].indexOf(disp(x, k)) >= 0);
+    const filtered = base.filter(x => pass(x, null));
+    const cmp = (a, b) => { const A = skey(a, st.sort.k), B = skey(b, st.sort.k); const r = A < B ? -1 : A > B ? 1 : 0; return st.sort.dir === 'asc' ? r : -r; };
+    const sorted = filtered.slice().sort((a, b) => cmp(a, b) || iso(b.d).localeCompare(iso(a.d)));
+
+    const setFilter = (k, vals) => this.setState({ filters: Object.assign({}, st.filters, { [k]: vals }) });
+    const heads = COLS.map(c => {
+      const open = st.openCol === c.k;
+      const filtered = !!(st.filters[c.k] && st.filters[c.k].length);
+      const sorted = st.sort.k === c.k;
+      const active = open || filtered || st.group === c.k;
+      return {
+        label: c.label, open, filtered, grouped: st.group === c.k, hasSort: sorted, sortSign: st.sort.dir === 'asc' ? '▲' : '▼',
+        style: 'display: flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 8px; border: 0; border-radius: 10px; font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; text-align: left; ' +
+          (open ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: 0 8px 16px -10px rgba(31,79,216,0.9)' : active ? 'background: #E6EEFF; color: #17338F' : 'background: transparent; color: #586380'),
+        toggle: () => this.setState({ openCol: open ? null : c.k })
+      };
+    });
+
+    const col = COLS.find(c => c.k === st.openCol);
+    let panel = null;
+    if (col) {
+      const facetRows = base.filter(x => pass(x, col.k));
+      const counts = {}; const order = [];
+      facetRows.slice().sort((a, b) => { const A = skey(a, col.k), B = skey(b, col.k); return A < B ? (col.k === 'date' ? 1 : -1) : A > B ? (col.k === 'date' ? -1 : 1) : 0; })
+        .forEach(x => { const v = disp(x, col.k); if (!(v in counts)) { counts[v] = 0; order.push(v); } counts[v]++; });
+      const cur = st.filters[col.k] || [];
+      const pillSt = on => 'min-height: 38px; padding: 0 12px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' + (on ? 'border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: 0 6px 14px -8px rgba(31,79,216,0.9)' : 'border: 1px solid #D4DBE8; background: #FFFFFF; color: #3A4560');
+      panel = {
+        aria: 'Options de la colonne ' + col.label,
+        sorts: ['asc', 'desc'].map((dir, i) => {
+          const on = st.sort.k === col.k && st.sort.dir === dir;
+          return { label: (dir === 'asc' ? '↑ ' : '↓ ') + col.sorts[i], on, cls: on ? 'ez press btn pop' : 'ez press btn ink', style: pillSt(on), pick: () => this.setState({ sort: { k: col.k, dir } }) };
+        }),
+        canGroup: col.grp, grouped: st.group === col.k,
+        groupLabel: st.group === col.k ? 'Ne plus regrouper' : 'Regrouper par ' + col.label.toLowerCase(),
+        groupCls: st.group === col.k ? 'ez press btn pop' : 'ez press btn ink', groupStyle: pillSt(st.group === col.k),
+        toggleGroup: () => this.setState({ group: st.group === col.k ? null : col.k, collapsed: {} }),
+        canFilter: col.filt, filtered: cur.length > 0,
+        clearFilter: () => setFilter(col.k, []),
+        values: order.map(v => {
+          const on = cur.indexOf(v) >= 0;
+          return {
+            label: v, count: counts[v], on,
+            cls: on ? 'ez press btn pop' : 'ez press btn ink',
+            style: 'display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 12px 0 8px; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' + (on ? 'border: 1px solid #3B6CF6; background: #FFFFFF; color: #17338F; box-shadow: 0 0 0 3px rgba(59,108,246,0.15)' : 'border: 1px solid #D4DBE8; background: #FFFFFF; color: #3A4560'),
+            box: 'width: 18px; height: 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; ' + (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8)' : 'background: #FFFFFF; border: 2px solid #CDD5E3'),
+            toggle: () => setFilter(col.k, on ? cur.filter(z => z !== v) : cur.concat([v]))
+          };
+        })
+      };
+    }
+
+    const chips = [];
+    COLS.forEach(c => { const f = st.filters[c.k]; if (f && f.length) chips.push({ label: c.label + ' : ' + (f.length > 2 ? f.length + ' valeurs' : f.join(', ')), aria: 'Retirer le filtre ' + c.label, remove: () => setFilter(c.k, []) }); });
+    if (st.group) { const c = COLS.find(z => z.k === st.group); chips.push({ label: 'Regroupé par ' + c.label.toLowerCase(), aria: 'Retirer le regroupement', remove: () => this.setState({ group: null }) }); }
+    if (!(st.sort.k === 'date' && st.sort.dir === 'desc')) { const c = COLS.find(z => z.k === st.sort.k); chips.push({ label: 'Tri : ' + c.label + (st.sort.dir === 'asc' ? ' ▲' : ' ▼'), aria: 'Revenir au tri par défaut', remove: () => this.setState({ sort: { k: 'date', dir: 'desc' } }) }); }
+
+    const selKey = st.sel;
+    const rowOf = (x, i) => {
+      const on = x.n === selKey;
+      return Object.assign({}, x, {
+        mFmt: eur(x.m), stLabel: ST[x.st].label, badge: badge(x.st), envKind: envKind(x), cur: on ? 'true' : 'false',
+        cls: on ? 'ez press btn' : 'ez press btn ink row',
+        style: 'display: grid; grid-template-columns: 1.1fr 0.95fr 1.5fr 0.85fr 1.05fr 0.9fr; gap: 6px; align-items: center; width: 100%; min-height: 48px; padding: 0 12px; border: 0; border-radius: 12px; font: inherit; font-size: 14px; text-align: left; cursor: pointer; color: #141B2D; ' +
+          (on ? 'background: linear-gradient(180deg, #EEF4FF, #E1EAFF); box-shadow: inset 0 0 0 2px #3B6CF6, 0 10px 22px -14px rgba(31,79,216,0.7)' : 'background: transparent') +
+          (x.st === 'cancel' ? '; text-decoration: line-through; text-decoration-color: rgba(163,22,28,0.5)' : ''),
+        pick: () => { if (!on) this.setState({ sel: x.n, swap: st.swap + 1, confirm: false }); }
+      });
+    };
+    let groups;
+    if (st.group) {
+      const map = {}; const order = [];
+      sorted.forEach(x => { const gk = String(gkey(x, st.group)); if (!map[gk]) { map[gk] = { label: disp(x, st.group), rows: [] }; order.push(gk); } map[gk].rows.push(x); });
+      groups = order.map(gk => {
+        const g = map[gk]; const shut = !!st.collapsed[gk];
+        return {
+          head: true, label: g.label, count: g.rows.length, total: eur0(g.rows.reduce((a, x) => a + x.m, 0)), open: !shut,
+          chev: shut ? 'chev shut' : 'chev', acc: shut ? 'acc' : 'acc open',
+          toggle: () => this.setState({ collapsed: Object.assign({}, st.collapsed, { [gk]: !shut }) }),
+          rows: g.rows.map(rowOf)
+        };
+      });
+    } else {
+      groups = [{ head: false, acc: 'acc open', rows: sorted.map(rowOf) }];
+    }
+
+    const s0 = st.list.find(x => x.n === st.sel) || sorted[0];
+    const hasSel = !!s0 && sorted.indexOf(s0) >= 0;
+    const s = s0 ? Object.assign({}, s0, {
+      kind: s0.st === 'avoir' ? 'Avoir' : 'Note d’honoraires',
+      mFmt: eur(s0.m), mFmtAbs: eur(Math.abs(s0.m)), stLabel: ST[s0.st].label, badge: badge(s0.st),
+      line: s0.st === 'avoir' ? 'Annulation de la facture ' + (s0.ref || '').replace('Annule ', '') : 'Séance d’ostéopathie du ' + s0.seance,
+      regl: s0.st === 'wait' ? 'Règlement attendu par virement.' : s0.st === 'avoir' ? 'Montant remboursé ou déduit.' : 'Acquittée · règlement : ' + s0.pay.toLowerCase() + '.',
+      hasRef: !!s0.ref, ref: s0.ref || '',
+      cancelled: s0.st === 'cancel', isWait: s0.st === 'wait', canAvoir: s0.st === 'ok' || s0.st === 'wait'
+    }) : {};
+
+    const seg = on => 'min-height: 36px; padding: 0 12px; border-radius: 9px; border: 0; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' +
+      (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 6px 14px -8px rgba(31,79,216,0.9)' : 'background: transparent; color: #3A4560');
+    const years = [['all', 'Toutes'], ['2026', '2026'], ['2025', '2025']].map(([k, l]) => ({ label: l, on: st.year === k, style: seg(st.year === k), cls: st.year === k ? 'ez press btn pop' : 'ez press btn ink', pick: () => this.setState({ year: k }) }));
+    const avNum = 'AV-2026-' + String(st.nextAv).padStart(4, '0');
+    const pf = this.props.patientFilter || '';
+    const onlyPatient = st.filters.nom && st.filters.nom.length === 1 ? st.filters.nom[0] : '';
+
+    return {
+      fromFiche: !!pf && onlyPatient === pf, patientFilter: pf,
+      title: onlyPatient ? 'Factures de ' + onlyPatient : 'Factures',
+      q: st.q, onQ: ev => this.setState({ q: ev.target.value }), years,
+      heads, panelOn: !!panel, panel: panel || { sorts: [], values: [] }, closePanel: () => this.setState({ openCol: null }),
+      chips, hasChips: chips.length > 0,
+      clearAll: () => this.setState({ filters: {}, group: null, sort: { k: 'date', dir: 'desc' }, q: '', openCol: null }),
+      groups, empty: sorted.length === 0,
+      kN: filtered.filter(x => x.st !== 'cancel').length, kTotal: eur0(filtered.filter(x => x.st !== 'cancel').reduce((a, x) => a + x.m, 0)),
+      kWait: eur0(filtered.filter(x => x.st === 'wait').reduce((a, x) => a + x.m, 0)), kAv: filtered.filter(x => x.st === 'cancel').length,
+      hasSel, s, swapCls: st.swap % 2 ? 'swB' : 'swA',
+      noConfirm: !st.confirm, confirmAvoir: st.confirm, nextAv: avNum,
+      askAvoir: () => this.setState({ confirm: true }),
+      cancelAvoir: () => this.setState({ confirm: false }),
+      doAvoir: () => {
+        const list = st.list.map(x => x.n === s0.n ? Object.assign({}, x, { st: 'cancel', ref: 'Supprimée le 24/10/2026' }) : x);
+        this.setState({ list, sel: s0.n, swap: st.swap + 1, confirm: false, nextAv: st.nextAv + 1 });
+        this.toastMsg('Facture ' + s0.n + ' supprimée · inscrit au journal');
+      },
+      markPaid: () => { this.setState({ list: st.list.map(x => x.n === s0.n ? Object.assign({}, x, { st: 'ok' }) : x) }); this.toastMsg('Virement reçu · facture ' + s0.n + ' acquittée'); },
+      resend: () => this.toastMsg('Facture ' + s0.n + ' renvoyée par e-mail'),
+      toastOn: !!st.toast, toast: st.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

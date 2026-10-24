@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Fiche patient</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#EEF2F8}
+a{color:#1F4FD8}a:hover{color:#17338F}
+.ez{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s cubic-bezier(.2,.8,.2,1),background .25s ease,color .2s ease,border-color .2s ease,opacity .2s ease}
+.prim:hover{transform:translateY(-2px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -10px rgba(31,79,216,.75)!important}
+.soft:hover{transform:translateY(-2px)!important;box-shadow:0 12px 24px -12px rgba(15,30,70,.35),inset 0 1px 0 #FFFFFF!important}
+.glass:hover{background:rgba(255,255,255,.22)!important;transform:translateY(-2px)!important}
+.dash:hover{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.7)!important}
+.row:hover{background:#EEF4FF!important;transform:translateX(3px)}
+.nav-i:hover{background:rgba(255,255,255,.08)!important;color:#FFFFFF!important;transform:translateX(3px)}
+.press:active{transform:scale(.965)!important;transition-duration:.08s!important}
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.5) 10%,transparent 10.5%) center/1500% no-repeat;opacity:0;transition:background-size .7s ease,opacity 1s ease;pointer-events:none}
+.btn:active::after{background-size:0%;opacity:1;transition:0s}
+.btn.ink::after{background-image:radial-gradient(circle,rgba(31,79,216,.28) 10%,transparent 10.5%)}
+.field{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.field:hover{border-color:#9DAECB!important}
+.field:focus{outline:none;border-color:#1F4FD8!important;box-shadow:0 0 0 4px rgba(31,79,216,.16)!important;background:#FFFFFF!important}
+.field.aq:focus{border-color:#0EA5C6!important;box-shadow:0 0 0 4px rgba(14,165,198,.18)!important}
+.field.bad{border-color:#D92D20!important;box-shadow:0 0 0 4px rgba(217,45,32,.12)!important;background:#FFFBFA!important}
+.field.hi{border-color:#E0922F!important;box-shadow:0 0 0 4px rgba(224,146,47,.16)!important}
+button:focus-visible,a:focus-visible{outline:2px solid #0EA5C6;outline-offset:2px}
+button:disabled{cursor:not-allowed!important;opacity:.55}
+button.on:disabled{opacity:1}
+.field:disabled{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:#141B2D!important;-webkit-text-fill-color:#141B2D;opacity:1;padding-left:2px!important;cursor:default;resize:none}
+.knob{transition:transform .38s cubic-bezier(.3,1.5,.5,1)}
+.rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.04s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}.d5{animation-delay:.28s}.d6{animation-delay:.34s}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.swA{animation:swA .45s cubic-bezier(.2,.8,.2,1) both}.swB{animation:swB .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes swA{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes swB{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.pop{animation:pop .5s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes pop{0%{transform:scale(.9)}100%{transform:scale(1)}}
+.drop{animation:drop .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.fadeIn{animation:fadeIn .3s ease both}.fadeOut{animation:fadeOut .28s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+.slideIn{animation:slideIn .5s cubic-bezier(.2,.8,.2,1) both}.slideOut{animation:slideOut .3s cubic-bezier(.4,0,1,1) both}
+@keyframes slideIn{from{transform:translateX(105%)}to{transform:none}}@keyframes slideOut{from{transform:none}to{transform:translateX(105%)}}
+.zoomIn{animation:zoomIn .45s cubic-bezier(.2,.9,.3,1.1) both}.zoomOut{animation:zoomOut .26s ease both}
+@keyframes zoomIn{from{opacity:0;transform:translateY(20px) scale(.94)}to{opacity:1;transform:none}}@keyframes zoomOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(12px) scale(.96)}}
+.shA{animation:shA .45s ease both}.shB{animation:shB .45s ease both}
+@keyframes shA{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@keyframes shB{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.stamp{animation:stamp .6s .1s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes stamp{from{opacity:0;transform:rotate(-12deg) scale(1.7)}to{opacity:1;transform:rotate(-12deg) scale(1)}}
+.flash{animation:flash 1.4s ease both}
+@keyframes flash{0%{background:rgba(94,234,212,.55)}100%{background:rgba(255,255,255,.1)}}
+.spin{animation:spin .8s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.draw{stroke-dasharray:28;stroke-dashoffset:28;animation:draw .5s .1s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pulse{animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.65)}100%{box-shadow:0 0 0 9px rgba(94,234,212,0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height: 1000px; display: flex; flex-wrap: wrap; font-family: Figtree, system-ui, sans-serif; color: #141B2D; background: radial-gradient(1100px 520px at 25% -10%, #D6E7FA 0%, rgba(214,231,250,0) 62%), #EEF2F8">
+
+<nav aria-label="Navigation principale" style="flex: 1 1 210px; box-sizing: border-box; background: linear-gradient(180deg, #132A6B 0%, #0A1433 100%); padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 8px 0 30px -12px rgba(6,14,40,0.5); position: relative; z-index: 1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 4px 8px 22px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #22C3D6, #1F4FD8); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 18px -6px rgba(0,0,0,0.5)">M</div>
+<div style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 17px; color: #FFFFFF">MeuOsteo</span><span style="font-size: 12px; color: #9DB4E8">Cabinet d'ostéopathie</span></div>
+</div>
+<a href="Planning.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Planning</a>
+<a href="Main.dc.html" aria-current="page" class="ez press btn" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 600; text-decoration: none; font-size: 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 20px -8px rgba(0,0,0,0.55)">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21c0-4 3-6 7-6s7 2 7 6"></path><path d="M17 11a3 3 0 1 0 0-6"></path><path d="M22 21c0-3-2-5-5-5.5"></path></svg>Patients</a>
+<a href="Facture.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h8M9 17h6"></path></svg>Factures</a>
+<a href="Dashboard.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Tableau de bord</a>
+<div style="flex-grow: 1; min-height: 24px"></div>
+<a href="Parametres.dc.html" class="ez press nav-i" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #D3DEF7; text-decoration: none; font-size: 15px">
+<svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"></path></svg>Paramètres</a>
+<div style="margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.06); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); display: flex; align-items: center; gap: 10px; font-size: 12px; color: #D3DEF7"><span class="pulse" aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #5EEAD4; flex-shrink: 0"></span>Sauvegarde auto · il y a 2 min</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 22px 26px; display: flex; flex-direction: column; gap: 18px">
+
+<header class="rise" style="position: relative; overflow: hidden; border-radius: 24px; padding: 18px 22px; background: linear-gradient(120deg, #2B5BE8 0%, #17338F 70%, #132A6B 100%); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 24px 44px -22px rgba(23,51,143,0.8); display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="position: absolute; right: -60px; top: -120px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(34,195,214,0.45) 0%, rgba(34,195,214,0) 70%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 30%; bottom: -160px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(94,234,212,0.18) 0%, rgba(94,234,212,0) 70%)"></div>
+<div style="position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px">
+<div style="display: flex; align-items: center; gap: 14px">
+<a href="Main.dc.html" aria-label="Retour à la liste des patients" class="ez press glass" style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.12); color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div aria-hidden="true" style="width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(145deg, #5EEAD4, #22C3D6 45%, #3B6CF6); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), 0 0 0 3px rgba(255,255,255,0.18), 0 12px 24px -8px rgba(0,0,0,0.5)">{{p.ini}}</div>
+<div class="{{hdrFlash}}" style="border-radius: 12px; padding: 2px 6px; margin: -2px -6px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.01em">{{p.full}}</h1>
+<p style="margin: 2px 0 0; color: #DCE6FD; font-size: 14px">{{p.sub}}</p>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" onClick="{{openEdit}}" class="ez press btn glass" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: rgba(255,255,255,0.12); color: #FFFFFF; font: inherit; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Modifier la fiche</button>
+<button type="button" onClick="{{toggleHist}}" aria-expanded="{{histOpen}}" class="ez press btn glass" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: rgba(255,255,255,0.12); color: #FFFFFF; font: inherit; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5M12 7v5l3 2"></path></svg>Historique</button>
+<a href="FacturesPatient.dc.html" class="ez press btn glass" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 12px; background: rgba(255,255,255,0.12); color: #FFFFFF; font-weight: 600; font-size: 14px; text-decoration: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15)">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6"></path></svg>Ses factures ({{nbFac}})</a>
+</div>
+</div>
+<div style="position: relative; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+<sc-if value="{{c.full}}" hint-placeholder-val="{{ true }}">
+<span class="{{c.cls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(255,255,255,0.1); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); font-size: 13px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.d}}"></path></svg>{{c.label}}</span>
+</sc-if>
+<sc-if value="{{c.empty}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{c.open}}" class="ez press dash" style="display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 12px; border-radius: 10px; border: 1px dashed rgba(255,255,255,0.45); background: transparent; color: #DCE6FD; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>{{c.label}}</button>
+</sc-if>
+</sc-for>
+<span style="display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(94,234,212,0.16); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); font-size: 13px; font-weight: 600; color: #E3FAF5">{{suivi}} · {{nbSeances}} séances</span>
+</div>
+<div style="position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.12)">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #9DB4E8; margin-right: 4px">Proches</span>
+<sc-for list="{{proches}}" as="x" hint-placeholder-count="2">
+<span class="{{x.cls}}" style="display: inline-flex; align-items: center; padding-right: 6px; border-radius: 999px; background: rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12)">
+<button type="button" onClick="{{x.open}}" title="{{x.title}}" class="ez press glass" style="display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 6px 0 4px; border-radius: 999px; border: 0; background: transparent; color: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer">
+<span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(145deg, #5EEAD4, #3B6CF6); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800">{{x.ini}}</span>{{x.nom}}<span style="font-weight: 600; color: #C7D6FB">· {{x.rel}}</span><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9DB4E8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+
+</span>
+</sc-for>
+<sc-if value="{{noProches}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #9DB4E8">Aucun proche lié · à ajouter depuis « Modifier la fiche »</span></sc-if>
+<sc-if value="{{backOn}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{goBack}}" class="ez press pop" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0; background: rgba(94,234,212,0.18); color: #E3FAF5; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>Revenir à {{backName}}</button>
+</sc-if>
+</div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: stretch">
+
+<section aria-labelledby="h-list" class="rise d2" style="flex: 1 1 230px; min-width: 0; max-width: 100%; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 16px 36px -18px rgba(15,30,70,0.28)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 16px 16px 12px">
+<h2 id="h-list" style="margin: 0; font-size: 16px; font-weight: 800">Séances</h2>
+<button type="button" onClick="{{create}}" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 18px -10px rgba(31,79,216,0.9)"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nouvelle</button>
+</div>
+<p style="margin: -4px 16px 10px; font-size: 12px; line-height: 1.45; color: #586380">Les RDV Doctolib apparaissent ici tout seuls. « Nouvelle » sert aux séances prises hors Doctolib.</p>
+<div style="padding: 0 10px 12px; display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{items}}" as="s" hint-placeholder-count="5">
+<button type="button" onClick="{{s.pick}}" aria-current="{{s.cur}}" class="{{s.cls}}" style="{{s.style}}">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums">{{s.dateFr}}</span>
+<span style="{{s.badge}}">{{s.payShort}}</span>
+</span>
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="{{s.sub}}">{{s.motifOr}}</span>
+<sc-if value="{{s.hasTag}}" hint-placeholder-val="{{ false }}"><span style="{{s.facTag}}">{{s.tag}}</span></sc-if>
+</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="h-seance" class="rise d3" style="flex: 999 1 420px; min-width: 0; background: #FFFFFF; border: 1px solid rgba(15,30,70,0.05); border-radius: 22px; padding: 20px 22px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(15,30,70,0.06), 0 22px 46px -22px rgba(15,30,70,0.35)">
+<div class="{{swapCls}}" style="display: flex; flex-direction: column; gap: 15px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">{{cur.kicker}}</p>
+<h2 id="h-seance" style="margin: 2px 0 0; font-size: 20px; font-weight: 800">Séance du {{cur.dateLong}}</h2>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<sc-if value="{{dirtyOn}}" hint-placeholder-val="{{ false }}">
+<span role="status" class="drop" style="display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #8A4B08; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #FCF1E3"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #E0922F"></span>Non enregistré</span>
+</sc-if>
+<span class="pop" style="{{cur.stStyle}}">{{cur.stLabel}}</span>
+<span style="font-size: 13px; color: #586380; font-weight: 600">{{cur.rel}}</span>
+<sc-if value="{{cur.canCancel}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{askCancel}}" aria-label="{{cur.cancelAria}}" title="{{cur.cancelAria}}" class="ez press btn ink soft" style="width: 38px; height: 38px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #586380; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 #FFFFFF, 0 3px 8px -5px rgba(15,30,70,0.35)"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+</sc-if>
+</div>
+</div>
+<sc-if value="{{cur.bannerView}}" hint-placeholder-val="{{ true }}">
+<div class="drop" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 12px; border-radius: 12px; background: #F0F4FA; color: #3A4560; font-size: 13px">
+<span style="display: flex; align-items: center; gap: 8px; flex: 1 1 260px"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>{{cur.viewMsg}}</span>
+<button type="button" onClick="{{startEdit}}" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid rgba(15,30,70,0.1); background: #FFFFFF; font: inherit; font-size: 14px; font-weight: 700; color: #141B2D; cursor: pointer; box-shadow: 0 3px 8px -5px rgba(15,30,70,0.35)"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Modifier</button>
+</div>
+</sc-if>
+<sc-if value="{{cur.bannerEdit}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 12px; border-radius: 12px; background: linear-gradient(180deg, #FFF6EA, #FBE8CF); border: 1px solid #E9C9A0; color: #5A3205; font-size: 13px">
+<span style="display: flex; align-items: center; gap: 8px; flex: 1 1 260px"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>{{cur.editMsg}}</span>
+<sc-if value="{{cur.canUnlock}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{askUnlock}}" class="ez press btn ink soft" style="min-height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(184,106,18,0.35); background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #7A4207; cursor: pointer">Déverrouiller date et tarif…</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{cur.bannerPlanned}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: linear-gradient(180deg, #EEFBFD, #E0F7FB); border: 1px solid rgba(14,165,198,0.25); color: #0B5F73; font-size: 13px">
+<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>{{cur.plannedMsg}}</div>
+</sc-if>
+<sc-if value="{{cur.bannerCancel}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 12px; border-radius: 12px; background: #EDF0F6; color: #3A4560; font-size: 13px">
+<span style="display: flex; align-items: center; gap: 8px; flex: 1 1 260px"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"></circle><path d="M6 18L18 6"></path></svg>{{cur.cancelMsg}}</span>
+<button type="button" onClick="{{restore}}" class="ez press btn ink soft" style="min-height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(15,30,70,0.1); background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 700; color: #141B2D; cursor: pointer">Rétablir la séance</button>
+</div>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px">
+<label for="d" style="font-size: 13px; font-weight: 600; color: #3A4560">Date</label>
+<input id="d" type="date" value="{{cur.iso}}" onInput="{{onDate}}" disabled="{{cur.dtLock}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; box-shadow: inset 0 1px 2px rgba(15,30,70,0.05)">
+</div>
+<div style="flex: 3 1 240px; display: flex; flex-direction: column; gap: 6px">
+<label for="m" style="font-size: 13px; font-weight: 600; color: #3A4560">Motif</label>
+<input id="m" type="text" value="{{cur.motif}}" onInput="{{onMotif}}" disabled="{{cur.ro}}" placeholder="Motif de consultation" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; box-shadow: inset 0 1px 2px rgba(15,30,70,0.05)">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="an" style="font-size: 13px; font-weight: 600; color: #3A4560">Anamnèse</label>
+<textarea id="an" rows="4" value="{{cur.an}}" onInput="{{onAn}}" disabled="{{cur.ro}}" placeholder="Histoire de la plainte, contexte, évolution…" class="field" style="font: inherit; font-size: 15px; line-height: 1.55; border: 1px solid #D4DBE8; border-radius: 12px; padding: 12px 14px; resize: vertical; color: #141B2D; background: #F7F9FC; box-shadow: inset 0 1px 2px rgba(15,30,70,0.05)"></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="pr" style="font-size: 13px; font-weight: 600; color: #3A4560">Pratique</label>
+<textarea id="pr" rows="4" value="{{cur.pr}}" onInput="{{onPr}}" disabled="{{cur.ro}}" placeholder="Tests, techniques, conseils…" class="field" style="font: inherit; font-size: 15px; line-height: 1.55; border: 1px solid #D4DBE8; border-radius: 12px; padding: 12px 14px; resize: vertical; color: #141B2D; background: #F7F9FC; box-shadow: inset 0 1px 2px rgba(15,30,70,0.05)"></textarea>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 18px">
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="font-size: 13px; font-weight: 600; color: #3A4560; padding: 0; margin-bottom: 8px">Tarif</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 5px; border-radius: 15px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{prix}}" as="o" hint-placeholder-count="5">
+<button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" disabled="{{o.dis}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button>
+</sc-for>
+</div>
+</fieldset>
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="font-size: 13px; font-weight: 600; color: #3A4560; padding: 0; margin-bottom: 8px">Paiement</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 5px; border-radius: 15px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{pay}}" as="o" hint-placeholder-count="4">
+<button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" disabled="{{o.dis}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button>
+</sc-for>
+</div>
+</fieldset>
+</div>
+<sc-if value="{{cancelOn}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-labelledby="t-cancel" aria-describedby="p-cancel" class="zoomIn" style="display: flex; flex-direction: column; gap: 12px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(180deg, #FFF5F5, #FDE8E8); border: 1px solid rgba(194,39,45,0.3); box-shadow: 0 14px 30px -16px rgba(194,39,45,0.55)">
+<span id="t-cancel" style="font-size: 15px; font-weight: 800; color: #7A1015">{{cx.title}}</span>
+<span id="p-cancel" style="font-size: 13px; line-height: 1.5; color: #5A1A1D">{{cx.text}}</span>
+<sc-if value="{{cx.needReason}}" hint-placeholder-val="{{ true }}">
+<div role="group" aria-label="Motif d'annulation" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{cReasons}}" as="o" hint-placeholder-count="4"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{cx.hasDoc}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 700; color: #7A4207">Ce RDV vient de Doctolib : pensez à l'annuler aussi dans Doctolib, l'application ne peut pas le faire à votre place.</span></sc-if>
+<div style="display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{backCancel}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Retour</button>
+<button type="button" onClick="{{doCancel}}" disabled="{{cx.noReason}}" class="ez press btn" style="min-height: 44px; padding: 0 16px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 16px -8px rgba(194,39,45,0.8)">{{cx.btn}}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{cancelOff}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid #EDF0F6">
+<span style="{{cur.hintStyle}}">{{cur.facHint}}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto">
+<sc-if value="{{cur.modeOpen}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{save}}" disabled="{{notDirty}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Enregistrer</button>
+<button type="button" onClick="{{markDone}}" disabled="{{cur.future}}" class="{{doneCls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>Séance réalisée</button>
+</sc-if>
+<sc-if value="{{cur.modeEdit}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{cancelEditS}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Annuler</button>
+<button type="button" onClick="{{save}}" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 13px; border: 0; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">Enregistrer</button>
+</sc-if>
+<sc-if value="{{cur.canInvoice}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{openInvoice}}" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 14h6M12 11v6"></path></svg>Générer la facture</button>
+</sc-if>
+<sc-if value="{{cur.needAddr}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{openEditAddr}}" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(224,146,47,0.45); background: linear-gradient(180deg, #FFFFFF, #FFF6EA); color: #7A4207; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(138,75,8,0.4)">Compléter l'adresse</button>
+</sc-if>
+<sc-if value="{{cur.hasFac}}" hint-placeholder-val="{{ false }}">
+<a href="FacturesPatient.dc.html" class="ez press btn ink soft" style="display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 16px; border-radius: 13px; font-weight: 700; text-decoration: none; font-size: 15px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 14h6"></path></svg>Voir la facture</a>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</section>
+
+<aside aria-labelledby="h-com" class="rise d4" style="flex: 1 1 250px; min-width: 0; border-radius: 22px; padding: 18px 18px; display: flex; flex-direction: column; gap: 12px; background: linear-gradient(180deg, #F4FEFB 0%, #E3FAF5 100%); border: 1px solid rgba(15,76,69,0.1); box-shadow: inset 0 1px 0 #FFFFFF, 0 18px 40px -22px rgba(15,76,69,0.45)">
+<div style="display: flex; align-items: center; gap: 10px">
+<div aria-hidden="true" style="width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(145deg, #5EEAD4, #0EA5C6); color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 16px -8px rgba(14,165,198,0.9)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+<div>
+<h2 id="h-com" style="margin: 0; font-size: 16px; font-weight: 800; color: #0F4C45">Commentaire inter-séances</h2>
+<p style="margin: 1px 0 0; font-size: 12px; color: #2F6B63">Suit la patiente d'une séance à l'autre</p>
+</div>
+</div>
+<label for="com" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Commentaire inter-séances</label>
+<textarea id="com" value="{{comment}}" onInput="{{onCom}}" class="field aq" style="flex-grow: 1; min-height: 340px; font: inherit; font-size: 14px; line-height: 1.6; border: 1px solid rgba(15,76,69,0.16); border-radius: 14px; padding: 12px 14px; resize: vertical; color: #141B2D; background: rgba(255,255,255,0.75); box-shadow: inset 0 1px 3px rgba(15,76,69,0.08)"></textarea>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="font-size: 12px; font-weight: 700; color: #0F4C45; background: rgba(94,234,212,0.3); padding: 4px 10px; border-radius: 999px">Appendicectomie 2008</span>
+<span style="font-size: 12px; font-weight: 700; color: #0F4C45; background: rgba(94,234,212,0.3); padding: 4px 10px; border-radius: 999px">Entorses cheville D</span>
+<span style="font-size: 12px; font-weight: 700; color: #0F4C45; background: rgba(94,234,212,0.3); padding: 4px 10px; border-radius: 999px">Lunettes</span>
+</div>
+<p style="margin: 0; font-size: 12px; color: #2F6B63">{{comHint}}</p>
+</aside>
+
+</div>
+</main>
+
+<sc-if value="{{drawerOn}}" hint-placeholder-val="{{ false }}">
+<div class="{{drawerFade}}" style="position: fixed; inset: 0; z-index: 20; background: rgba(10,20,51,0.42); backdrop-filter: blur(3px); display: flex; justify-content: flex-end">
+<section role="dialog" aria-modal="true" aria-labelledby="h-edit" class="{{drawerSlide}}" style="width: 100%; max-width: 580px; height: 100%; box-sizing: border-box; overflow-y: auto; background: #F3F5F9; border-radius: 26px 0 0 26px; box-shadow: -30px 0 60px -20px rgba(6,14,40,0.55); display: flex; flex-direction: column">
+<div style="position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px 16px; background: linear-gradient(180deg, #F3F5F9 70%, rgba(243,245,249,0)); ">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">Fiche patient</p>
+<h2 id="h-edit" style="margin: 2px 0 0; font-size: 22px; font-weight: 800">Modifier les informations</h2>
+</div>
+<button type="button" onClick="{{cancelEdit}}" aria-label="Fermer" class="ez press btn ink soft" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 #FFFFFF, 0 3px 8px -5px rgba(15,30,70,0.35)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+
+<div style="padding: 0 24px 24px; display: flex; flex-direction: column; gap: 16px">
+<sc-if value="{{noteOn}}" hint-placeholder-val="{{ false }}">
+<p class="drop" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: linear-gradient(180deg, #FFF6EA, #FBE8CF); color: #5A3205; font-size: 14px; font-weight: 600; box-shadow: inset 0 1px 0 #FFFFFF">{{note}}</p>
+</sc-if>
+
+<fieldset style="border: 0; margin: 0; padding: 18px; border-radius: 18px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 14px">
+<legend style="font-size: 15px; font-weight: 800; padding: 0; float: left; width: 100%; margin-bottom: 4px">Identité</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-nom" style="font-size: 13px; font-weight: 600; color: #3A4560">Nom *</label>
+<input id="f-nom" type="text" value="{{dr.nom}}" onInput="{{f.nom}}" class="field {{c.nom}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<sc-if value="{{eOn.nom}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.nom}}</span></sc-if>
+</div>
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-pre" style="font-size: 13px; font-weight: 600; color: #3A4560">Prénom *</label>
+<input id="f-pre" type="text" value="{{dr.prenom}}" onInput="{{f.prenom}}" class="field {{c.prenom}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<sc-if value="{{eOn.prenom}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.prenom}}</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-ddn" style="font-size: 13px; font-weight: 600; color: #3A4560">Date de naissance *</label>
+<div style="display: flex; align-items: center; gap: 10px">
+<input id="f-ddn" type="date" value="{{dr.ddn}}" onInput="{{f.ddn}}" class="field {{c.ddn}}" style="flex-grow: 1; font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; min-width: 0">
+<span style="font-size: 13px; font-weight: 700; color: #17338F; background: #E6EEFF; padding: 6px 10px; border-radius: 999px; white-space: nowrap">{{drAge}}</span>
+</div>
+<sc-if value="{{eOn.ddn}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.ddn}}</span></sc-if>
+</div>
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<span id="l-sexe" style="font-size: 13px; font-weight: 600; color: #3A4560">Sexe</span>
+<div role="group" aria-labelledby="l-sexe" style="display: flex; gap: 6px; padding: 5px; border-radius: 14px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<sc-for list="{{sexes}}" as="o" hint-placeholder-count="2">
+<button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+</div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 18px; border-radius: 18px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 14px">
+<legend style="font-size: 15px; font-weight: 800; padding: 0; float: left; width: 100%; margin-bottom: 4px">Situation</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<div style="flex: 1 1 170px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-sit" style="font-size: 13px; font-weight: 600; color: #3A4560">Situation familiale</label>
+<select id="f-sit" value="{{dr.situation}}" onChange="{{f.situation}}" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<option value="">Non renseignée</option>
+<option value="Célibataire">Célibataire</option>
+<option value="En couple">En couple</option>
+<option value="Pacsé(e)">Pacsé(e)</option>
+<option value="Marié(e)">Marié(e)</option>
+<option value="Divorcé(e)">Divorcé(e)</option>
+<option value="Veuf(ve)">Veuf(ve)</option>
+</select>
+</div>
+<div style="flex: 0 1 160px; display: flex; flex-direction: column; gap: 6px">
+<span id="l-enf" style="font-size: 13px; font-weight: 600; color: #3A4560">Enfants</span>
+<div role="group" aria-labelledby="l-enf" style="display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 4px; border-radius: 14px; background: #EDF2F9; box-shadow: inset 0 2px 4px rgba(15,30,70,0.08)">
+<button type="button" aria-label="Un enfant de moins" onClick="{{enfMinus}}" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px -2px rgba(15,30,70,0.3)">−</button>
+<span class="{{enfCls}}" style="font-size: 17px; font-weight: 800; min-width: 24px; text-align: center; font-variant-numeric: tabular-nums">{{dr.enfants}}</span>
+<button type="button" aria-label="Un enfant de plus" onClick="{{enfPlus}}" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #141B2D; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px -2px rgba(15,30,70,0.3)">+</button>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-pro" style="font-size: 13px; font-weight: 600; color: #3A4560">Profession</label>
+<input id="f-pro" type="text" value="{{dr.profession}}" onInput="{{f.profession}}" placeholder="ex. Infirmière, retraité…" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+</div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 18px; border-radius: 18px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 14px">
+<legend style="font-size: 15px; font-weight: 800; padding: 0; float: left; width: 100%; margin-bottom: 4px">Coordonnées</legend>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-adr" style="font-size: 13px; font-weight: 600; color: #3A4560">Adresse</label>
+<input id="f-adr" type="text" value="{{dr.adresse}}" onInput="{{f.adresse}}" placeholder="N° et rue" class="field {{c.adresse}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+<div style="flex: 0 1 130px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-cp" style="font-size: 13px; font-weight: 600; color: #3A4560">Code postal</label>
+<input id="f-cp" type="text" inputmode="numeric" value="{{dr.cp}}" onInput="{{f.cp}}" placeholder="94300" class="field {{c.cp}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; width: 100%">
+<sc-if value="{{eOn.cp}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.cp}}</span></sc-if>
+</div>
+<div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-com" style="font-size: 13px; font-weight: 600; color: #3A4560">Commune</label>
+<select id="f-com" value="{{dr.commune}}" onChange="{{f.commune}}" class="field {{c.commune}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<option value="">{{communeHint}}</option>
+<sc-for list="{{communes}}" as="o" hint-placeholder-count="1"><option value="{{o.v}}">{{o.v}}</option></sc-for>
+</select>
+<span style="font-size: 12px; color: #586380">Proposée automatiquement à partir du code postal (base des communes de l'outil actuel)</span>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start">
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-por" style="font-size: 13px; font-weight: 600; color: #3A4560">Portable</label>
+<input id="f-por" type="tel" value="{{dr.portable}}" onInput="{{f.portable}}" placeholder="06 00 00 00 00" class="field {{c.portable}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; font-variant-numeric: tabular-nums">
+<sc-if value="{{eOn.portable}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.portable}}</span></sc-if>
+</div>
+<div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px">
+<label for="f-fix" style="font-size: 13px; font-weight: 600; color: #3A4560">Téléphone fixe</label>
+<input id="f-fix" type="tel" value="{{dr.fixe}}" onInput="{{f.fixe}}" placeholder="01 00 00 00 00" class="field {{c.fixe}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC; font-variant-numeric: tabular-nums">
+<sc-if value="{{eOn.fixe}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.fixe}}</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="f-mail" style="font-size: 13px; font-weight: 600; color: #3A4560">E-mail</label>
+<input id="f-mail" type="email" value="{{dr.mail}}" onInput="{{f.mail}}" placeholder="prenom.nom@exemple.fr" class="field {{c.mail}}" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<sc-if value="{{eOn.mail}}" hint-placeholder-val="{{ false }}"><span class="drop" style="font-size: 12px; font-weight: 600; color: #B42318">{{e.mail}}</span></sc-if>
+<span style="font-size: 12px; color: #586380">Utilisé pour l'envoi des factures</span>
+</div>
+</fieldset>
+<fieldset style="border: 0; margin: 0; padding: 18px; border-radius: 18px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 10px">
+<legend style="font-size: 15px; font-weight: 800; padding: 0; float: left; width: 100%; margin-bottom: 4px">Proches</legend>
+<span style="font-size: 12px; color: #586380">Liens vers d'autres fiches patients. Chaque ajout ou retrait est confirmé puis enregistré tout de suite, sur les deux fiches.</span>
+<sc-for list="{{drProches}}" as="x" hint-placeholder-count="2">
+<div class="{{x.cls}}" style="{{x.rowStyle}}">
+<span aria-hidden="true" style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(145deg, #E8F0FF, #CCDBFF); color: #17338F; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0">{{x.ini}}</span>
+<span style="flex: 1 1 140px; display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 700">{{x.nom}}</span><span style="font-size: 12px; color: #586380">{{x.relCap}}</span></span>
+<sc-if value="{{x.idle}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{x.ask}}" aria-label="{{x.aria}}" class="ez press btn ink soft" style="min-height: 40px; padding: 0 12px; border-radius: 11px; border: 1px solid rgba(194,39,45,0.25); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 13px; color: #A3161C; cursor: pointer">Retirer…</button>
+</sc-if>
+<sc-if value="{{x.asking}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-label="{{x.aria}}" class="zoomIn" style="flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 8px 8px 12px; border-radius: 12px; background: linear-gradient(180deg, #FFF5F5, #FDE8E8); border: 1px solid rgba(194,39,45,0.3)">
+<span style="font-size: 13px; font-weight: 700; color: #7A1015">Retirer le lien avec {{x.nom}} ? Il disparaîtra aussi de sa fiche.</span>
+<span style="display: flex; gap: 6px">
+<button type="button" onClick="{{x.keep}}" class="ez press btn ink soft" style="min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 13px; color: #141B2D; cursor: pointer">Garder</button>
+<button type="button" onClick="{{x.remove}}" class="ez press btn" style="min-height: 40px; padding: 0 12px; border-radius: 10px; border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 13px; cursor: pointer">Retirer le lien</button>
+</span>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{noProches}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #8E99B3">Aucun proche lié.</span></sc-if>
+<button type="button" onClick="{{openLink}}" class="ez press btn ink" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 14px; border-radius: 11px; border: 1px dashed #8FA9F5; background: #F5F8FF; color: #1F4FD8; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Lier un proche…</button>
+</fieldset>
+<p style="margin: 0; font-size: 12px; color: #586380">* Champs obligatoires · fiche créée le 04/03/2025</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-radius: 16px; border: 1px dashed rgba(194,39,45,0.35); background: #FFFAFA">
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 220px"><span style="font-size: 14px; font-weight: 700; color: #A3161C">Supprimer ce patient</span><span style="font-size: 12px; color: #586380">Fiche, séances et commentaire. Les factures émises sont conservées.</span></span>
+<button type="button" onClick="{{askDelete}}" class="ez press btn ink soft" style="min-height: 42px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(194,39,45,0.3); background: linear-gradient(180deg, #FFFFFF, #FFF5F5); font: inherit; font-weight: 700; font-size: 14px; color: #A3161C; cursor: pointer">Supprimer…</button>
+</div>
+</div>
+
+<div style="position: sticky; bottom: 0; margin-top: auto; padding: 16px 24px 20px; background: linear-gradient(0deg, #F3F5F9 70%, rgba(243,245,249,0)); display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{errCount}}" hint-placeholder-val="{{ false }}">
+<p role="alert" class="drop" style="margin: 0; font-size: 13px; font-weight: 700; color: #B42318">{{errMsg}}</p>
+</sc-if>
+<sc-if value="{{confirmOn}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-labelledby="t-aband" class="zoomIn" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; min-height: 48px; padding: 10px 10px 10px 16px; border-radius: 16px; background: linear-gradient(180deg, #FFF5F5, #FDE8E8); border: 1px solid rgba(194,39,45,0.3); box-shadow: 0 14px 30px -16px rgba(194,39,45,0.55)">
+<span id="t-aband" style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #7A1015"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18h.01"></path></svg>Abandonner les modifications ?</span>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{keepEditing}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Continuer l'édition</button>
+<button type="button" onClick="{{discard}}" class="ez press btn" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 16px -8px rgba(194,39,45,0.8)">Abandonner</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{confirmOff}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 10px; justify-content: flex-end">
+<button type="button" onClick="{{cancelEdit}}" class="ez press btn ink soft" style="min-height: 48px; padding: 0 18px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer; box-shadow: inset 0 1px 0 #FFFFFF, 0 4px 10px -6px rgba(15,30,70,0.3)">Annuler</button>
+<button type="button" onClick="{{saveEdit}}" class="{{saveCls}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">
+<sc-if value="{{savingFiche}}" hint-placeholder-val="{{ false }}"><svg class="spin" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg></sc-if>{{saveLabel}}</button>
+</div>
+</sc-if>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{modalOn}}" hint-placeholder-val="{{ false }}">
+<div class="{{modalFade}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="h-inv" class="{{modalZoom}}" style="width: 100%; max-width: 1000px; max-height: 100%; overflow-y: auto; background: #F3F5F9; border-radius: 26px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 24px 8px">
+<div>
+<p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">{{inv.patient}} · séance du {{inv.date}}</p>
+<h2 id="h-inv" style="margin: 2px 0 0; font-size: 22px; font-weight: 800">{{inv.title}}</h2>
+</div>
+<button type="button" onClick="{{closeInvoice}}" aria-label="Fermer" class="ez press btn ink soft" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 22px; padding: 14px 24px 24px; align-items: flex-start">
+
+<article aria-label="Aperçu de la note d'honoraires" style="flex: 1 1 420px; min-width: 0; position: relative; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(15,30,70,0.06), 0 28px 56px -28px rgba(15,30,70,0.45); padding: 34px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px; font-size: 13px; line-height: 1.5; overflow: hidden">
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; height: 6px; background: linear-gradient(90deg, #22C3D6, #3B6CF6, #1F4FD8)"></div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px">
+<div>
+<p style="margin: 0; font-size: 15px; font-weight: 800">[Prénom NOM]</p>
+<p style="margin: 0; color: #3A4560">Ostéopathe D.O.</p>
+<p style="margin: 6px 0 0; color: #3A4560">[Adresse du cabinet]<br>N° ADELI : [—] · SIRET : [—]</p>
+</div>
+<div style="text-align: right">
+<p style="margin: 0; font-size: 17px; font-weight: 800; color: #1F4FD8">Note d'honoraires</p>
+<p style="margin: 2px 0 0; font-weight: 700">{{inv.num}}</p>
+<p style="margin: 2px 0 0; color: #3A4560">Émise le 24/10/2026</p>
+</div>
+</div>
+<div style="background: #F3F7FC; border-radius: 8px; padding: 12px 16px; box-shadow: inset 0 1px 2px rgba(15,30,70,0.06)">
+<p style="margin: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #586380">Patient</p>
+<p style="margin: 2px 0 0; font-weight: 700">{{inv.patient}}</p>
+<p style="margin: 0; color: #3A4560">{{inv.addr}}</p>
+</div>
+<div>
+<div style="display: grid; grid-template-columns: 1fr 2.4fr 1fr; gap: 10px; padding: 8px 0; border-bottom: 2px solid #141B2D; font-weight: 700; font-size: 12px"><span>Date</span><span>Désignation</span><span style="text-align: right">Montant</span></div>
+<div style="display: grid; grid-template-columns: 1fr 2.4fr 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid #E1E6EF"><span>{{inv.date}}</span><span>Séance d'ostéopathie</span><span style="text-align: right; font-variant-numeric: tabular-nums">{{inv.amount}}</span></div>
+<div style="display: flex; justify-content: flex-end; gap: 40px; padding: 12px 0 0; font-size: 15px; font-weight: 800"><span>Total</span><span style="font-variant-numeric: tabular-nums">{{inv.amount}}</span></div>
+</div>
+<p style="margin: 0; color: #3A4560">{{inv.reglement}}</p>
+<p style="margin: 0; font-size: 12px; color: #586380">TVA non applicable, article 261-4-1° du CGI.</p>
+<sc-if value="{{invDone}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" class="stamp" style="position: absolute; right: 34px; top: 120px; padding: 8px 16px; border: 3px solid #1F4FD8; border-radius: 10px; color: #1F4FD8; font-weight: 800; font-size: 18px; letter-spacing: 0.08em; background: rgba(255,255,255,0.85)">ÉMISE</div>
+</sc-if>
+</article>
+
+<div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div style="background: #FFFFFF; border-radius: 18px; padding: 16px 18px; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35); display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Patient</span><span style="font-weight: 700; text-align: right">{{inv.patient}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Séance</span><span style="font-weight: 700; text-align: right">{{inv.date}} · {{inv.motif}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Montant</span><span style="font-weight: 800; text-align: right">{{inv.amount}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px"><span style="color: #586380">Règlement</span><span style="{{inv.payStyle}}">{{inv.payLabel}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px solid #EDF0F6"><span style="color: #586380">Numéro</span><span style="font-weight: 800; text-align: right; font-variant-numeric: tabular-nums">{{inv.numSide}}</span></div>
+</div>
+
+<sc-if value="{{invPreview}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; box-shadow: inset 0 1px 0 #FFFFFF, 0 10px 26px -18px rgba(15,30,70,0.35)">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span id="l-send" style="font-size: 14px; font-weight: 700">Envoyer par e-mail à l'émission</span><span style="font-size: 12px; color: #586380">{{inv.mailHint}}</span></span>
+<button type="button" role="switch" aria-checked="{{sendOn}}" aria-labelledby="l-send" onClick="{{toggleSend}}" disabled="{{noMail}}" style="{{swStyle}}"><span class="knob" style="{{knobStyle}}"></span></button>
+</div>
+<p style="margin: 0; display: flex; gap: 8px; font-size: 13px; line-height: 1.5; color: #3A4560; padding: 12px 14px; border-radius: 14px; background: #E6EEFF"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8h.01M11 12h1v5h1"></path></svg>Une fois émise, la facture reçoit son numéro définitif et ne peut plus être modifiée ni supprimée. En cas d'erreur, elle pourra être supprimée depuis l'onglet Factures.</p>
+<div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+<button type="button" onClick="{{closeInvoice}}" class="ez press btn ink soft" style="min-height: 48px; padding: 0 18px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{emit}}" class="ez press btn prim" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">{{emitLabel}}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{invEmitting}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 10px 26px -18px rgba(15,30,70,0.35); font-size: 14px; font-weight: 700"><svg class="spin" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4FD8" stroke-width="3" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"></path></svg>{{emittingMsg}}</div>
+</sc-if>
+
+<sc-if value="{{invDone}}" hint-placeholder-val="{{ false }}">
+<div class="drop" style="display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: linear-gradient(180deg, #E3FAF5, #C9F2EA); color: #0F4C45; font-size: 14px; font-weight: 700; box-shadow: inset 0 1px 0 #FFFFFF, 0 12px 26px -16px rgba(15,76,69,0.6)">
+<span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>Facture {{inv.numShort}} émise et enregistrée</span>
+<sc-if value="{{sentOk}}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>Envoyée à {{inv.mail}}</span></sc-if>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button type="button" class="ez press btn ink soft" style="flex: 1 1 140px; min-height: 46px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Télécharger le PDF</button>
+<button type="button" class="ez press btn ink soft" style="flex: 1 1 100px; min-height: 46px; border-radius: 12px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Imprimer</button>
+</div>
+<div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap">
+<a href="FacturesPatient.dc.html" style="font-size: 14px; font-weight: 700">Voir ses factures →</a>
+<button type="button" onClick="{{closeInvoice}}" class="ez press btn prim" style="min-height: 46px; padding: 0 20px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer">Terminer</button>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{linkOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 35; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="dialog" aria-modal="true" aria-labelledby="h-link" class="zoomIn" style="width: 100%; max-width: 520px; max-height: 100%; overflow-y: auto; box-sizing: border-box; background: #FFFFFF; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7F99">{{p.full}}</p><h2 id="h-link" style="margin: 2px 0 0; font-size: 20px; font-weight: 800">Lier un proche</h2></div>
+<button type="button" onClick="{{closeLink}}" aria-label="Fermer" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 11px; border: 0; background: #F0F4FA; color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<label for="lq" style="font-size: 13px; font-weight: 600; color: #3A4560">Est un proche de…</label>
+<input id="lq" type="search" value="{{lq}}" onInput="{{onLq}}" placeholder="Rechercher un patient existant" class="field" style="font: inherit; font-size: 15px; min-height: 46px; border: 1px solid #D4DBE8; border-radius: 12px; padding: 0 12px; box-sizing: border-box; color: #141B2D; background: #F7F9FC">
+<div role="listbox" aria-label="Patients" style="display: flex; flex-direction: column; gap: 4px; max-height: 210px; overflow-y: auto; padding: 2px">
+<sc-for list="{{linkCands}}" as="k" hint-placeholder-count="4">
+<button type="button" role="option" aria-selected="{{k.on}}" onClick="{{k.pick}}" class="{{k.cls}}" style="{{k.style}}">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(145deg, #E8F0FF, #CCDBFF); color: #17338F; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0">{{k.ini}}</span>
+<span style="display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 700">{{k.nom}}</span><span style="font-size: 12px; opacity: 0.8">{{k.info}}</span></span>
+</button>
+</sc-for>
+<sc-if value="{{noCand}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 10px 4px; font-size: 13px; color: #586380">Aucun patient trouvé. Le proche doit d'abord avoir sa propre fiche.</p></sc-if>
+</div>
+<span id="l-rel" style="font-size: 13px; font-weight: 600; color: #3A4560">Lien</span>
+<div role="group" aria-labelledby="l-rel" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{rels}}" as="o" hint-placeholder-count="7"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<sc-if value="{{linkReady}}" hint-placeholder-val="{{ false }}">
+<p class="drop" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #E6EEFF; color: #17338F; font-size: 13px; line-height: 1.5">{{linkSentence}}</p>
+</sc-if>
+<sc-if value="{{lConfOff}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; justify-content: flex-end; gap: 10px">
+<button type="button" onClick="{{closeLink}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{askLink}}" disabled="{{linkNotReady}}" class="ez press btn prim" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">Lier…</button>
+</div>
+</sc-if>
+<sc-if value="{{lConfOn}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-labelledby="t-lconf" class="zoomIn" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px 10px 16px; border-radius: 16px; background: linear-gradient(180deg, #F2F6FF, #E3ECFF); border: 1px solid #A9C0F7; box-shadow: 0 14px 30px -16px rgba(31,79,216,0.55)">
+<span id="t-lconf" style="flex: 1 1 220px; font-size: 14px; font-weight: 700; color: #17338F">Confirmer le lien ? Les deux fiches seront mises à jour.</span>
+<span style="display: flex; gap: 8px">
+<button type="button" onClick="{{backLink}}" class="ez press btn ink soft" style="min-height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid rgba(15,30,70,0.08); background: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Retour</button>
+<button type="button" onClick="{{saveLink}}" class="ez press btn prim" style="min-height: 44px; padding: 0 16px; border-radius: 11px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 18px -10px rgba(31,79,216,0.9)">Confirmer le lien</button>
+</span>
+</div>
+</sc-if>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{pendOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 35; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="alertdialog" aria-modal="true" aria-labelledby="h-pend" aria-describedby="p-pend" class="zoomIn" style="width: 100%; max-width: 460px; background: #FFFFFF; border-radius: 24px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<h2 id="h-pend" style="margin: 0; font-size: 20px; font-weight: 800">Modifications non enregistrées</h2>
+<p id="p-pend" style="margin: 0; font-size: 14px; line-height: 1.55; color: #3A4560">La séance du {{pendDate}} contient des modifications qui n'ont pas été enregistrées. Que voulez-vous en faire avant de changer de séance ?</p>
+<div style="display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; padding-top: 4px">
+<button type="button" onClick="{{pendStay}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 14px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Rester</button>
+<button type="button" onClick="{{pendDiscard}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 14px; border-radius: 13px; border: 1px solid rgba(194,39,45,0.3); background: linear-gradient(180deg, #FFFFFF, #FFF5F5); font: inherit; font-weight: 700; font-size: 14px; color: #A3161C; cursor: pointer">Ne pas enregistrer</button>
+<button type="button" onClick="{{pendSave}}" class="ez press btn prim" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 22px -10px rgba(31,79,216,0.8)">Enregistrer</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{histOpen}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-hist" class="drop" style="position: fixed; top: 96px; right: 30px; z-index: 25; width: 410px; max-width: calc(100% - 40px); max-height: calc(100% - 130px); overflow-y: auto; box-sizing: border-box; background: #FFFFFF; border-radius: 20px; box-shadow: 0 30px 70px -24px rgba(6,14,40,0.6), 0 0 0 1px rgba(15,30,70,0.06); padding: 16px 18px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 6px">
+<h2 id="h-hist" style="margin: 0; font-size: 16px; font-weight: 800">Historique de la fiche</h2>
+<button type="button" onClick="{{toggleHist}}" aria-label="Fermer l'historique" class="ez press btn ink" style="width: 40px; height: 40px; border-radius: 11px; border: 0; background: #F0F4FA; color: #3A4560; cursor: pointer; display: inline-flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<sc-for list="{{hist}}" as="h" hint-placeholder-count="5">
+<div class="{{h.cls}}" style="display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid #EDF0F6">
+<span aria-hidden="true" style="{{h.dot}}"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; line-height: 1.4">{{h.txt}}</span><span style="font-size: 12px; color: #586380">{{h.t}} · {{h.kind}}</span></span>
+</div>
+</sc-for>
+<p style="margin: 6px 0 0; padding-top: 10px; border-top: 1px solid #EDF0F6; font-size: 12px; color: #586380; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px">Une ligne par action, sans contenu médical · 24 mois<a href="Parametres.dc.html" style="font-weight: 700; text-decoration: none">Journal complet →</a></p>
+</section>
+</sc-if>
+
+<sc-if value="{{unlockOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 35; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="alertdialog" aria-modal="true" aria-labelledby="h-unl" aria-describedby="p-unl" class="zoomIn" style="width: 100%; max-width: 480px; background: #FFFFFF; border-radius: 24px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<div aria-hidden="true" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(145deg, #F5B356, #D07A1E); color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 10px 20px -8px rgba(208,122,30,0.8)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18h.01"></path></svg></div>
+<h2 id="h-unl" style="margin: 0; font-size: 20px; font-weight: 800">Déverrouiller une séance facturée ?</h2>
+<p id="p-unl" style="margin: 0; font-size: 14px; line-height: 1.55; color: #3A4560">La séance du {{cur.dateFr}} est liée à la facture <strong>N° {{cur.fac}}</strong>, déjà émise. Si vous changez la date ou le tarif, la facture sera marquée « modifiée » et il faudra la renvoyer au patient. L'opération est inscrite dans l'historique.</p>
+<span id="l-reason" style="font-size: 13px; font-weight: 700; color: #3A4560">Motif (obligatoire)</span>
+<div role="group" aria-labelledby="l-reason" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{reasons}}" as="o" hint-placeholder-count="4"><button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" class="{{o.cls}}" style="{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; padding-top: 4px">
+<button type="button" onClick="{{cancelUnlock}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{confirmUnlock}}" disabled="{{noReason}}" class="ez press btn" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 20px -10px rgba(184,106,18,0.9)">Déverrouiller</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{delOn}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 35; background: rgba(10,20,51,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section role="alertdialog" aria-modal="true" aria-labelledby="h-del" aria-describedby="p-del" class="zoomIn" style="width: 100%; max-width: 480px; background: #FFFFFF; border-radius: 24px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 90px -30px rgba(6,14,40,0.7)">
+<div aria-hidden="true" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(145deg, #F2777B, #C2272D); color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 10px 20px -8px rgba(194,39,45,0.8)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></div>
+<h2 id="h-del" style="margin: 0; font-size: 20px; font-weight: 800">Supprimer {{p.full}} ?</h2>
+<p id="p-del" style="margin: 0; font-size: 14px; line-height: 1.55; color: #3A4560">La fiche, ses {{nbSeances}} séances et le commentaire inter-séances seront supprimés. Les {{nbFac}} factures émises restent dans le registre (obligation de conservation). La suppression est inscrite dans le journal.</p>
+<div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; padding-top: 4px">
+<button type="button" onClick="{{cancelDelete}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 15px; color: #141B2D; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{doDelete}}" class="ez press btn" style="min-height: 46px; padding: 0 18px; border-radius: 13px; border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 10px 20px -10px rgba(194,39,45,0.9)">Supprimer définitivement</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{deleted}}" hint-placeholder-val="{{ false }}">
+<div class="fadeIn" style="position: fixed; inset: 0; z-index: 36; background: rgba(238,242,248,0.94); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box">
+<section aria-labelledby="h-gone" class="zoomIn" style="width: 100%; max-width: 440px; background: #FFFFFF; border-radius: 24px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; box-shadow: 0 30px 70px -30px rgba(6,14,40,0.5)">
+<div aria-hidden="true" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(145deg, #5EEAD4, #0EA5C6); color: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px -10px rgba(14,165,198,0.9)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg></div>
+<h2 id="h-gone" style="margin: 0; font-size: 20px; font-weight: 800">{{p.full}} a été supprimé(e)</h2>
+<p style="margin: 0; font-size: 14px; color: #3A4560; line-height: 1.5">Les factures restent consultables dans le registre. Une ligne a été ajoutée au journal.</p>
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding-top: 6px">
+<button type="button" onClick="{{undoDelete}}" class="ez press btn ink soft" style="min-height: 46px; padding: 0 16px; border-radius: 13px; border: 1px solid rgba(15,30,70,0.08); background: linear-gradient(180deg, #FFFFFF, #F0F4FA); font: inherit; font-weight: 700; font-size: 14px; color: #141B2D; cursor: pointer">Annuler la suppression</button>
+<a href="Main.dc.html" class="ez press btn prim" style="display: inline-flex; align-items: center; min-height: 46px; padding: 0 18px; border-radius: 13px; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Retour aux patients</a>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="drop" style="position: fixed; right: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 16px; background: linear-gradient(180deg, #17338F, #132A6B); color: #FFFFFF; font-size: 14px; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 20px 40px -16px rgba(6,14,40,0.7)"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l5 5L20 7"></path></svg>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sel: 1, swap: 0, saving: false, created: false, comEdited: false,
+      buf: null, editing: false, pendSel: null, shakeS: 0, cancelAsk: false, cReason: '',
+      cur: 'Camille Roux', profiles: {}, trail: [], freshLink: '', rmAsk: '', lConfirm: false,
+      links: [{ a: 'Camille Roux', b: 'Lucas Roux', rel: 'Conjoint' }, { a: 'Camille Roux', b: 'Emma Roux', rel: 'Enfant' }, { a: 'Lucas Roux', b: 'Emma Roux', rel: 'Enfant' }],
+      linkOpen: false, lq: '', lsel: null, lrel: '',
+      patient: { nom: 'Roux', prenom: 'Camille', ddn: '1992-03-12', sexe: 'Femme', situation: 'Marié(e)', enfants: 2, profession: 'Graphiste', adresse: '8 rue des Lilas', cp: '94300', commune: 'Vincennes', portable: '06 01 02 03 04', fixe: '', mail: 'camille.roux@exemple.fr' },
+      drawer: 'closed', draft: null, errors: {}, tried: false, confirm: false, savingFiche: false, shake: 0, note: '', hl: false, flash: 0,
+      modal: 'closed', step: 'preview', sendMail: true, nextNum: 143,
+      toast: '',
+      unlock: {}, unlockAsk: false, reason: '', histOpen: false, delAsk: false, deleted: false, logBase: 5,
+      log: [
+        { t: '09/10/2026 18:20', k: 'fac', txt: 'Facture 2026-0131 émise (60 €) · envoyée par e-mail' },
+        { t: '09/10/2026 18:05', k: 'pat', txt: 'Fiche modifiée : adresse, code postal, commune' },
+        { t: '11/06/2026 19:05', k: 'fac', txt: 'Facture 2026-0077 émise (60 €) · envoyée par e-mail' },
+        { t: '18/09/2025 12:40', k: 'fac', txt: 'Facture 2025-0198 émise (55 €)' },
+        { t: '04/03/2025 10:12', k: 'pat', txt: 'Patient créé' }
+      ],
+      comment: "Antécédents : appendicectomie (2008), entorses récidivantes cheville droite. Grossesse 2021, accouchement par voie basse.\n\nTravail sur écran toute la journée, peu de sport. Sensible au niveau cervical, préfère les techniques douces.\n\nÀ revoir : posture au bureau, reprise de la marche.",
+      seances: [
+        { iso: '2026-10-30', motif: 'Suivi lombalgie', an: '', pr: '', prix: 60, pay: '', fac: null, status: 'planned', src: 'Doctolib', time: '10:30' },
+        { iso: '2026-10-24', motif: 'Lombalgie · suivi', an: '', pr: '', prix: 60, pay: '', fac: null, status: 'planned', src: 'Doctolib', time: '11:30' },
+        { iso: '2026-10-16', motif: 'Lombalgie · contrôle', an: 'Nette amélioration, raideur matinale résiduelle.', pr: '', prix: 60, pay: '', fac: null, status: 'planned', src: 'Doctolib', time: '18:00' },
+        { iso: '2026-10-09', motif: 'Lombalgie basse', an: 'Douleur lombaire aiguë apparue après le port de cartons lors d’un déménagement. Gêne à la flexion, pas d’irradiation.', pr: 'Techniques douces lombaires et pelviennes, travail du diaphragme. Conseils de posture.', prix: 60, pay: 'Chèque', fac: '2026-0131', status: 'done' },
+        { iso: '2026-06-11', motif: 'Cervicalgie, céphalées', an: 'Tensions cervicales en fin de journée, céphalées 2 à 3 fois par semaine.', pr: 'Travail cervico-thoracique et crânien.', prix: 60, pay: 'Virement reçu', fac: '2026-0077', status: 'done' },
+        { iso: '2026-02-02', motif: 'Bilan post-ski', an: 'Chute à ski il y a 8 jours, gêne à l’épaule droite en élévation.', pr: 'Bilan articulaire de l’épaule, techniques fonctionnelles.', prix: 60, pay: 'Virement en attente', fac: null, status: 'done' },
+        { iso: '2025-09-18', motif: 'Dorsalgie', an: 'Douleur entre les omoplates depuis 3 semaines.', pr: 'Techniques thoraciques et costales.', prix: 55, pay: 'Espèces', fac: '2025-0198', status: 'done' },
+        { iso: '2025-03-04', motif: 'Torticolis (geste offert)', an: 'Blocage cervical au réveil.', pr: 'Techniques cervicales douces.', prix: 0, pay: 'Espèces', fac: null, status: 'done' }
+      ]
+    };
+  }
+  mkProfile(name) {
+    // fiches fictives des autres patients (démo)
+    const D = {
+      'Lucas Roux': ['1990-05-02', 'Homme', 'Marié(e)', 2, 'Développeur', '06 11 22 33 44'],
+      'Emma Roux': ['2020-04-14', 'Femme', '', 0, 'Écolière', ''],
+      'Paul Roux': ['2018-01-20', 'Homme', '', 0, 'Écolier', ''],
+      'Thomas Girard': ['2026-02-10', 'Homme', '', 0, '', ''],
+      'Julien Morel': ['1985-07-08', 'Homme', 'Pacsé(e)', 1, 'Boulanger', '06 21 43 65 87'],
+      'Sophie Lambert': ['1997-03-30', 'Femme', 'Célibataire', 0, 'Infirmière', '07 12 34 56 78'],
+      'Léa Fontaine': ['1969-09-12', 'Femme', 'Divorcé(e)', 3, 'Professeure', '06 98 76 54 32'],
+      'Manon Petit': ['1988-06-01', 'Femme', 'Marié(e)', 2, 'Comptable', '06 55 44 33 22'],
+      'Antoine Dubois': ['1954-11-03', 'Homme', 'Veuf(ve)', 2, 'Retraité', '01 43 28 11 00']
+    }[name] || ['1990-01-01', '', '', 0, '', ''];
+    const sp = name.split(' '); const roux = sp[1] === 'Roux';
+    return {
+      patient: { prenom: sp[0], nom: sp.slice(1).join(' '), ddn: D[0], sexe: D[1], situation: D[2], enfants: D[3], profession: D[4], adresse: roux ? '8 rue des Lilas' : '', cp: roux ? '94300' : '', commune: roux ? 'Vincennes' : '', portable: D[5], fixe: '', mail: '' },
+      seances: [
+        { iso: '2026-09-17', motif: 'Suivi', an: 'Bonne évolution depuis la dernière séance.', pr: 'Techniques fonctionnelles.', prix: 60, pay: 'Chèque', fac: null, status: 'done' },
+        { iso: '2026-04-02', motif: 'Première consultation', an: 'Bilan initial.', pr: 'Bilan global, techniques douces.', prix: 60, pay: 'Espèces', fac: null, status: 'done' }
+      ],
+      log: [{ t: '02/04/2026 09:40', k: 'pat', txt: 'Patient créé' }],
+      comment: '', sel: 0
+    };
+  }
+  openPatient(name, back) {
+    const st = this.state;
+    if (this.isDirty() || st.editing || st.drawer !== 'closed') { this.toastMsg('Enregistrez ou abandonnez vos modifications avant de changer de fiche'); return; }
+    const profiles = Object.assign({}, st.profiles, { [st.cur]: { patient: st.patient, seances: st.seances, log: st.log, comment: st.comment, sel: st.sel } });
+    const t = profiles[name] || this.mkProfile(name);
+    const trail = back ? st.trail.slice(0, -1) : st.trail.concat([st.cur]);
+    this.setState({ profiles, cur: name, trail, patient: t.patient, seances: t.seances, log: t.log, logBase: t.log.length, comment: t.comment, sel: t.sel,
+      buf: null, editing: false, unlock: {}, pendSel: null, cancelAsk: false, created: false, comEdited: false, linkOpen: false, histOpen: false, freshLink: '',
+      swap: st.swap + 1, flash: st.flash + 1 });
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+  }
+  componentWillUnmount() { [this.t, this.t2, this.t3, this.t4, this.t5].forEach(clearTimeout); }
+  touch() { clearTimeout(this.t); this.setState({ saving: true }); this.t = setTimeout(() => this.setState({ saving: false }), 900); }
+  toastMsg(m) { clearTimeout(this.t5); this.setState({ toast: m }); this.t5 = setTimeout(() => this.setState({ toast: '' }), 2800); }
+  frD(iso) { const p = (iso || '').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : ''; }
+  stamp() { const d = new Date(); const z = n => String(n).padStart(2, '0'); return z(d.getDate()) + '/' + z(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()); }
+  logIt(k, txt) { this.setState({ log: [{ t: this.stamp(), k, txt }].concat(this.state.log) }); }
+  upd(field, value) {
+    const st = this.state; const base = st.buf || st.seances[st.sel];
+    this.setState({ buf: Object.assign({}, base, { [field]: value }) });
+  }
+  isDirty() { const st = this.state; return !!st.buf && JSON.stringify(st.buf) !== JSON.stringify(st.seances[st.sel]); }
+  finishUnlock(i, after) {
+    const st = this.state; const un = st.unlock[i];
+    if (!un) return { unlock: st.unlock, extra: {} };
+    const ch = [];
+    if (after.prix !== un.prix) ch.push('tarif ' + un.prix + ' € → ' + after.prix + ' €');
+    if (after.iso !== un.iso) ch.push('date ' + this.frD(un.iso) + ' → ' + this.frD(after.iso));
+    const unlock = Object.assign({}, st.unlock); delete unlock[i];
+    if (ch.length) {
+      this.logIt('fac', 'Facture ' + after.fac + ' modifiée : ' + ch.join(', '));
+      return { unlock, extra: { facMod: this.stamp().slice(0, 10) }, msg: 'Facture ' + after.fac + ' modifiée · pensez à la renvoyer' };
+    }
+    this.logIt('lock', 'Séance du ' + this.frD(un.iso) + ' reverrouillée, facture inchangée');
+    return { unlock, extra: {} };
+  }
+  commit(extra, msg) {
+    const st = this.state; const i = st.sel;
+    const after = Object.assign({}, st.buf || st.seances[i], extra || {});
+    const r = this.finishUnlock(i, after);
+    Object.assign(after, r.extra);
+    const arr = st.seances.slice(); arr[i] = after;
+    arr.sort((a, b) => b.iso.localeCompare(a.iso));
+    this.setState({ seances: arr, sel: arr.indexOf(after), buf: null, editing: false, unlock: r.unlock });
+    this.toastMsg(r.msg || msg || 'Séance enregistrée');
+    return arr;
+  }
+  discard() {
+    const st = this.state; let unlock = st.unlock;
+    if (unlock[st.sel]) { unlock = Object.assign({}, unlock); delete unlock[st.sel]; this.logIt('lock', 'Séance du ' + this.frD(st.seances[st.sel].iso) + ' reverrouillée, sans modification'); }
+    this.setState({ buf: null, editing: false, unlock });
+  }
+  goTo(i) {
+    const st = this.state;
+    if (this.isDirty()) { this.setState({ pendSel: i }); return; }
+    if (st.editing || st.unlock[st.sel]) this.discard();
+    this.setState({ sel: i, swap: st.swap + 1, buf: null, editing: false, cancelAsk: false });
+  }
+  relTime(iso) {
+    const p = (iso || '').split('-').map(Number); if (p.length !== 3) return '';
+    const n = Math.round((Date.UTC(p[0], p[1] - 1, p[2]) - Date.UTC(2026, 9, 24)) / 864e5);
+    if (n === 0) return 'Aujourd’hui'; if (n === 1) return 'Demain'; if (n > 1) return 'Dans ' + n + ' jours';
+    if (n === -1) return 'Hier'; if (n > -31) return 'Il y a ' + (-n) + ' jours';
+    const m = Math.round(-n / 30.4); return m < 12 ? 'Il y a ' + m + ' mois' : 'Il y a ' + Math.floor(m / 12) + (m >= 24 ? ' ans' : ' an');
+  }
+  age(iso) {
+    const p = (iso || '').split('-').map(Number);
+    if (p.length !== 3 || !p[0]) return '';
+    const [y, m, d] = p; const Y = 2026, M = 10, D = 24;
+    let months = (Y - y) * 12 + (M - m) - (D < d ? 1 : 0);
+    if (months < 0) return '';
+    return months >= 12 ? Math.floor(months / 12) + ' ans' : months + ' mois';
+  }
+  validate(d) {
+    const e = {}; const digits = s => (s || '').replace(/\D/g, '');
+    if (!d.nom.trim()) e.nom = 'Le nom est obligatoire';
+    if (!d.prenom.trim()) e.prenom = 'Le prénom est obligatoire';
+    if (!d.ddn) e.ddn = 'La date de naissance est obligatoire';
+    else if (d.ddn > '2026-10-24') e.ddn = 'La date ne peut pas être dans le futur';
+    else if (d.ddn < '1900-01-01') e.ddn = 'Date de naissance improbable';
+    if (d.portable && !/^0[67]\d{8}$/.test(digits(d.portable))) e.portable = 'Numéro de portable invalide (06 ou 07, 10 chiffres)';
+    if (d.fixe && !/^0[1-59]\d{8}$/.test(digits(d.fixe))) e.fixe = 'Numéro de fixe invalide (10 chiffres)';
+    if (d.mail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.mail)) e.mail = 'Adresse e-mail invalide';
+    if (d.cp && !/^\d{5}$/.test(d.cp)) e.cp = '5 chiffres attendus';
+    return e;
+  }
+  setD(k, v) {
+    const dr = Object.assign({}, this.state.draft, { [k]: v });
+    if (k === 'cp') { const list = this.communesFor(v); dr.commune = list.length === 1 ? list[0] : (list.indexOf(dr.commune) >= 0 ? dr.commune : ''); }
+    this.setState({ draft: dr, confirm: false, errors: this.state.tried ? this.validate(dr) : {} });
+  }
+  communesFor(cp) {
+    const db = { '94300': ['Vincennes'], '93100': ['Montreuil'], '94160': ['Saint-Mandé'], '94120': ['Fontenay-sous-Bois'], '94130': ['Nogent-sur-Marne'], '94100': ['Saint-Maur-des-Fossés'], '75012': ['Paris 12e Arrondissement'], '94000': ['Créteil'], '77000': ['Melun', 'La Rochette', 'Vaux-le-Pénil'] };
+    return db[cp] || [];
+  }
+  openDrawer(note) { clearTimeout(this.t2); this.setState({ drawer: 'open', draft: Object.assign({}, this.state.patient), errors: {}, tried: false, confirm: false, rmAsk: '', note: note || '', hl: !!note }); }
+  closeDrawer() { clearTimeout(this.t2); this.setState({ drawer: 'closing' }); this.t2 = setTimeout(() => this.setState({ drawer: 'closed', draft: null }), 300); }
+  closeModal() { clearTimeout(this.t3); this.setState({ modal: 'closing' }); this.t3 = setTimeout(() => this.setState({ modal: 'closed' }), 260); }
+  renderVals() {
+    const st = this.state; const P = st.patient;
+    const INV = { 'Enfant': 'Parent', 'Parent': 'Enfant', 'Grand-parent': 'Petit-enfant', 'Petit-enfant': 'Grand-parent', 'Conjoint': 'Conjoint', 'Frère / sœur': 'Frère / sœur', 'Autre': 'Autre' };
+    const myLinks = st.links.filter(l => l.a === st.cur || l.b === st.cur).map(l => l.a === st.cur ? { nom: l.b, rel: l.rel, link: l } : { nom: l.a, rel: INV[l.rel], link: l });
+    const linkCands = (() => {
+        const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+        const pool = [['Paul Roux', '8 ans · Vincennes'], ['Lucas Roux', '36 ans · Vincennes'], ['Emma Roux', '6 ans · Vincennes'], ['Thomas Girard', '8 mois · Vincennes'], ['Julien Morel', '41 ans · Montreuil'], ['Sophie Lambert', '29 ans · Saint-Mandé'], ['Léa Fontaine', '57 ans · Fontenay-sous-Bois'], ['Manon Petit', '38 ans · Montreuil'], ['Antoine Dubois', '72 ans · Saint-Maur']];
+        const linked = myLinks.map(x => x.nom).concat([st.cur]);
+        return pool.concat([['Camille Roux', '34 ans · Vincennes']]).filter(([n]) => linked.indexOf(n) < 0 && (!st.lq || fold(n).includes(fold(st.lq.trim())))).map(([n, info]) => {
+          const on = st.lsel === n;
+          return {
+            nom: n, info, on, ini: n.split(' ').map(w => w[0]).join(''),
+            cls: on ? 'ez press btn pop' : 'ez press btn ink row',
+            style: 'display: flex; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 6px 10px; border-radius: 12px; font: inherit; font-size: 14px; text-align: left; cursor: pointer; color: #141B2D; ' + (on ? 'border: 2px solid #3B6CF6; background: #EEF4FF' : 'border: 2px solid transparent; background: transparent'),
+            pick: () => this.setState({ lsel: n, lConfirm: false })
+          };
+        });
+      })();
+    const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    const fr = iso => { const p = (iso || '').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : ''; };
+    const long = iso => { const p = (iso || '').split('-'); return p.length === 3 ? parseInt(p[2], 10) + ' ' + months[parseInt(p[1], 10) - 1] + ' ' + p[0] : ''; };
+    const fem = P.sexe === 'Femme';
+    const sitLabel = s => !s ? '' : fem ? s.replace('(e)', 'e').replace('(ve)', 've') : s.replace('(e)', '').replace('(ve)', '');
+    const sub = [this.age(P.ddn), P.sexe, sitLabel(P.situation), P.enfants === 0 ? 'Sans enfant' : P.enfants + (P.enfants > 1 ? ' enfants' : ' enfant'), P.profession].filter(Boolean).join(' · ');
+    const ic = {
+      cal: 'M3 10h18M8 3v4M16 3v4M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
+      tel: 'M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
+      mail: 'M3 7l9 6 9-6M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
+      pin: 'M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12zM12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'
+    };
+    const addr = [P.adresse, [P.cp, P.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    const chipCls = st.flash ? (st.flash % 2 ? 'flash' : 'flash') : '';
+    const chipDefs = [
+      { has: !!P.ddn, label: (fem ? 'Née le ' : 'Né le ') + fr(P.ddn), add: '+ Date de naissance', d: ic.cal },
+      { has: !!P.portable, label: P.portable, add: 'Ajouter un portable', d: ic.tel },
+      { has: !!P.fixe, label: 'Fixe ' + P.fixe, add: 'Ajouter un fixe', d: ic.tel },
+      { has: !!P.mail, label: P.mail, add: 'Ajouter un e-mail', d: ic.mail },
+      { has: !!(P.adresse && P.cp && P.commune), label: addr, add: 'Compléter l’adresse', d: ic.pin }
+    ];
+    const chips = chipDefs.map(c => ({ full: c.has, empty: !c.has, label: c.has ? c.label : c.add, d: c.d, cls: chipCls, open: () => this.openDrawer('') }));
+
+    const short = { 'Espèces': 'Espèces', 'Chèque': 'Chèque', 'Virement en attente': 'En attente', 'Virement reçu': 'Virement' };
+    const TODAY = '2026-10-24';
+    const effOf = s => (s.status === 'planned' || s.status === 'draft') ? (s.iso > TODAY ? 'planned' : s.iso === TODAY ? 'today' : 'draft') : s.status;
+    const ST = {
+      planned: { label: 'À venir', bg: '#EDF0F6', fg: '#3A4560' },
+      today: { label: 'Aujourd’hui', bg: '#D9F6FA', fg: '#0B5F73' },
+      draft: { label: 'À compléter', bg: '#FCF1E3', fg: '#8A4B08' },
+      paid: { label: 'Réglée', bg: '#E3FAF5', fg: '#0F4C45' },
+      wait: { label: 'Paiement en attente', bg: '#FCF1E3', fg: '#8A4B08' },
+      done: { label: 'Réalisée', bg: '#E6EEFF', fg: '#17338F' },
+      cancelled: { label: 'Annulée', bg: '#EDF0F6', fg: '#586380' },
+      fac: { label: 'Facturée', bg: '#E3FAF5', fg: '#0F4C45' }
+    };
+    const items = st.seances.map((s, i) => {
+      const on = i === st.sel; const eff = effOf(s); const wait = s.pay === 'Virement en attente';
+      const k = eff === 'done' ? (wait ? 'wait' : 'paid') : eff;
+      const lab = eff === 'done' ? (short[s.pay] || 'Réalisée') : ST[eff].label;
+      const open = eff === 'planned' || eff === 'today' || eff === 'draft';
+      const tag = open ? (s.src ? s.src + (s.time ? ' · ' + s.time : '') : 'Hors Doctolib') : s.fac ? 'Facturée' : '';
+      return {
+        dateFr: fr(s.iso), payShort: lab, motifOr: s.motif || 'Motif à saisir', cur: on ? 'true' : 'false', hasTag: !!tag, tag,
+        cls: (on ? 'ez press btn' : 'ez press btn ink row') + (s.fresh ? ' pop' : ''),
+        style: 'display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 11px 12px; border-radius: 14px; font: inherit; text-align: left; cursor: pointer; ' +
+          (on ? 'border: 0; background: linear-gradient(160deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 12px 24px -12px rgba(31,79,216,0.9)'
+              : eff === 'planned' ? 'border: 1px dashed rgba(14,165,198,0.45); background: #F7FDFE; color: #141B2D'
+              : eff === 'cancelled' ? 'border: 1px solid transparent; background: transparent; color: #8E99B3; text-decoration: line-through' : 'border: 1px solid transparent; background: transparent; color: #141B2D'),
+        sub: 'font-size: 13px; ' + (on ? 'color: #DCE6FD' : 'color: #586380'),
+        facTag: 'font-size: 11px; font-weight: 700; ' + (on ? 'color: #C7D6FB' : eff === 'planned' ? 'color: #0B7F99' : 'color: #1F4FD8'),
+        badge: 'font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; ' + (on ? 'background: rgba(255,255,255,0.18); color: #FFFFFF' : wait && eff === 'done' ? 'background: #FCF1E3; color: #8A4B08' : 'background: ' + ST[k || 'fac'].bg + '; color: ' + ST[k || 'fac'].fg),
+        pick: () => { if (i !== st.sel) this.goTo(i); }
+      };
+    });
+    const c = st.seances[st.sel] || st.seances[0];
+    const v = st.buf || c;
+    const eff = effOf(c);
+    const isDone = c.status === 'done';
+    const isCancelled = c.status === 'cancelled';
+    const editable = (!isDone && !isCancelled) || st.editing;
+    const un = st.unlock[st.sel];
+    const dtLock = !editable || (!!c.fac && !un);
+    const sDirty = this.isDirty();
+    const viewMode = isDone && !st.editing;
+    const addrOk = !!(P.adresse && P.cp && P.commune);
+    const pill = on => 'min-height: 40px; padding: 0 14px; border-radius: 11px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border: 0; ' +
+      (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 16px -8px rgba(31,79,216,0.9)' : 'background: transparent; color: #3A4560');
+    const pcls = on => on ? 'ez press btn pop on' : 'ez press btn ink';
+    const prix = [0, 50, 55, 60, 65].map(x => ({ label: x === 0 ? 'Gratuit' : x + ' €', on: v.prix === x, dis: dtLock, style: pill(v.prix === x), cls: pcls(v.prix === x), pick: () => { if (!dtLock) this.upd('prix', x); } }));
+    const pay = ['Espèces', 'Chèque', 'Virement en attente', 'Virement reçu'].map(x => ({ label: x, on: v.pay === x, dis: !editable, style: pill(v.pay === x), cls: pcls(v.pay === x), pick: () => { if (editable) this.upd('pay', x); } }));
+    let facHint, hintTone = 'n';
+    if (isCancelled) facHint = 'Séance annulée : non facturable';
+    else if (!isDone) facHint = eff === 'planned' ? 'Facturation possible une fois la séance réalisée' : eff === 'today' ? 'Validez la séance une fois réalisée pour pouvoir la facturer' : 'Séance passée non validée : complétez-la puis validez-la';
+    else if (st.editing) facHint = un ? 'Le changement de date ou de tarif sera inscrit sur la facture' : 'Enregistrer reverrouille la séance';
+    else if (c.fac) facHint = 'Facture N° ' + c.fac + ' · ' + c.prix + ',00 € · ' + (c.pay === 'Virement en attente' ? 'en attente de règlement' : 'acquittée') + (c.facMod ? ' · modifiée le ' + c.facMod : '');
+    else if (c.prix === 0) { facHint = 'Séance gratuite : aucune facture à émettre'; }
+    else if (!addrOk) { facHint = 'Adresse du patient incomplète : elle est obligatoire sur la facture'; hintTone = 'w'; }
+    else facHint = 'Pas encore de facture pour cette séance';
+    const stKey = isCancelled ? 'cancelled' : isDone ? (c.pay === 'Virement en attente' ? 'wait' : 'paid') : eff;
+    const stText = stKey === 'paid' ? 'Réglée' + (c.pay ? ' · ' + c.pay.toLowerCase() : '') : ST[stKey].label;
+    const cur = Object.assign({}, v, {
+      dateLong: long(v.iso), dateFr: fr(c.iso), ro: !editable, dtLock, reason: un ? un.reason.toLowerCase() : '',
+      kicker: c.fresh ? 'Nouvelle séance' : 'Séance ' + (st.seances.length - st.sel) + ' sur ' + st.seances.length,
+      facHint, hintStyle: 'font-size: 14px; ' + (hintTone === 'w' ? 'color: #8A4B08; font-weight: 600' : 'color: #586380'),
+      hasFac: viewMode && !!c.fac, canInvoice: viewMode && !c.fac && c.prix > 0 && addrOk, needAddr: viewMode && !c.fac && c.prix > 0 && !addrOk,
+      canCancel: !c.fac && !isCancelled && !st.editing && !st.cancelAsk,
+      cancelAria: isDone ? 'Supprimer la séance' : 'Annuler la séance',
+      bannerCancel: isCancelled, cancelMsg: 'Séance annulée' + (c.cReason ? ' · ' + c.cReason.toLowerCase() : '') + (c.cOn ? ' · le ' + c.cOn : '') + '. Les annotations sont conservées.',
+      modeOpen: !isDone && !isCancelled, modeEdit: isDone && st.editing, future: v.iso > TODAY,
+      stLabel: stText, stStyle: 'display: inline-flex; align-items: center; font-size: 12px; font-weight: 800; letter-spacing: 0.02em; padding: 5px 11px; border-radius: 999px; background: ' + ST[stKey].bg + '; color: ' + ST[stKey].fg,
+      rel: this.relTime(v.iso) + (c.time ? ' · ' + c.time : ''),
+      bannerView: viewMode, bannerEdit: isDone && st.editing, bannerPlanned: !isDone && !isCancelled && (eff === 'planned' || eff === 'today' || !c.src),
+      viewMsg: 'Séance réalisée, verrouillée pour éviter toute modification involontaire.' + (c.fac ? ' Facture N° ' + c.fac + '.' : ''),
+      editMsg: c.fac ? (un ? 'Modification en cours · date et tarif déverrouillés (' + un.reason.toLowerCase() + ').' : 'Modification en cours · date et tarif restent liés à la facture N° ' + c.fac + '.') : 'Modification d’une séance réalisée en cours.',
+      canUnlock: isDone && st.editing && !!c.fac && !un,
+      plannedMsg: !c.src ? 'Séance créée à la main (hors Doctolib). Si le patient a aussi un RDV Doctolib ce jour-là, il sera rattaché à cette séance au lieu d’en créer une seconde.'
+        : eff === 'today' ? 'RDV Doctolib aujourd’hui à ' + c.time + ', créé automatiquement. Préparez vos notes, puis validez une fois la séance réalisée.'
+        : 'RDV Doctolib du ' + fr(c.iso) + ' à ' + c.time + ', créé automatiquement. Vous pouvez déjà y noter ce que vous voulez préparer.'
+    });
+
+    // Drawer
+    const dr = st.draft || P;
+    const E = st.errors; const keys = ['nom', 'prenom', 'ddn', 'portable', 'fixe', 'mail', 'cp', 'adresse', 'commune'];
+    const e = {}, eOn = {}, cc = {};
+    keys.forEach(k => { e[k] = E[k] || ''; eOn[k] = !!E[k]; cc[k] = E[k] ? 'bad' : ''; });
+    if (st.hl) { ['adresse', 'cp', 'commune'].forEach(k => { if (!dr[k] && !E[k]) cc[k] = 'hi'; }); }
+    const f = {};
+    ['nom', 'prenom', 'ddn', 'profession', 'adresse', 'mail', 'situation', 'commune'].forEach(k => { f[k] = ev => this.setD(k, ev.target.value); });
+    f.cp = ev => this.setD('cp', ev.target.value.replace(/\D/g, '').slice(0, 5));
+    const fmtTel = v => v.replace(/\D/g, '').slice(0, 10).replace(/(\d{2})(?=\d)/g, '$1 ');
+    f.portable = ev => this.setD('portable', fmtTel(ev.target.value));
+    f.fixe = ev => this.setD('fixe', fmtTel(ev.target.value));
+    const seg = on => 'flex: 1 1 0; min-height: 40px; padding: 0 12px; border-radius: 10px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border: 0; ' +
+      (on ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 16px -8px rgba(31,79,216,0.9)' : 'background: transparent; color: #3A4560');
+    const sexes = ['Femme', 'Homme'].map(v => ({ label: v, on: dr.sexe === v, style: seg(dr.sexe === v), cls: dr.sexe === v ? 'ez press btn pop' : 'ez press btn ink', pick: () => this.setD('sexe', v) }));
+    const errN = Object.keys(E).length;
+    const communes = this.communesFor(dr.cp).map(v => ({ v }));
+    const dirty = st.draft && JSON.stringify(st.draft) !== JSON.stringify(P);
+
+    // Invoice modal
+    const isPending = c.pay === 'Virement en attente';
+    const numPreview = '2026-' + String(st.nextNum).padStart(4, '0');
+    const inv = {
+      title: st.step === 'done' ? 'Facture émise' : 'Émettre la facture',
+      patient: P.prenom + ' ' + P.nom, addr, date: fr(c.iso), motif: c.motif || '—', amount: c.prix + ',00 €', mail: P.mail,
+      num: st.step === 'done' ? 'N° ' + (c.fac || numPreview) : 'N° ' + numPreview + ' (provisoire)',
+      numShort: 'N° ' + (c.fac || numPreview),
+      numSide: st.step === 'done' ? (c.fac || numPreview) : numPreview + ' · attribué à l’émission',
+      reglement: isPending ? 'Règlement attendu par virement.' : 'Acquittée le ' + fr(c.iso) + ' · règlement : ' + c.pay.toLowerCase() + '.',
+      payLabel: isPending ? 'En attente (virement)' : 'Acquittée · ' + c.pay,
+      payStyle: 'font-weight: 700; padding: 2px 10px; border-radius: 999px; font-size: 13px; ' + (isPending ? 'background: #FCF1E3; color: #8A4B08' : 'background: #E3FAF5; color: #0F4C45'),
+      mailHint: P.mail ? P.mail : 'Pas d’e-mail dans la fiche patient'
+    };
+    const sendOn = !!(st.sendMail && P.mail);
+    const swStyle = 'position: relative; width: 56px; height: 32px; flex-shrink: 0; border-radius: 999px; border: 0; padding: 0; cursor: pointer; ' +
+      (sendOn ? 'background: linear-gradient(180deg, #3B6CF6, #1F4FD8); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2)' : 'background: #D4DBE8; box-shadow: inset 0 2px 4px rgba(15,30,70,0.18)');
+    const knobStyle = 'position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 999px; background: linear-gradient(180deg, #FFFFFF, #EDF2F9); box-shadow: 0 3px 8px rgba(0,0,0,0.25); transform: translateX(' + (sendOn ? '24px' : '0') + ')';
+
+    return {
+      p: { full: P.prenom + ' ' + P.nom, ini: (P.prenom[0] || '') + (P.nom[0] || ''), sub },
+      hdrFlash: st.flash ? (st.flash % 2 ? 'flash' : 'drop') : '',
+      chips, items, cur, prix, pay,
+      suivi: (P.sexe === 'Femme' ? 'Suivie' : 'Suivi') + ' depuis ' + (st.seances.length ? st.seances[st.seances.length - 1].iso.slice(0, 4) : '2026'),
+      nbSeances: st.seances.length, nbFac: st.seances.filter(s => s.fac).length,
+      swapCls: st.swap % 2 ? 'swB' : 'swA',
+      dirtyOn: sDirty, notDirty: !sDirty, showRdv: !st.created,
+      // proches
+      noProches: myLinks.length === 0,
+      drProches: myLinks.map(x => {
+        const asking = st.rmAsk === x.nom;
+        return {
+          nom: x.nom, relCap: x.rel, ini: x.nom.split(' ').map(w => w[0]).join(''), cls: st.freshLink === x.nom ? 'pop' : '',
+          aria: 'Retirer le lien avec ' + x.nom, idle: !asking, asking,
+          rowStyle: 'display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; ' + (asking ? 'background: #FFFAFA; box-shadow: inset 0 0 0 1px rgba(194,39,45,0.2)' : 'background: #F7F9FC'),
+          ask: () => this.setState({ rmAsk: x.nom }),
+          keep: () => this.setState({ rmAsk: '' }),
+          remove: () => {
+            this.setState({ links: st.links.filter(l => l !== x.link), rmAsk: '' });
+            this.logIt('pat', 'Lien de proche retiré : ' + x.nom);
+            this.toastMsg('Lien avec ' + x.nom + ' retiré (sur les deux fiches)');
+          }
+        };
+      }),
+      proches: myLinks.map(x => ({
+        nom: x.nom, rel: x.rel.toLowerCase(), ini: x.nom.split(' ').map(w => w[0]).join(''), cls: st.freshLink === x.nom ? 'pop' : '',
+        aria: 'Retirer le lien avec ' + x.nom, title: 'Ouvrir la fiche de ' + x.nom,
+        open: () => this.openPatient(x.nom)
+      })),
+      backOn: st.trail.length > 0, backName: st.trail[st.trail.length - 1] || '',
+      goBack: () => this.openPatient(st.trail[st.trail.length - 1], true),
+      linkOn: st.linkOpen,
+      openLink: () => this.setState({ linkOpen: true, lq: '', lsel: null, lrel: '', lConfirm: false, rmAsk: '' }),
+      lConfOn: st.lConfirm, lConfOff: !st.lConfirm,
+      askLink: () => { if (st.lsel && st.lrel) this.setState({ lConfirm: true }); },
+      backLink: () => this.setState({ lConfirm: false }),
+      closeLink: () => this.setState({ linkOpen: false }),
+      lq: st.lq, onLq: ev => this.setState({ lq: ev.target.value }),
+      linkCands,
+      noCand: !linkCands.length,
+      rels: ['Conjoint', 'Enfant', 'Parent', 'Frère / sœur', 'Grand-parent', 'Petit-enfant', 'Autre'].map(r => ({
+        label: r, on: st.lrel === r,
+        cls: st.lrel === r ? 'ez press btn pop' : 'ez press btn ink',
+        style: 'min-height: 40px; padding: 0 12px; border-radius: 11px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' + (st.lrel === r ? 'border: 0; background: linear-gradient(180deg, #3B6CF6, #1F4FD8); color: #FFFFFF' : 'border: 1px solid #D4DBE8; background: #FFFFFF; color: #3A4560'),
+        pick: () => this.setState({ lrel: r, lConfirm: false })
+      })),
+      linkReady: !!(st.lsel && st.lrel), linkNotReady: !(st.lsel && st.lrel),
+      linkSentence: (() => {
+        if (!st.lsel || !st.lrel) return '';
+        const inv = { 'Enfant': 'parent', 'Parent': 'enfant', 'Grand-parent': 'petit-enfant', 'Petit-enfant': 'grand-parent', 'Conjoint': 'conjoint', 'Frère / sœur': 'frère / sœur', 'Autre': 'proche' };
+        return st.lsel + ' apparaîtra ici comme « ' + st.lrel.toLowerCase() + ' », et ' + P.prenom + ' ' + P.nom + ' apparaîtra sur la fiche de ' + st.lsel + ' comme « ' + inv[st.lrel] + ' ».';
+      })(),
+      saveLink: () => {
+        if (!st.lsel || !st.lrel) return;
+        this.setState({ links: st.links.concat([{ a: st.cur, b: st.lsel, rel: st.lrel }]), freshLink: st.lsel, linkOpen: false, lConfirm: false });
+        this.logIt('pat', 'Proche lié : ' + st.lsel + ' (' + st.lrel.toLowerCase() + ')');
+        this.toastMsg(st.lsel + ' lié(e) comme ' + st.lrel.toLowerCase() + ' · lien ajouté sur les deux fiches');
+      },
+      cancelOn: st.cancelAsk, cancelOff: !st.cancelAsk,
+      askCancel: () => this.setState({ cancelAsk: true, cReason: '' }),
+      backCancel: () => this.setState({ cancelAsk: false }),
+      cx: isDone
+        ? { title: 'Supprimer la séance du ' + fr(c.iso) + ' ?', text: 'Elle disparaîtra de la fiche avec ses notes cliniques. Action définitive, inscrite au journal.', needReason: false, hasDoc: false, noReason: false, btn: 'Supprimer définitivement' }
+        : { title: 'Annuler la séance du ' + fr(c.iso) + ' ?', text: 'Elle restera visible dans la liste, barrée, avec ses annotations. Vous pourrez la rétablir.', needReason: true, hasDoc: !!c.src, noReason: !st.cReason, btn: 'Annuler la séance' },
+      cReasons: ['Annulée par le patient', 'Patient absent', 'Reportée', 'Erreur de saisie'].map(x => ({
+        label: x, on: st.cReason === x,
+        cls: st.cReason === x ? 'ez press btn pop' : 'ez press btn ink',
+        style: 'min-height: 40px; padding: 0 12px; border-radius: 11px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; ' + (st.cReason === x ? 'border: 0; background: linear-gradient(180deg, #E5484D, #C2272D); color: #FFFFFF' : 'border: 1px solid rgba(194,39,45,0.25); background: #FFFFFF; color: #7A1015'),
+        pick: () => this.setState({ cReason: x })
+      })),
+      doCancel: () => {
+        const d = fr(c.iso);
+        if (isDone) {
+          const arr = st.seances.filter((x, i) => i !== st.sel);
+          this.logIt('pat', 'Séance du ' + d + ' supprimée');
+          this.setState({ seances: arr, sel: Math.min(st.sel, arr.length - 1), swap: st.swap + 1, cancelAsk: false, buf: null });
+          this.toastMsg('Séance du ' + d + ' supprimée');
+          return;
+        }
+        if (!st.cReason) return;
+        const arr = st.seances.slice();
+        arr[st.sel] = Object.assign({}, c, { status: 'cancelled', cReason: st.cReason, cOn: this.stamp().slice(0, 10), prevStatus: c.status });
+        this.setState({ seances: arr, cancelAsk: false, buf: null });
+        this.toastMsg('Séance du ' + d + ' annulée' + (c.src ? ' · pensez à Doctolib' : ''));
+      },
+      restore: () => {
+        const arr = st.seances.slice();
+        arr[st.sel] = Object.assign({}, c, { status: c.iso > TODAY ? 'planned' : 'draft', cReason: '', cOn: '' });
+        this.setState({ seances: arr });
+        this.toastMsg('Séance du ' + fr(c.iso) + ' rétablie');
+      },
+      doneCls: 'ez press btn prim' + (st.shakeS ? (st.shakeS % 2 ? ' shA' : ' shB') : ''),
+      startEdit: () => this.setState({ editing: true, buf: Object.assign({}, c) }),
+      cancelEditS: () => this.discard(),
+      save: () => this.commit(null, isDone ? 'Modifications enregistrées · séance reverrouillée' : 'Séance enregistrée'),
+      markDone: () => {
+        if (v.iso > TODAY) return;
+        if (!v.motif || !v.pay) { this.setState({ shakeS: st.shakeS + 1 }); this.toastMsg(!v.motif ? 'Saisissez le motif avant de valider' : 'Choisissez le mode de paiement avant de valider'); return; }
+        this.commit({ status: 'done' }, 'Séance réalisée · elle est maintenant verrouillée');
+      },
+      pendOn: st.pendSel !== null, pendDate: fr(c.iso),
+      pendStay: () => this.setState({ pendSel: null }),
+      pendDiscard: () => { const i = st.pendSel; this.discard(); this.setState({ pendSel: null, sel: i, swap: st.swap + 1 }); },
+      pendSave: () => { const target = st.seances[st.pendSel]; const arr = this.commit(null, 'Séance enregistrée'); this.setState({ pendSel: null, sel: arr.indexOf(target), swap: st.swap + 1 }); },
+      comment: st.comment,
+      comHint: st.comEdited ? 'Modifié à l’instant · enregistré automatiquement' : 'Modifié le 09/10/2026 · enregistré automatiquement',
+      onCom: ev => { this.setState({ comment: ev.target.value, comEdited: true }); this.touch(); },
+      onDate: ev => { if (!dtLock) this.upd('iso', ev.target.value); },
+      onMotif: ev => { if (editable) this.upd('motif', ev.target.value); },
+      onAn: ev => { if (editable) this.upd('an', ev.target.value); },
+      onPr: ev => { if (editable) this.upd('pr', ev.target.value); },
+      create: () => {
+        if (sDirty) { this.setState({ shakeS: st.shakeS + 1 }); this.toastMsg('Enregistrez ou annulez d’abord la séance en cours'); return; }
+        if (st.editing || un) this.discard();
+        const same = st.seances.findIndex(s => s.iso === TODAY && s.status !== 'cancelled');
+        if (same >= 0) {
+          this.setState({ sel: same, swap: st.swap + 1, buf: null, editing: false });
+          const s = st.seances[same];
+          this.toastMsg('Une séance existe déjà aujourd’hui' + (s.src ? ' (RDV ' + s.src + ' ' + s.time + ')' : '') + ' : ouverte au lieu d’en créer une seconde');
+          return;
+        }
+        const fresh = { iso: TODAY, motif: '', an: '', pr: '', prix: 60, pay: '', fac: null, status: 'draft', fresh: true };
+        const arr = st.seances.concat([fresh]).sort((a, b) => b.iso.localeCompare(a.iso));
+        this.setState({ seances: arr, sel: arr.indexOf(fresh), swap: st.swap + 1, created: true, buf: null, editing: false });
+      },
+      // drawer
+      drawerOn: st.drawer !== 'closed',
+      drawerFade: st.drawer === 'closing' ? 'fadeOut' : 'fadeIn',
+      drawerSlide: st.drawer === 'closing' ? 'slideOut' : 'slideIn',
+      openEdit: () => this.openDrawer(''),
+      openEditAddr: () => this.openDrawer('L’adresse complète (rue, code postal, commune) est obligatoire pour émettre une facture.'),
+      noteOn: !!st.note, note: st.note,
+      dr, drAge: this.age(dr.ddn) || '—', f, e, eOn, c: cc, sexes, communes,
+      communeHint: communes.length ? 'Choisir la commune' : (dr.cp && dr.cp.length === 5 ? 'Aucune commune pour ce code' : 'Saisir le code postal'),
+      enfCls: 'pop',
+      enfMinus: () => this.setD('enfants', Math.max(0, (dr.enfants || 0) - 1)),
+      enfPlus: () => this.setD('enfants', Math.min(15, (dr.enfants || 0) + 1)),
+      errCount: errN > 0, errMsg: errN + (errN > 1 ? ' champs à corriger' : ' champ à corriger'),
+      confirmOn: st.confirm, confirmOff: !st.confirm,
+      savingFiche: st.savingFiche,
+      saveLabel: st.savingFiche ? 'Enregistrement…' : 'Enregistrer',
+      saveCls: 'ez press btn prim' + (st.shake ? (st.shake % 2 ? ' shA' : ' shB') : ''),
+      cancelEdit: () => { if (dirty && !st.confirm) this.setState({ confirm: true }); else this.closeDrawer(); },
+      keepEditing: () => this.setState({ confirm: false }),
+      discard: () => this.closeDrawer(),
+      saveEdit: () => {
+        if (st.savingFiche) return;
+        const errs = this.validate(st.draft);
+        if (Object.keys(errs).length) { this.setState({ errors: errs, tried: true, shake: st.shake + 1 }); return; }
+        this.setState({ savingFiche: true });
+        clearTimeout(this.t4);
+        this.t4 = setTimeout(() => {
+          const L = { nom: 'nom', prenom: 'prénom', ddn: 'date de naissance', sexe: 'sexe', situation: 'situation', enfants: 'enfants', profession: 'profession', adresse: 'adresse', cp: 'code postal', commune: 'commune', portable: 'portable', fixe: 'fixe', mail: 'e-mail' };
+          const changed = Object.keys(L).filter(k => this.state.draft[k] !== this.state.patient[k]).map(k => L[k]);
+          if (changed.length) this.logIt('pat', 'Fiche modifiée : ' + changed.join(', '));
+          this.setState({ patient: Object.assign({}, this.state.draft), savingFiche: false, flash: this.state.flash + 1 });
+          this.closeDrawer();
+          this.toastMsg('Fiche patient mise à jour');
+        }, 700);
+      },
+      // invoice
+      modalOn: st.modal !== 'closed',
+      modalFade: st.modal === 'closing' ? 'fadeOut' : 'fadeIn',
+      modalZoom: st.modal === 'closing' ? 'zoomOut' : 'zoomIn',
+      openInvoice: () => this.setState({ modal: 'open', step: 'preview', sendMail: !!P.mail }),
+      closeInvoice: () => { if (st.step !== 'emitting') this.closeModal(); },
+      inv, invPreview: st.step === 'preview', invEmitting: st.step === 'emitting', invDone: st.step === 'done',
+      sentOk: st.step === 'done' && sendOn,
+      emittingMsg: sendOn ? 'Attribution du numéro, génération du PDF et envoi…' : 'Attribution du numéro et génération du PDF…',
+      emitLabel: sendOn ? 'Émettre et envoyer' : 'Émettre la facture',
+      sendOn, noMail: !P.mail, swStyle, knobStyle,
+      toggleSend: () => this.setState({ sendMail: !st.sendMail }),
+      emit: () => {
+        const sel = st.sel; const num = numPreview;
+        this.setState({ step: 'emitting' });
+        clearTimeout(this.t3);
+        this.t3 = setTimeout(() => {
+          const arr = this.state.seances.slice();
+          arr[sel] = Object.assign({}, arr[sel], { fac: num });
+          this.logIt('fac', 'Facture ' + num + ' émise (' + arr[sel].prix + ' €)' + (sendOn ? ' · envoyée par e-mail' : ''));
+          this.setState({ seances: arr, step: 'done', nextNum: this.state.nextNum + 1 });
+        }, 1300);
+      },
+      // historique, déverrouillage, suppression
+      histOpen: st.histOpen,
+      toggleHist: () => this.setState({ histOpen: !st.histOpen }),
+      hist: st.log.map((l, i) => ({
+        t: l.t, txt: l.txt,
+        kind: { pat: 'Patient', fac: 'Facture', lock: 'Verrouillage' }[l.k],
+        cls: i < st.log.length - st.logBase ? 'pop' : '',
+        dot: 'width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: ' + ({ pat: '#3B6CF6', fac: '#14B8A6', lock: '#E0922F' }[l.k]) + '; box-shadow: 0 0 0 4px ' + ({ pat: 'rgba(59,108,246,0.15)', fac: 'rgba(20,184,166,0.15)', lock: 'rgba(224,146,47,0.18)' }[l.k])
+      })),
+      askUnlock: () => this.setState({ unlockAsk: true, reason: '' }),
+      unlockOn: st.unlockAsk,
+      cancelUnlock: () => this.setState({ unlockAsk: false }),
+      noReason: !st.reason,
+      reasons: ['Erreur de saisie', 'Erreur de date', 'Changement de tarif', 'Autre'].map(v => ({
+        label: v, on: st.reason === v,
+        cls: st.reason === v ? 'ez press btn pop' : 'ez press btn ink',
+        style: 'min-height: 40px; padding: 0 14px; border-radius: 11px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; ' + (st.reason === v ? 'border: 0; background: linear-gradient(180deg, #E0922F, #B86A12); color: #FFFFFF; box-shadow: 0 6px 14px -8px rgba(184,106,18,0.9)' : 'border: 1px solid #E9C9A0; background: #FFF6EA; color: #7A4207'),
+        pick: () => this.setState({ reason: v })
+      })),
+      confirmUnlock: () => {
+        if (!st.reason) return;
+        this.setState({ unlock: Object.assign({}, st.unlock, { [st.sel]: { reason: st.reason, prix: c.prix, iso: c.iso } }), unlockAsk: false });
+        this.logIt('lock', 'Séance du ' + fr(c.iso) + ' déverrouillée (facture ' + c.fac + ') · motif : ' + st.reason.toLowerCase());
+      },
+      askDelete: () => this.setState({ delAsk: true }),
+      delOn: st.delAsk,
+      cancelDelete: () => this.setState({ delAsk: false }),
+      doDelete: () => {
+        this.logIt('pat', 'Patient supprimé (' + st.seances.length + ' séances) · factures conservées');
+        this.setState({ delAsk: false, drawer: 'closed', draft: null, deleted: true, histOpen: false });
+      },
+      deleted: st.deleted,
+      undoDelete: () => { this.logIt('pat', 'Suppression annulée'); this.setState({ deleted: false }); },
+      toastOn: !!st.toast, toast: st.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
