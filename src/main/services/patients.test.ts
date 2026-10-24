@@ -196,7 +196,8 @@ describe('écran Patients (SPEC §4)', () => {
       service.search(q)
       expect(performance.now() - started, q).toBeLessThan(100)
     }
-  })
+    // Generous timeout: inserting the 5 000 fake records is slow on CI runners, not the search.
+  }, 30_000)
 })
 
 describe('R-14 suppression d’un patient', () => {
