@@ -13,18 +13,24 @@ export function DeletedPatientsCard() {
   useEffect(load, [])
 
   return (
-    <Card title="Patients supprimés" description="Restaurables pendant 30 jours, puis purgés définitivement">
+    <Card
+      title="Patients supprimés"
+      description="Restaurables pendant 30 jours, puis purgés définitivement"
+    >
       {list?.length === 0 && <p className="text-[15px] text-ink-500">Aucune fiche supprimée.</p>}
       <ul className="flex flex-col gap-2">
         {list?.map((p) => (
-          <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-surface-mist px-4 py-3">
+          <li
+            key={p.id}
+            className="flex flex-wrap items-center gap-3 rounded-2xl bg-surface-mist px-4 py-3"
+          >
             <span className="flex min-w-0 flex-[1_1_220px] flex-col">
               <span className="font-bold">
                 {p.prenom} {p.nom}
               </span>
               <span className="text-[13px] text-ink-500">
-                Supprimé le {formatIsoDateFr(p.deletedAt.slice(0, 10))} · {p.seances} séance{p.seances > 1 ? 's' : ''} ·
-                purge dans {p.daysLeft} jour{p.daysLeft > 1 ? 's' : ''}
+                Supprimé le {formatIsoDateFr(p.deletedAt.slice(0, 10))} · {p.seances} séance
+                {p.seances > 1 ? 's' : ''} · purge dans {p.daysLeft} jour{p.daysLeft > 1 ? 's' : ''}
               </span>
             </span>
             <Button

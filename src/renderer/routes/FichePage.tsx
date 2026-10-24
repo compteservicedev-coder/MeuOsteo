@@ -1,6 +1,13 @@
 import { motion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useBlocker, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import {
+  Link,
+  useBlocker,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import { formatIsoDateFr } from '@shared/domain/dates'
 import { isAddressComplete } from '@shared/domain/patient'
 import {
@@ -22,7 +29,12 @@ import { HistoryPanel } from '../features/patients/fiche/HistoryPanel'
 import { PendingChangesDialog } from '../features/patients/fiche/PendingChangesDialog'
 import { SeanceDetail } from '../features/patients/fiche/SeanceDetail'
 import { SeanceList } from '../features/patients/fiche/SeanceList'
-import { changesOf, draftOf, isDirty, type SeanceDraft } from '../features/patients/fiche/seanceDraft'
+import {
+  changesOf,
+  draftOf,
+  isDirty,
+  type SeanceDraft,
+} from '../features/patients/fiche/seanceDraft'
 import { staggerItem } from '../lib/motion'
 import { todayIso } from '../lib/today'
 
@@ -121,7 +133,14 @@ function FicheScreen({ id }: { id: string }) {
 
   const applySeance = (updated: SeanceView) => {
     setDetail((d) =>
-      d ? { ...d, seances: d.seances.map((s) => (s.id === updated.id ? updated : s)).sort(compareSeancesDesc) } : d,
+      d
+        ? {
+            ...d,
+            seances: d.seances
+              .map((s) => (s.id === updated.id ? updated : s))
+              .sort(compareSeancesDesc),
+          }
+        : d,
     )
     setDraft(draftOf(updated))
   }
@@ -148,7 +167,9 @@ function FicheScreen({ id }: { id: string }) {
     }
     applySeance(result.seance)
     setEditing(false)
-    toast.show(wasEditing ? 'Modifications enregistrées · séance reverrouillée' : 'Séance enregistrée')
+    toast.show(
+      wasEditing ? 'Modifications enregistrées · séance reverrouillée' : 'Séance enregistrée',
+    )
     return true
   }
 
@@ -180,7 +201,9 @@ function FicheScreen({ id }: { id: string }) {
       toast.show(existingSessionMessage(result.seance), 'info')
       return
     }
-    setDetail((d) => (d ? { ...d, seances: [...d.seances, result.seance].sort(compareSeancesDesc) } : d))
+    setDetail((d) =>
+      d ? { ...d, seances: [...d.seances, result.seance].sort(compareSeancesDesc) } : d,
+    )
     setFreshId(result.seance.id)
     select(result.seance)
   }
@@ -198,7 +221,8 @@ function FicheScreen({ id }: { id: string }) {
   }
 
   const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) => dirty && currentLocation.pathname !== nextLocation.pathname,
+    ({ currentLocation, nextLocation }) =>
+      dirty && currentLocation.pathname !== nextLocation.pathname,
   )
   useEffect(() => {
     if (blocker.state === 'blocked') setPending({ kind: 'route' })
@@ -250,7 +274,9 @@ function FicheScreen({ id }: { id: string }) {
     }
     applySeance(result.seance)
     setBin(null)
-    toast.show(`Séance du ${dateFr} annulée${selected.source === 'doctolib' ? ' · pensez à Doctolib' : ''}`)
+    toast.show(
+      `Séance du ${dateFr} annulée${selected.source === 'doctolib' ? ' · pensez à Doctolib' : ''}`,
+    )
   }
 
   const restore = async () => {
@@ -326,15 +352,18 @@ function FicheScreen({ id }: { id: string }) {
           aria-labelledby="h-gone"
           className="mx-auto mt-10 flex w-full max-w-[520px] flex-col items-center gap-3 rounded-[26px] bg-white px-8 py-10 text-center shadow-card"
         >
-          <span aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-[18px] bg-red-50 text-red-600">
+          <span
+            aria-hidden="true"
+            className="flex h-14 w-14 items-center justify-center rounded-[18px] bg-red-50 text-red-600"
+          >
             <Icon name="trash" size={26} />
           </span>
           <h1 id="h-gone" className="text-[22px] font-extrabold">
             {name} a été supprimé(e)
           </h1>
           <p className="text-[15px] text-ink-600">
-            Les factures restent consultables dans le registre. Une ligne a été ajoutée au journal. La fiche
-            reste récupérable pendant 30 jours (Paramètres &gt; Données &amp; import).
+            Les factures restent consultables dans le registre. Une ligne a été ajoutée au journal.
+            La fiche reste récupérable pendant 30 jours (Paramètres &gt; Données &amp; import).
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-2">
             <Button
@@ -370,7 +399,13 @@ function FicheScreen({ id }: { id: string }) {
         onOpenRelative={openRelative}
         onBack={goBack}
       />
-      {historyOpen && <HistoryPanel patientId={id} version={historyVersion} onClose={() => setHistoryOpen(false)} />}
+      {historyOpen && (
+        <HistoryPanel
+          patientId={id}
+          version={historyVersion}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
 
       <div className="flex flex-wrap items-stretch gap-[18px]">
         <SeanceList
@@ -414,7 +449,8 @@ function FicheScreen({ id }: { id: string }) {
             onCompleteAddress={() =>
               setDrawer({
                 reason: {
-                  message: 'L’adresse complète (rue, code postal, commune) est obligatoire pour émettre une facture.',
+                  message:
+                    'L’adresse complète (rue, code postal, commune) est obligatoire pour émettre une facture.',
                   fields: ADDRESS_FIELDS,
                 },
               })
@@ -427,7 +463,8 @@ function FicheScreen({ id }: { id: string }) {
           >
             <h2 className="text-section">Aucune séance</h2>
             <p className="text-[15px] text-ink-600">
-              Les RDV Doctolib apparaîtront ici. « Nouvelle » crée une séance du jour, hors Doctolib.
+              Les RDV Doctolib apparaîtront ici. « Nouvelle » crée une séance du jour, hors
+              Doctolib.
             </p>
           </motion.section>
         )}

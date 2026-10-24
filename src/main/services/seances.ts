@@ -201,7 +201,9 @@ export class SeanceService {
   cancel(id: string, reason: string): SeanceResult {
     const loaded = this.load(id)
     if (!loaded) return { ok: false, reason: 'not_found' }
-    if (binAction({ status: loaded.row.status, invoiced: loaded.view.invoice !== null }) !== 'cancel') {
+    if (
+      binAction({ status: loaded.row.status, invoiced: loaded.view.invoice !== null }) !== 'cancel'
+    ) {
       return { ok: false, reason: 'not_editable' }
     }
     if (!(CANCEL_REASONS as readonly string[]).includes(reason)) {
@@ -230,7 +232,12 @@ export class SeanceService {
     if (other) return { ok: false, reason: 'same_day', existingId: other.id }
     this.db
       .update(seances)
-      .set({ status: row.prevStatus ?? 'planned', cancelReason: null, cancelledAt: null, prevStatus: null })
+      .set({
+        status: row.prevStatus ?? 'planned',
+        cancelReason: null,
+        cancelledAt: null,
+        prevStatus: null,
+      })
       .where(eq(seances.id, id))
       .run()
     return this.reload(id)

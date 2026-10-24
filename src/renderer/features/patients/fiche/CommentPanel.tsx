@@ -17,7 +17,13 @@ interface CommentPanelProps {
 }
 
 /** « Commentaire inter-séances » and important history tags (right column). */
-export function CommentPanel({ patientId, sexe, initialComment, initialUpdatedAt, initialTags }: CommentPanelProps) {
+export function CommentPanel({
+  patientId,
+  sexe,
+  initialComment,
+  initialUpdatedAt,
+  initialTags,
+}: CommentPanelProps) {
   const [text, setText] = useState(initialComment)
   const [updatedAt, setUpdatedAt] = useState(initialUpdatedAt)
   const [saving, setSaving] = useState(false)
@@ -79,7 +85,8 @@ export function CommentPanel({ patientId, sexe, initialComment, initialUpdatedAt
             Commentaire inter-séances
           </h2>
           <p className="mt-px text-[12px] text-[#2F6B63]">
-            Suit {sexe === 'M' ? 'le patient' : sexe === 'F' ? 'la patiente' : 'la personne'} d’une séance à l’autre
+            Suit {sexe === 'M' ? 'le patient' : sexe === 'F' ? 'la patiente' : 'la personne'} d’une
+            séance à l’autre
           </p>
         </div>
       </div>
@@ -94,7 +101,9 @@ export function CommentPanel({ patientId, sexe, initialComment, initialUpdatedAt
         className="field min-h-[340px] grow resize-y rounded-[14px] border-[rgba(15,76,69,0.16)] bg-white/75 px-3.5 py-3 text-[14px] leading-relaxed focus:!border-cyan-500 focus:!shadow-[0_0_0_4px_rgba(14,165,198,0.18)]"
       />
       <div className="flex flex-col gap-2">
-        <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#2F6B63]">Antécédents importants</span>
+        <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#2F6B63]">
+          Antécédents importants
+        </span>
         <ul className="flex flex-wrap gap-1.5" aria-label="Antécédents importants">
           {tags.map((tag) => (
             <li

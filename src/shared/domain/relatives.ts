@@ -66,7 +66,11 @@ export function linkError(self: string, other: string, existing: string[]): Link
  * Explains the reciprocity: « Paul Roux apparaîtra ici comme « enfant », et Camille Roux apparaîtra
  * sur la fiche de Paul Roux comme « parent ». »
  */
-export function reciprocitySentence(selfName: string, otherName: string, relation: Relation): string {
+export function reciprocitySentence(
+  selfName: string,
+  otherName: string,
+  relation: Relation,
+): string {
   const here = relationLabel(relation).toLowerCase()
   const there = relationLabel(inverseRelation(relation)).toLowerCase()
   return `${otherName} apparaîtra ici comme « ${here} », et ${selfName} apparaîtra sur la fiche de ${otherName} comme « ${there} ».`

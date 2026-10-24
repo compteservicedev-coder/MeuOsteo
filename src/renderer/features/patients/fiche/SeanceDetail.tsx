@@ -49,7 +49,13 @@ export interface SeanceDetailProps {
   onCompleteAddress: () => void
 }
 
-function Banner({ tone, children }: { tone: 'grey' | 'amber' | 'cyan' | 'muted'; children: ReactNode }) {
+function Banner({
+  tone,
+  children,
+}: {
+  tone: 'grey' | 'amber' | 'cyan' | 'muted'
+  children: ReactNode
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -58,8 +64,10 @@ function Banner({ tone, children }: { tone: 'grey' | 'amber' | 'cyan' | 'muted';
       className={cn(
         'flex flex-wrap items-center justify-between gap-2.5 rounded-control py-2 pl-3 pr-2 text-[13px]',
         tone === 'grey' && 'bg-[#F0F4FA] text-ink-600',
-        tone === 'amber' && 'border border-[#E9C9A0] bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] text-[#5A3205]',
-        tone === 'cyan' && 'border border-[rgba(14,165,198,0.25)] bg-[linear-gradient(180deg,#EEFBFD,#E0F7FB)] py-2.5 text-[#0B5F73]',
+        tone === 'amber' &&
+          'border border-[#E9C9A0] bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] text-[#5A3205]',
+        tone === 'cyan' &&
+          'border border-[rgba(14,165,198,0.25)] bg-[linear-gradient(180deg,#EEFBFD,#E0F7FB)] py-2.5 text-[#0B5F73]',
         tone === 'muted' && 'bg-[#EDF0F6] text-ink-600',
       )}
     >
@@ -69,21 +77,35 @@ function Banner({ tone, children }: { tone: 'grey' | 'amber' | 'cyan' | 'muted';
 }
 
 /** What the footer says about invoicing (R-10); the invoice buttons come with lot 3. */
-function invoiceHint(s: SeanceView, today: string, editing: boolean, addressComplete: boolean): { text: string; warn: boolean } {
+function invoiceHint(
+  s: SeanceView,
+  today: string,
+  editing: boolean,
+  addressComplete: boolean,
+): { text: string; warn: boolean } {
   const status = displayStatus(s, today)
   if (s.status === 'cancelled') return { text: 'Séance annulée : non facturable', warn: false }
   if (s.status === 'planned') {
-    if (status === 'upcoming') return { text: 'Facturation possible une fois la séance réalisée', warn: false }
-    if (status === 'today') return { text: 'Validez la séance une fois réalisée pour pouvoir la facturer', warn: false }
+    if (status === 'upcoming')
+      return { text: 'Facturation possible une fois la séance réalisée', warn: false }
+    if (status === 'today')
+      return { text: 'Validez la séance une fois réalisée pour pouvoir la facturer', warn: false }
     return { text: 'Séance passée non validée : complétez-la puis validez-la', warn: false }
   }
   if (editing) return { text: 'Enregistrer reverrouille la séance', warn: false }
   if (s.invoice) {
     const reglement = s.paiement === 'virement_attente' ? 'en attente de règlement' : 'acquittée'
-    return { text: `Facture N° ${s.invoice.numero} · ${(s.tarifCents / 100).toFixed(2).replace('.', ',')} € · ${reglement}`, warn: false }
+    return {
+      text: `Facture N° ${s.invoice.numero} · ${(s.tarifCents / 100).toFixed(2).replace('.', ',')} € · ${reglement}`,
+      warn: false,
+    }
   }
   if (s.tarifCents === 0) return { text: 'Séance gratuite : aucune facture à émettre', warn: false }
-  if (!addressComplete) return { text: 'Adresse du patient incomplète : elle est obligatoire sur la facture', warn: true }
+  if (!addressComplete)
+    return {
+      text: 'Adresse du patient incomplète : elle est obligatoire sur la facture',
+      warn: true,
+    }
   return { text: 'Pas encore de facture pour cette séance', warn: false }
 }
 
@@ -126,12 +148,21 @@ export function SeanceDetail(props: SeanceDetailProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {dirty && (
-              <span role="status" className="inline-flex items-center gap-1.5 rounded-pill bg-amber-50 px-2.5 py-1 text-[12px] font-bold text-amber-ink">
+              <span
+                role="status"
+                className="inline-flex items-center gap-1.5 rounded-pill bg-amber-50 px-2.5 py-1 text-[12px] font-bold text-amber-ink"
+              >
                 <span aria-hidden="true" className="h-2 w-2 rounded-full bg-amber-500" />
                 Non enregistré
               </span>
             )}
-            <span key={status} className={cn('pop inline-flex items-center rounded-pill px-[11px] py-[5px] text-[12px] font-extrabold tracking-[0.02em]', STATUS_BADGE[status])}>
+            <span
+              key={status}
+              className={cn(
+                'pop inline-flex items-center rounded-pill px-[11px] py-[5px] text-[12px] font-extrabold tracking-[0.02em]',
+                STATUS_BADGE[status],
+              )}
+            >
               {statusLabel(s, today)}
             </span>
             <span className="text-[13px] font-semibold text-ink-500">
@@ -159,7 +190,11 @@ export function SeanceDetail(props: SeanceDetailProps) {
               Séance réalisée, verrouillée pour éviter toute modification involontaire.
               {s.invoice ? ` Facture N° ${s.invoice.numero}.` : ''}
             </span>
-            <Button size="sm" icon={<Icon name="edit" size={15} strokeWidth={2.2} />} onClick={props.onStartEdit}>
+            <Button
+              size="sm"
+              icon={<Icon name="edit" size={15} strokeWidth={2.2} />}
+              onClick={props.onStartEdit}
+            >
               Modifier
             </Button>
           </Banner>
@@ -192,7 +227,8 @@ export function SeanceDetail(props: SeanceDetailProps) {
               <Icon name="close" size={15} strokeWidth={2.4} className="shrink-0" />
               Séance annulée
               {s.cancelReason ? ` · ${s.cancelReason.toLowerCase()}` : ''}
-              {s.cancelledAt ? ` · le ${formatIsoDateFr(s.cancelledAt.slice(0, 10))}` : ''}. Les annotations sont conservées.
+              {s.cancelledAt ? ` · le ${formatIsoDateFr(s.cancelledAt.slice(0, 10))}` : ''}. Les
+              annotations sont conservées.
             </span>
             <Button size="sm" onClick={props.onRestore}>
               Rétablir la séance
@@ -287,7 +323,9 @@ export function SeanceDetail(props: SeanceDetailProps) {
             className="flex flex-col gap-3 rounded-2xl border border-red-600/30 bg-[linear-gradient(180deg,#FFF5F5,#FDE8E8)] px-4 py-3.5 shadow-[0_14px_30px_-16px_rgba(194,39,45,0.55)]"
           >
             <span id="t-bin" className="text-[15px] font-extrabold text-red-ink">
-              {bin === 'delete' ? `Supprimer la séance du ${dateFr} ?` : `Annuler la séance du ${dateFr} ?`}
+              {bin === 'delete'
+                ? `Supprimer la séance du ${dateFr} ?`
+                : `Annuler la séance du ${dateFr} ?`}
             </span>
             <span id="p-bin" className="text-[14px] text-[#7A1015]">
               {bin === 'delete'
@@ -304,7 +342,9 @@ export function SeanceDetail(props: SeanceDetailProps) {
                     onClick={() => setReason(r)}
                     className={cn(
                       'btn min-h-[44px] rounded-[11px] px-3 text-[13px]',
-                      reason === r ? 'btn-danger pop' : 'btn-ink border border-red-600/25 bg-white text-[#7A1015]',
+                      reason === r
+                        ? 'btn-danger pop'
+                        : 'btn-ink border border-red-600/25 bg-white text-[#7A1015]',
                     )}
                   >
                     {r}
@@ -314,7 +354,8 @@ export function SeanceDetail(props: SeanceDetailProps) {
             )}
             {bin === 'cancel' && s.source === 'doctolib' && (
               <span className="text-[13px] font-semibold text-[#7A1015]">
-                Ce RDV vient de Doctolib : pensez à l’annuler aussi dans Doctolib, l’application ne peut pas le faire à votre place.
+                Ce RDV vient de Doctolib : pensez à l’annuler aussi dans Doctolib, l’application ne
+                peut pas le faire à votre place.
               </span>
             )}
             <div className="flex justify-end gap-2">
@@ -334,7 +375,14 @@ export function SeanceDetail(props: SeanceDetailProps) {
           </motion.div>
         ) : (
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EDF0F6] pt-3.5">
-            <span className={cn('text-[14px]', hint.warn ? 'font-semibold text-amber-ink' : 'text-ink-500')}>{hint.text}</span>
+            <span
+              className={cn(
+                'text-[14px]',
+                hint.warn ? 'font-semibold text-amber-ink' : 'text-ink-500',
+              )}
+            >
+              {hint.text}
+            </span>
             <div className="flex flex-wrap gap-2">
               {s.status === 'planned' && (
                 <>

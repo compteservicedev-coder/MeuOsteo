@@ -18,7 +18,14 @@ interface SeanceListProps {
 }
 
 /** Left column (SPEC §5.2): most recent first, future sessions on top in dashed frames. */
-export function SeanceList({ seances, selectedId, freshId, today, onSelect, onCreate }: SeanceListProps) {
+export function SeanceList({
+  seances,
+  selectedId,
+  freshId,
+  today,
+  onSelect,
+  onCreate,
+}: SeanceListProps) {
   return (
     <motion.section
       variants={staggerItem}
@@ -29,14 +36,23 @@ export function SeanceList({ seances, selectedId, freshId, today, onSelect, onCr
         <h2 id="h-list" className="text-[16px] font-extrabold">
           Séances
         </h2>
-        <Button size="sm" variant="primary" icon={<Icon name="plus" size={15} strokeWidth={2.6} />} onClick={onCreate}>
+        <Button
+          size="sm"
+          variant="primary"
+          icon={<Icon name="plus" size={15} strokeWidth={2.6} />}
+          onClick={onCreate}
+        >
           Nouvelle
         </Button>
       </div>
       <p className="px-4 pb-2 text-[12px] leading-snug text-ink-500">
-        Les RDV Doctolib apparaissent ici tout seuls. « Nouvelle » sert aux séances prises hors Doctolib.
+        Les RDV Doctolib apparaissent ici tout seuls. « Nouvelle » sert aux séances prises hors
+        Doctolib.
       </p>
-      <ul className="flex flex-col gap-1 overflow-y-auto px-2.5 pb-3" aria-label="Séances du patient">
+      <ul
+        className="flex flex-col gap-1 overflow-y-auto px-2.5 pb-3"
+        aria-label="Séances du patient"
+      >
         {seances.map((s) => {
           const on = s.id === selectedId
           const status = displayStatus(s, today)
@@ -60,7 +76,9 @@ export function SeanceList({ seances, selectedId, freshId, today, onSelect, onCr
                 )}
               >
                 <span className="flex items-center justify-between gap-2">
-                  <span className="text-[15px] font-bold tabular-nums">{formatIsoDateFr(s.date)}</span>
+                  <span className="text-[15px] font-bold tabular-nums">
+                    {formatIsoDateFr(s.date)}
+                  </span>
                   <span
                     className={cn(
                       'rounded-pill px-2 py-[3px] text-[11px] font-bold no-underline',
@@ -71,14 +89,20 @@ export function SeanceList({ seances, selectedId, freshId, today, onSelect, onCr
                   </span>
                 </span>
                 <span className="flex items-center justify-between gap-2">
-                  <span className={cn('truncate text-[13px]', on ? 'text-[#DCE6FD]' : 'text-ink-500')}>
+                  <span
+                    className={cn('truncate text-[13px]', on ? 'text-[#DCE6FD]' : 'text-ink-500')}
+                  >
                     {s.motif || 'Motif à saisir'}
                   </span>
                   {tag && (
                     <span
                       className={cn(
                         'shrink-0 text-[11px] font-bold',
-                        on ? 'text-nav-soft' : status === 'upcoming' ? 'text-[#0B7F99]' : 'text-royal-600',
+                        on
+                          ? 'text-nav-soft'
+                          : status === 'upcoming'
+                            ? 'text-[#0B7F99]'
+                            : 'text-royal-600',
                       )}
                     >
                       {tag}

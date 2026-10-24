@@ -48,9 +48,24 @@ export function FicheBanner({
   const name = `${p.prenom} ${p.nom}`
   const oldest = detail.seances.at(-1)?.date ?? p.createdAt
   const chips: Array<{ has: boolean; label: string; add: string; icon: IconName }> = [
-    { has: Boolean(p.ddn), label: `${bornLabel(p.sexe)} ${formatIsoDateFr(p.ddn)}`, add: '+ Date de naissance', icon: 'calendar' },
-    { has: Boolean(p.portable), label: p.portable ? formatPhone(p.portable) : '', add: 'Ajouter un portable', icon: 'phone' },
-    { has: Boolean(p.fixe), label: p.fixe ? `Fixe ${formatPhone(p.fixe)}` : '', add: 'Ajouter un fixe', icon: 'phone' },
+    {
+      has: Boolean(p.ddn),
+      label: `${bornLabel(p.sexe)} ${formatIsoDateFr(p.ddn)}`,
+      add: '+ Date de naissance',
+      icon: 'calendar',
+    },
+    {
+      has: Boolean(p.portable),
+      label: p.portable ? formatPhone(p.portable) : '',
+      add: 'Ajouter un portable',
+      icon: 'phone',
+    },
+    {
+      has: Boolean(p.fixe),
+      label: p.fixe ? `Fixe ${formatPhone(p.fixe)}` : '',
+      add: 'Ajouter un fixe',
+      icon: 'phone',
+    },
     { has: Boolean(p.email), label: p.email ?? '', add: 'Ajouter un e-mail', icon: 'mail' },
     { has: isAddressComplete(p), label: formatAddress(p), add: 'Compléter l’adresse', icon: 'pin' },
   ]
@@ -60,8 +75,14 @@ export function FicheBanner({
       variants={staggerItem}
       className="relative flex flex-col gap-3.5 overflow-hidden rounded-[24px] bg-[linear-gradient(120deg,#2B5BE8_0%,#17338F_70%,#132A6B_100%)] px-[22px] py-[18px] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_24px_44px_-22px_rgba(23,51,143,0.8)]"
     >
-      <div aria-hidden="true" className="absolute -right-[60px] -top-[120px] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(34,195,214,0.45)_0%,rgba(34,195,214,0)_70%)]" />
-      <div aria-hidden="true" className="absolute -bottom-[160px] left-[30%] h-[280px] w-[280px] rounded-full bg-[radial-gradient(circle,rgba(94,234,212,0.18)_0%,rgba(94,234,212,0)_70%)]" />
+      <div
+        aria-hidden="true"
+        className="absolute -right-[60px] -top-[120px] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(34,195,214,0.45)_0%,rgba(34,195,214,0)_70%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-[160px] left-[30%] h-[280px] w-[280px] rounded-full bg-[radial-gradient(circle,rgba(94,234,212,0.18)_0%,rgba(94,234,212,0)_70%)]"
+      />
 
       <div className="relative flex flex-wrap items-center justify-between gap-3.5">
         <div className="flex items-center gap-3.5">
@@ -94,7 +115,12 @@ export function FicheBanner({
             <Icon name="edit" size={17} />
             Modifier la fiche
           </button>
-          <button type="button" onClick={onToggleHistory} aria-expanded={historyOpen} className={glassButton}>
+          <button
+            type="button"
+            onClick={onToggleHistory}
+            aria-expanded={historyOpen}
+            className={glassButton}
+          >
             <Icon name="history" size={17} />
             Historique
           </button>
@@ -108,7 +134,10 @@ export function FicheBanner({
       <div className="relative flex flex-wrap items-center gap-2">
         {chips.map((c) =>
           c.has ? (
-            <span key={c.add} className={cn(chipBase, 'bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]')}>
+            <span
+              key={c.add}
+              className={cn(chipBase, 'bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]')}
+            >
               <Icon name={c.icon} size={14} strokeWidth={2.2} className="text-aqua-300" />
               {c.label}
             </span>
@@ -128,32 +157,45 @@ export function FicheBanner({
           ),
         )}
         <span className="text-[13px] text-nav-muted">
-          {p.sexe === 'F' ? 'Suivie' : 'Suivi'} depuis {oldest.slice(0, 4)} · {detail.seances.length} séance
+          {p.sexe === 'F' ? 'Suivie' : 'Suivi'} depuis {oldest.slice(0, 4)} ·{' '}
+          {detail.seances.length} séance
           {detail.seances.length > 1 ? 's' : ''}
         </span>
       </div>
 
       <div className="relative flex flex-wrap items-center gap-2 border-t border-white/[0.12] pt-2.5">
-        <span className="mr-1 text-[12px] font-extrabold uppercase tracking-[0.06em] text-nav-muted">Proches</span>
+        <span className="mr-1 text-[12px] font-extrabold uppercase tracking-[0.06em] text-nav-muted">
+          Proches
+        </span>
         {detail.relatives.map((r) => (
-          <span key={r.patientId} className="inline-flex items-center rounded-pill bg-white/[0.12] pr-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+          <span
+            key={r.patientId}
+            className="inline-flex items-center rounded-pill bg-white/[0.12] pr-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+          >
             <button
               type="button"
               onClick={() => onOpenRelative(r.patientId)}
               title={`Ouvrir la fiche de ${r.prenom} ${r.nom}`}
               className="inline-flex min-h-[44px] items-center gap-2 rounded-pill pl-1 pr-1.5 text-[13px] font-bold text-white hover:bg-white/10"
             >
-              <span aria-hidden="true" className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(145deg,#5EEAD4,#3B6CF6)] text-[11px] font-extrabold">
+              <span
+                aria-hidden="true"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(145deg,#5EEAD4,#3B6CF6)] text-[11px] font-extrabold"
+              >
                 {initials(r.prenom, r.nom)}
               </span>
               {r.prenom} {r.nom}
-              <span className="font-semibold text-nav-soft">· {relationLabel(r.relation).toLowerCase()}</span>
+              <span className="font-semibold text-nav-soft">
+                · {relationLabel(r.relation).toLowerCase()}
+              </span>
               <Icon name="chevronRight" size={12} strokeWidth={2.6} className="text-nav-muted" />
             </button>
           </span>
         ))}
         {detail.relatives.length === 0 && (
-          <span className="text-[13px] text-nav-muted">Aucun proche lié · à ajouter depuis « Modifier la fiche »</span>
+          <span className="text-[13px] text-nav-muted">
+            Aucun proche lié · à ajouter depuis « Modifier la fiche »
+          </span>
         )}
         {backTo && (
           <button

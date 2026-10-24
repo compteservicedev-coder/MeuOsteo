@@ -21,7 +21,8 @@ export function draftFromRecord(p: PatientRecord): PatientDraft {
   }
 }
 
-export const sameDraft = (a: PatientDraft, b: PatientDraft) => JSON.stringify(a) === JSON.stringify(b)
+export const sameDraft = (a: PatientDraft, b: PatientDraft) =>
+  JSON.stringify(a) === JSON.stringify(b)
 
 /** Fields highlighted when the panel opens to complete the address (SPEC §5.1). */
 export const ADDRESS_FIELDS: PatientField[] = ['adresse', 'cp', 'commune']

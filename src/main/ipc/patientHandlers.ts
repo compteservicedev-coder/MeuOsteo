@@ -58,9 +58,7 @@ export function registerPatientHandlers(register: ReturnType<typeof createRegist
   )
   register('communes:by-cp', z.tuple([z.string().max(10)]), ({ db }, cp) => communesForCp(db, cp))
 
-  register('seances:create-today', byId, ({ seances }, patientId) =>
-    seances.createToday(patientId),
-  )
+  register('seances:create-today', byId, ({ seances }, patientId) => seances.createToday(patientId))
   register('seances:save', z.tuple([idSchema, seanceChangesSchema]), ({ seances }, id, changes) =>
     seances.save(id, changes),
   )

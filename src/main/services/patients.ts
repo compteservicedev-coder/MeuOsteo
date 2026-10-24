@@ -175,7 +175,12 @@ export class PatientService {
 
   private forgetRecent(id: string): void {
     const ids = getSetting(this.db, RECENT_KEY, recentSchema, [])
-    if (ids.includes(id)) setSetting(this.db, RECENT_KEY, ids.filter((x) => x !== id))
+    if (ids.includes(id))
+      setSetting(
+        this.db,
+        RECENT_KEY,
+        ids.filter((x) => x !== id),
+      )
   }
 
   /** Sessions of the day (« Aujourd’hui »), by hour. */
@@ -214,9 +219,11 @@ export class PatientService {
       patient: toRecord(row),
       seances: seanceViews,
       relatives: this.relatives(id),
-      invoiceCount: (this.db.$client
-        .prepare(`SELECT count(*) AS n FROM factures WHERE patient_id = ?`)
-        .get(id) as { n: number }).n,
+      invoiceCount: (
+        this.db.$client
+          .prepare(`SELECT count(*) AS n FROM factures WHERE patient_id = ?`)
+          .get(id) as { n: number }
+      ).n,
       tarifsCents: tarifs.list,
     }
   }
@@ -227,7 +234,10 @@ export class PatientService {
     const data = normalizePatient(draft)
     const id = ulid()
     this.db.transaction((tx) => {
-      const max = tx.select({ max: sql<number | null>`max(${patients.shortNo})` }).from(patients).get()
+      const max = tx
+        .select({ max: sql<number | null>`max(${patients.shortNo})` })
+        .from(patients)
+        .get()
       tx.insert(patients)
         .values({
           id,
@@ -238,7 +248,12 @@ export class PatientService {
         .run()
       addJournalLine(
         tx,
-        { type: 'patient', subject: `${data.prenom} ${data.nom}`, action: patientJournal.created(), patientId: id },
+        {
+          type: 'patient',
+          subject: `${data.prenom} ${data.nom}`,
+          action: patientJournal.created(),
+          patientId: id,
+        },
         this.now(),
       )
     })
@@ -290,7 +305,8 @@ export class PatientService {
       commune: '',
     })
     const ors = []
-    if (probe.nom && probe.prenom) ors.push(eq(patients.searchKey, patientSearchKey(probe.nom, probe.prenom)))
+    if (probe.nom && probe.prenom)
+      ors.push(eq(patients.searchKey, patientSearchKey(probe.nom, probe.prenom)))
     for (const tel of [probe.portable, probe.fixe].filter((t): t is string => Boolean(t))) {
       ors.push(eq(patients.portable, tel), eq(patients.fixe, tel))
     }
@@ -325,7 +341,10 @@ export class PatientService {
     const updatedAt = this.now().toISOString()
     const result = this.db
       .update(patients)
-      .set({ commentaire: commentaire === '' ? null : commentaire, commentaireUpdatedAt: updatedAt })
+      .set({
+        commentaire: commentaire === '' ? null : commentaire,
+        commentaireUpdatedAt: updatedAt,
+      })
       .where(and(eq(patients.id, id), isNull(patients.deletedAt)))
       .run()
     return result.changes > 0 ? { updatedAt } : null
@@ -354,7 +373,10 @@ export class PatientService {
         .where(eq(seances.patientId, id))
         .get()?.n ?? 0
     this.db.transaction((tx) => {
-      tx.update(patients).set({ deletedAt: this.now().toISOString() }).where(eq(patients.id, id)).run()
+      tx.update(patients)
+        .set({ deletedAt: this.now().toISOString() })
+        .where(eq(patients.id, id))
+        .run()
       addJournalLine(
         tx,
         {
@@ -480,13 +502,22 @@ export class PatientService {
     const error = linkError(id, otherId, existing)
     if (error) return { ok: false, reason: error }
     this.db.transaction((tx) => {
-      tx.insert(patientLinks).values(orderLink(id, otherId, relation)).run()
+      tx.insert(patientLinks)
+        .values(orderLink(id, otherId, relation))
+        .run()
       const selfName = `${self.prenom} ${self.nom}`
       const otherName = `${other.prenom} ${other.nom}`
-      addJournalLine(tx, this.linkLine(self, patientJournal.relativeLinked(otherName, relationLabel(relation))), this.now())
       addJournalLine(
         tx,
-        this.linkLine(other, patientJournal.relativeLinked(selfName, relationLabel(inverseRelation(relation)))),
+        this.linkLine(self, patientJournal.relativeLinked(otherName, relationLabel(relation))),
+        this.now(),
+      )
+      addJournalLine(
+        tx,
+        this.linkLine(
+          other,
+          patientJournal.relativeLinked(selfName, relationLabel(inverseRelation(relation))),
+        ),
         this.now(),
       )
     })
@@ -504,14 +535,27 @@ export class PatientService {
         .where(and(eq(patientLinks.patientA, patientA), eq(patientLinks.patientB, patientB)))
         .run()
       if (removed.changes === 0) return
-      addJournalLine(tx, this.linkLine(self, patientJournal.relativeUnlinked(`${other.prenom} ${other.nom}`)), this.now())
-      addJournalLine(tx, this.linkLine(other, patientJournal.relativeUnlinked(`${self.prenom} ${self.nom}`)), this.now())
+      addJournalLine(
+        tx,
+        this.linkLine(self, patientJournal.relativeUnlinked(`${other.prenom} ${other.nom}`)),
+        this.now(),
+      )
+      addJournalLine(
+        tx,
+        this.linkLine(other, patientJournal.relativeUnlinked(`${self.prenom} ${self.nom}`)),
+        this.now(),
+      )
     })
     return { ok: true }
   }
 
   private linkLine(subject: PatientRow, action: string): JournalLine {
-    return { type: 'patient', subject: `${subject.prenom} ${subject.nom}`, action, patientId: subject.id }
+    return {
+      type: 'patient',
+      subject: `${subject.prenom} ${subject.nom}`,
+      action,
+      patientId: subject.id,
+    }
   }
 
   // ── Journal of the record (R-20) ────────────────────────────────────────

@@ -103,7 +103,11 @@ export function LinkRelativeDialog({
           autoComplete="off"
         />
       </div>
-      <div role="listbox" aria-label="Patients" className="flex max-h-[240px] flex-col gap-1 overflow-y-auto">
+      <div
+        role="listbox"
+        aria-label="Patients"
+        className="flex max-h-[240px] flex-col gap-1 overflow-y-auto"
+      >
         {candidates.map((c) => {
           const on = selected?.id === c.id
           return (
@@ -118,7 +122,9 @@ export function LinkRelativeDialog({
               }}
               className={cn(
                 'flex min-h-[52px] w-full items-center gap-2.5 rounded-control border-2 px-2.5 py-1.5 text-left text-[14px] transition-colors',
-                on ? 'pop border-royal-500 bg-surface-hover' : 'border-transparent hover:bg-surface-hover',
+                on
+                  ? 'pop border-royal-500 bg-surface-hover'
+                  : 'border-transparent hover:bg-surface-hover',
               )}
             >
               <Avatar prenom={c.prenom} nom={c.nom} size="sm" />

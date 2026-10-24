@@ -10,7 +10,13 @@ interface PendingChangesDialogProps {
 }
 
 /** R-05 · Changing session, creating one or leaving the record with unsaved changes. */
-export function PendingChangesDialog({ open, dateFr, onStay, onDiscard, onSave }: PendingChangesDialogProps) {
+export function PendingChangesDialog({
+  open,
+  dateFr,
+  onStay,
+  onDiscard,
+  onSave,
+}: PendingChangesDialogProps) {
   return (
     <Dialog
       open={open}

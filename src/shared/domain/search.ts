@@ -12,7 +12,10 @@ export function parseSearchQuery(raw: string): SearchQuery {
   const compact = raw.replace(/[\s.\-/]/g, '')
   if (/^\+?\d{2,}$/.test(compact)) {
     const digits = digitsOnly(compact)
-    return { words: [], phone: digits.startsWith('33') && digits.length > 9 ? `0${digits.slice(2)}` : digits }
+    return {
+      words: [],
+      phone: digits.startsWith('33') && digits.length > 9 ? `0${digits.slice(2)}` : digits,
+    }
   }
   const folded = foldForSearch(raw)
   return { words: folded ? folded.split(' ') : [], phone: null }

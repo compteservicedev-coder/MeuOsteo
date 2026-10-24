@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { suggestCommune, communeAfterCpChange } from './communes'
 import { findDuplicates } from './duplicates'
 import { ageLabel, bannerSubtitle, formatPhone, situationLabel } from './patient'
-import { changedFieldNames, normalizePatient, validatePatient, EMPTY_PATIENT_DRAFT } from './patientValidation'
+import {
+  changedFieldNames,
+  normalizePatient,
+  validatePatient,
+  EMPTY_PATIENT_DRAFT,
+} from './patientValidation'
 import { isPurgeDue, daysBeforePurge } from './patientDeletion'
 
 const TODAY = '2026-10-24'
@@ -22,23 +27,35 @@ describe('patients (R-14 à R-17)', () => {
     expect(validatePatient({ ...valid, ddn: '2026-10-25' }, TODAY).ddn).toBe(
       'La date ne peut pas être dans le futur',
     )
-    expect(validatePatient({ ...valid, ddn: '1899-12-31' }, TODAY).ddn).toBe('Date de naissance improbable')
-    expect(validatePatient({ ...valid, ddn: '2026-02-30' }, TODAY).ddn).toBe('Date de naissance invalide')
+    expect(validatePatient({ ...valid, ddn: '1899-12-31' }, TODAY).ddn).toBe(
+      'Date de naissance improbable',
+    )
+    expect(validatePatient({ ...valid, ddn: '2026-02-30' }, TODAY).ddn).toBe(
+      'Date de naissance invalide',
+    )
     expect(validatePatient({ ...valid, ddn: TODAY }, TODAY)).toEqual({})
   })
 
   it('R-15 portable 06/07, fixe 01-05/09, e-mail et code postal vérifiés s’ils sont renseignés', () => {
-    expect(validatePatient({ ...valid, portable: '06 12 34 56 78', fixe: '01 43 28 11 00' }, TODAY)).toEqual({})
+    expect(
+      validatePatient({ ...valid, portable: '06 12 34 56 78', fixe: '01 43 28 11 00' }, TODAY),
+    ).toEqual({})
     expect(validatePatient({ ...valid, portable: '05 12 34 56 78' }, TODAY).portable).toBeDefined()
     expect(validatePatient({ ...valid, portable: '06 12 34' }, TODAY).portable).toBeDefined()
     expect(validatePatient({ ...valid, fixe: '06 12 34 56 78' }, TODAY).fixe).toBeDefined()
     expect(validatePatient({ ...valid, fixe: '08 12 34 56 78' }, TODAY).fixe).toBeDefined()
-    expect(validatePatient({ ...valid, email: 'camille@' }, TODAY).email).toBe('Adresse e-mail invalide')
+    expect(validatePatient({ ...valid, email: 'camille@' }, TODAY).email).toBe(
+      'Adresse e-mail invalide',
+    )
     expect(validatePatient({ ...valid, cp: '9430' }, TODAY).cp).toBe('5 chiffres attendus')
   })
 
   it('R-15 téléphones stockés en chiffres seuls et affichés par paires', () => {
-    const stored = normalizePatient({ ...valid, portable: '06.12.34.56.78', email: ' Camille.Roux@Exemple.FR ' })
+    const stored = normalizePatient({
+      ...valid,
+      portable: '06.12.34.56.78',
+      email: ' Camille.Roux@Exemple.FR ',
+    })
     expect(stored.portable).toBe('0612345678')
     expect(stored.email).toBe('camille.roux@exemple.fr')
     expect(stored.profession).toBeNull()
@@ -60,18 +77,72 @@ describe('patients (R-14 à R-17)', () => {
 
   it('R-17 doublon à la création : même nom (accents et casse ignorés), téléphone, e-mail ou date', () => {
     const existing = [
-      { id: '1', nom: 'Lambert', prenom: 'Sophie', ddn: '1997-03-30', portable: '0712345678', fixe: null, email: 's.lambert@exemple.fr' },
-      { id: '2', nom: 'Morel', prenom: 'Julien', ddn: '1985-07-08', portable: '0621436587', fixe: null, email: null },
-      { id: '3', nom: 'Roux', prenom: 'Lucas', ddn: '1990-05-02', portable: null, fixe: null, email: null },
+      {
+        id: '1',
+        nom: 'Lambert',
+        prenom: 'Sophie',
+        ddn: '1997-03-30',
+        portable: '0712345678',
+        fixe: null,
+        email: 's.lambert@exemple.fr',
+      },
+      {
+        id: '2',
+        nom: 'Morel',
+        prenom: 'Julien',
+        ddn: '1985-07-08',
+        portable: '0621436587',
+        fixe: null,
+        email: null,
+      },
+      {
+        id: '3',
+        nom: 'Roux',
+        prenom: 'Lucas',
+        ddn: '1990-05-02',
+        portable: null,
+        fixe: null,
+        email: null,
+      },
     ]
-    const probe = { nom: 'LAMBERT', prenom: 'sophie', ddn: '1997-03-30', portable: null, fixe: null, email: null }
-    expect(findDuplicates(probe, existing)).toEqual([{ patient: existing[0], criteria: ['nom', 'ddn'] }])
-    const byPhone = { nom: 'Morelle', prenom: 'J.', ddn: '', portable: '0621436587', fixe: null, email: null }
+    const probe = {
+      nom: 'LAMBERT',
+      prenom: 'sophie',
+      ddn: '1997-03-30',
+      portable: null,
+      fixe: null,
+      email: null,
+    }
+    expect(findDuplicates(probe, existing)).toEqual([
+      { patient: existing[0], criteria: ['nom', 'ddn'] },
+    ])
+    const byPhone = {
+      nom: 'Morelle',
+      prenom: 'J.',
+      ddn: '',
+      portable: '0621436587',
+      fixe: null,
+      email: null,
+    }
     expect(findDuplicates(byPhone, existing).map((m) => m.criteria)).toEqual([['telephone']])
-    const byMail = { nom: 'X', prenom: 'Y', ddn: '', portable: null, fixe: null, email: 'S.Lambert@exemple.fr' }
+    const byMail = {
+      nom: 'X',
+      prenom: 'Y',
+      ddn: '',
+      portable: null,
+      fixe: null,
+      email: 'S.Lambert@exemple.fr',
+    }
     expect(findDuplicates(byMail, existing).map((m) => m.patient.id)).toEqual(['1'])
     // Same family name only (relatives) is not a duplicate.
-    const relative = { nom: 'Roux', prenom: 'Emma', ddn: '2020-04-14', portable: null, fixe: null, email: null }
+    const relative = {
+      nom: 'Roux',
+      prenom: 'Emma',
+      ddn: '2020-04-14',
+      portable: null,
+      fixe: null,
+      email: null,
+    }
     expect(findDuplicates(relative, existing)).toEqual([])
   })
 
@@ -96,10 +167,16 @@ describe('patients (R-14 à R-17)', () => {
     expect(situationLabel('veuf', 'M')).toBe('Veuf')
     expect(situationLabel('pacse', null)).toBe('Pacsé(e)')
     expect(
-      bannerSubtitle({ ddn: '1992-03-12', sexe: 'F', situation: 'marie', enfants: 2, profession: 'Graphiste' }, TODAY),
+      bannerSubtitle(
+        { ddn: '1992-03-12', sexe: 'F', situation: 'marie', enfants: 2, profession: 'Graphiste' },
+        TODAY,
+      ),
     ).toBe('34 ans · Femme · Mariée · 2 enfants · Graphiste')
-    expect(bannerSubtitle({ ddn: '2020-04-14', sexe: null, situation: null, enfants: 0, profession: null }, TODAY)).toBe(
-      '6 ans · Sans enfant',
-    )
+    expect(
+      bannerSubtitle(
+        { ddn: '2020-04-14', sexe: null, situation: null, enfants: 0, profession: null },
+        TODAY,
+      ),
+    ).toBe('6 ans · Sans enfant')
   })
 })

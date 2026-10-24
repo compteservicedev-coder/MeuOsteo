@@ -7,6 +7,8 @@ import { hardenApp, hardenSession } from './security'
 import { createMainWindow, isTrustedSender } from './window'
 
 configureUserDataPath()
+// French UI everywhere, including native date fields (JJ/MM/AAAA).
+app.commandLine.appendSwitch('lang', 'fr-FR')
 
 const seedMode = !app.isPackaged && process.argv.includes('--seed')
 

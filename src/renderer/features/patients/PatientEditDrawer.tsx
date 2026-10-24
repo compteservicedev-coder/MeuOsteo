@@ -1,8 +1,18 @@
 import { useEffect, useId, useMemo, useState, type ReactNode } from 'react'
-import { communeAfterCpChange, suggestCommune, type CommuneSuggestion } from '@shared/domain/communes'
+import {
+  communeAfterCpChange,
+  suggestCommune,
+  type CommuneSuggestion,
+} from '@shared/domain/communes'
 import { formatIsoDateFr } from '@shared/domain/dates'
 import { DUPLICATE_CRITERION_LABELS } from '@shared/domain/duplicates'
-import { SITUATION_OPTIONS, ageLabel, bornLabel, formatPhone, type Situation } from '@shared/domain/patient'
+import {
+  SITUATION_OPTIONS,
+  ageLabel,
+  bornLabel,
+  formatPhone,
+  type Situation,
+} from '@shared/domain/patient'
 import {
   EMPTY_PATIENT_DRAFT,
   errorCountLabel,
@@ -106,7 +116,14 @@ export function PatientEditDrawer({
 
   // R-17: live duplicate check while creating.
   const probe = useDebouncedValue(
-    { nom: draft.nom, prenom: draft.prenom, ddn: draft.ddn, portable: draft.portable, fixe: draft.fixe, email: draft.email },
+    {
+      nom: draft.nom,
+      prenom: draft.prenom,
+      ddn: draft.ddn,
+      portable: draft.portable,
+      fixe: draft.fixe,
+      email: draft.email,
+    },
     300,
   )
   useEffect(() => {
@@ -137,7 +154,11 @@ export function PatientEditDrawer({
     set('cp', cp)
     if (/^\d{5}$/.test(cp)) {
       void window.api.communes.byCp(cp).then((list) => {
-        setDraft((d) => (d.cp === cp ? { ...d, commune: communeAfterCpChange(suggestCommune(cp, list), d.commune) } : d))
+        setDraft((d) =>
+          d.cp === cp
+            ? { ...d, commune: communeAfterCpChange(suggestCommune(cp, list), d.commune) }
+            : d,
+        )
       })
     }
   }
@@ -170,7 +191,9 @@ export function PatientEditDrawer({
 
   const err = (k: PatientField) => (tried ? errors[k] : undefined)
   const hi = (k: PatientField) =>
-    highlighted.has(k) && !draft[k] && !err(k) ? '!border-amber-500 !shadow-[0_0_0_4px_rgba(224,146,47,0.16)]' : ''
+    highlighted.has(k) && !draft[k] && !err(k)
+      ? '!border-amber-500 !shadow-[0_0_0_4px_rgba(224,146,47,0.16)]'
+      : ''
   const errorCount = tried ? Object.keys(errors).length : 0
   const communeOptions =
     communes.mode === 'choice'
@@ -240,10 +263,18 @@ export function PatientEditDrawer({
         <Section title="Identité">
           <div className="flex flex-wrap gap-3">
             <Field label="Nom *" error={err('nom')} className="flex-[1_1_180px]">
-              <Input value={draft.nom} onChange={(e) => set('nom', e.target.value)} autoComplete="off" />
+              <Input
+                value={draft.nom}
+                onChange={(e) => set('nom', e.target.value)}
+                autoComplete="off"
+              />
             </Field>
             <Field label="Prénom *" error={err('prenom')} className="flex-[1_1_180px]">
-              <Input value={draft.prenom} onChange={(e) => set('prenom', e.target.value)} autoComplete="off" />
+              <Input
+                value={draft.prenom}
+                onChange={(e) => set('prenom', e.target.value)}
+                autoComplete="off"
+              />
             </Field>
           </div>
           <div className="flex flex-wrap items-start gap-3">
@@ -256,7 +287,10 @@ export function PatientEditDrawer({
                   onChange={(e) => set('ddn', e.target.value)}
                   className="min-w-0 flex-1"
                 />
-                <span className="min-w-[56px] text-[14px] font-bold text-royal-700" aria-live="polite">
+                <span
+                  className="min-w-[56px] text-[14px] font-bold text-royal-700"
+                  aria-live="polite"
+                >
                   {draft.ddn ? ageLabel(draft.ddn, today) || '—' : '—'}
                 </span>
               </div>
@@ -307,11 +341,17 @@ export function PatientEditDrawer({
                   size="sm"
                   aria-label="Un enfant de moins"
                   className="w-11 px-0"
-                  onClick={() => set('enfants', draft.enfants === null ? 0 : Math.max(0, draft.enfants - 1))}
+                  onClick={() =>
+                    set('enfants', draft.enfants === null ? 0 : Math.max(0, draft.enfants - 1))
+                  }
                 >
                   −
                 </Button>
-                <span key={draft.enfants ?? 'x'} className="pop min-w-[40px] text-center text-[16px] font-extrabold" aria-live="polite">
+                <span
+                  key={draft.enfants ?? 'x'}
+                  className="pop min-w-[40px] text-center text-[16px] font-extrabold"
+                  aria-live="polite"
+                >
                   {draft.enfants ?? '—'}
                 </span>
                 <Button
@@ -363,7 +403,11 @@ export function PatientEditDrawer({
               }
             >
               {communeOptions.length > 0 ? (
-                <Select value={draft.commune} onChange={(e) => set('commune', e.target.value)} className={hi('commune')}>
+                <Select
+                  value={draft.commune}
+                  onChange={(e) => set('commune', e.target.value)}
+                  className={hi('commune')}
+                >
                   <option value="">Choisir la commune</option>
                   {communeOptions.map((c) => (
                     <option key={c} value={c}>
@@ -414,19 +458,26 @@ export function PatientEditDrawer({
             aria-labelledby="h-dup"
             className="flex flex-col gap-2.5 rounded-[18px] border border-amber-500/40 bg-amber-50 p-4"
           >
-            <h3 id="h-dup" className="flex items-center gap-2 text-[15px] font-extrabold text-amber-ink">
+            <h3
+              id="h-dup"
+              className="flex items-center gap-2 text-[15px] font-extrabold text-amber-ink"
+            >
               <Icon name="alert" size={18} />
               Cette personne a peut-être déjà une fiche
             </h3>
             {duplicates.map((d) => (
-              <div key={d.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-white px-3 py-2.5">
+              <div
+                key={d.id}
+                className="flex flex-wrap items-center gap-3 rounded-2xl bg-white px-3 py-2.5"
+              >
                 <span className="flex min-w-0 flex-[1_1_200px] flex-col">
                   <span className="font-bold">
                     {d.prenom} {d.nom}
                   </span>
                   <span className="text-[12px] text-ink-500">
                     {bornLabel(null)} {formatIsoDateFr(d.ddn)}
-                    {d.commune ? ` · ${d.commune}` : ''} · {d.criteria.map((c) => DUPLICATE_CRITERION_LABELS[c]).join(', ')}
+                    {d.commune ? ` · ${d.commune}` : ''} ·{' '}
+                    {d.criteria.map((c) => DUPLICATE_CRITERION_LABELS[c]).join(', ')}
                   </span>
                 </span>
                 {onOpenExisting && (
@@ -450,7 +501,9 @@ export function PatientEditDrawer({
 
         <p className="text-[12px] text-ink-500">
           * Champs obligatoires
-          {detail ? ` · fiche créée le ${formatIsoDateFr(detail.patient.createdAt.slice(0, 10))}` : ''}
+          {detail
+            ? ` · fiche créée le ${formatIsoDateFr(detail.patient.createdAt.slice(0, 10))}`
+            : ''}
         </p>
 
         {!creating && (

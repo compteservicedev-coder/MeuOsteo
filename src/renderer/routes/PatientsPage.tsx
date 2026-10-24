@@ -19,7 +19,10 @@ const COLUMNS = 'grid grid-cols-[2fr_0.7fr_1.4fr_1.4fr_1.2fr] gap-3'
 
 /** « Camille Roux » typed in the search box prefills the new record. */
 function nameFromQuery(q: string): { nom: string; prenom: string } {
-  const words = q.trim().split(/\s+/).filter((w) => !/\d/.test(w))
+  const words = q
+    .trim()
+    .split(/\s+/)
+    .filter((w) => !/\d/.test(w))
   if (words.length === 0) return { nom: '', prenom: '' }
   if (words.length === 1) return { nom: words[0]!, prenom: '' }
   return { prenom: words[0]!, nom: words.slice(1).join(' ') }
@@ -31,7 +34,9 @@ export function PatientsPage() {
   const toast = useToast()
   const searchRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<{ items: PatientListItem[]; truncated: boolean } | null>(null)
+  const [results, setResults] = useState<{ items: PatientListItem[]; truncated: boolean } | null>(
+    null,
+  )
   const [recent, setRecent] = useState<PatientListItem[]>([])
   const [today, setToday] = useState<TodayAppointment[]>([])
   const [count, setCount] = useState<number | null>(null)
@@ -74,8 +79,14 @@ export function PatientsPage() {
         variants={staggerItem}
         className="relative overflow-hidden rounded-[24px] bg-hero px-[30px] pb-[78px] pt-7 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_24px_44px_-20px_rgba(23,51,143,0.75)]"
       >
-        <div aria-hidden="true" className="absolute -right-[70px] -top-[110px] h-[300px] w-[300px] rounded-full bg-white/[0.07]" />
-        <div aria-hidden="true" className="absolute -bottom-[140px] right-[120px] h-[240px] w-[240px] rounded-full bg-white/[0.05]" />
+        <div
+          aria-hidden="true"
+          className="absolute -right-[70px] -top-[110px] h-[300px] w-[300px] rounded-full bg-white/[0.07]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-[140px] right-[120px] h-[240px] w-[240px] rounded-full bg-white/[0.05]"
+        />
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-[14px] text-nav-soft">{formatLongDateFr(new Date())}</p>
@@ -84,7 +95,8 @@ export function PatientsPage() {
               {today.length === 0
                 ? 'Aucun rendez-vous aujourd’hui'
                 : `${today.length} rendez-vous aujourd’hui`}
-              {count !== null && ` · ${count} patient${count > 1 ? 's' : ''} suivi${count > 1 ? 's' : ''}`}
+              {count !== null &&
+                ` · ${count} patient${count > 1 ? 's' : ''} suivi${count > 1 ? 's' : ''}`}
             </p>
           </div>
           <Button
@@ -98,7 +110,10 @@ export function PatientsPage() {
         </div>
       </motion.div>
 
-      <motion.div variants={staggerItem} className="relative mx-[22px] -mt-[66px] flex flex-col gap-2">
+      <motion.div
+        variants={staggerItem}
+        className="relative mx-[22px] -mt-[66px] flex flex-col gap-2"
+      >
         <label htmlFor="patient-search" className="pl-1 text-label text-[#DCE6FD]">
           Rechercher un patient
         </label>
@@ -130,13 +145,24 @@ export function PatientsPage() {
             <h2 id="h-res" className="text-[16px] font-bold">
               {listTitle}
             </h2>
-            <span className="rounded-pill bg-royal-50 px-2.5 py-1 text-[13px] font-semibold text-royal-700" aria-live="polite">
-              {searching && results?.truncated ? `${rows.length}+ résultats` : `${rows.length} résultat(s)`}
+            <span
+              className="rounded-pill bg-royal-50 px-2.5 py-1 text-[13px] font-semibold text-royal-700"
+              aria-live="polite"
+            >
+              {searching && results?.truncated
+                ? `${rows.length}+ résultats`
+                : `${rows.length} résultat(s)`}
             </span>
           </div>
           <div className="overflow-x-auto">
             <div className="min-w-[560px] px-2 pb-2.5 pt-1.5">
-              <div className={cn(COLUMNS, 'px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.05em] text-ink-500')} aria-hidden="true">
+              <div
+                className={cn(
+                  COLUMNS,
+                  'px-3.5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.05em] text-ink-500',
+                )}
+                aria-hidden="true"
+              >
                 <span>Patient</span>
                 <span>Âge</span>
                 <span>Commune</span>
@@ -165,7 +191,9 @@ export function PatientsPage() {
                               <span
                                 className={cn(
                                   'self-start truncate text-[12px]',
-                                  highlight ? 'rounded-md bg-royal-50 px-1.5 font-bold text-royal-700' : 'text-ink-500',
+                                  highlight
+                                    ? 'rounded-md bg-royal-50 px-1.5 font-bold text-royal-700'
+                                    : 'text-ink-500',
                                 )}
                               >
                                 {p.profession}
@@ -175,8 +203,12 @@ export function PatientsPage() {
                         </span>
                         <span className="text-ink-600">{ageLabel(p.ddn, todayDate)}</span>
                         <span className="truncate text-ink-600">{p.commune ?? '—'}</span>
-                        <span className="text-ink-600">{p.portable ? formatPhone(p.portable) : '—'}</span>
-                        <span className="text-ink-600">{p.lastSeance ? formatIsoDateFr(p.lastSeance) : '—'}</span>
+                        <span className="text-ink-600">
+                          {p.portable ? formatPhone(p.portable) : '—'}
+                        </span>
+                        <span className="text-ink-600">
+                          {p.lastSeance ? formatIsoDateFr(p.lastSeance) : '—'}
+                        </span>
                       </Link>
                     </li>
                   )
@@ -185,7 +217,11 @@ export function PatientsPage() {
               {searching && rows.length === 0 && (
                 <p className="px-3.5 py-7 text-[15px] text-ink-500">
                   Aucun patient trouvé.{' '}
-                  <button type="button" className="font-semibold text-royal-600 underline-offset-2 hover:underline" onClick={() => setCreating(true)}>
+                  <button
+                    type="button"
+                    className="font-semibold text-royal-600 underline-offset-2 hover:underline"
+                    onClick={() => setCreating(true)}
+                  >
                     Créer une fiche
                   </button>
                 </p>
@@ -208,7 +244,10 @@ export function PatientsPage() {
             <h2 id="h-today" className="text-[16px] font-bold">
               Aujourd’hui
             </h2>
-            <Link to="/planning" className="text-[13px] font-bold text-royal-600 hover:text-royal-700">
+            <Link
+              to="/planning"
+              className="text-[13px] font-bold text-royal-600 hover:text-royal-700"
+            >
               Planning →
             </Link>
           </div>
@@ -226,7 +265,9 @@ export function PatientsPage() {
                     <span className="truncate text-[15px] font-semibold">
                       {r.prenom} {r.nom}
                     </span>
-                    <span className="truncate text-[13px] text-ink-500">{r.motif ?? 'Motif à saisir'}</span>
+                    <span className="truncate text-[13px] text-ink-500">
+                      {r.motif ?? 'Motif à saisir'}
+                    </span>
                   </span>
                   {r.isNew && (
                     <span className="rounded-pill bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] px-2.5 py-1 text-[12px] font-bold text-amber-ink">
@@ -238,7 +279,9 @@ export function PatientsPage() {
             ))}
           </ul>
           {today.length === 0 && (
-            <p className="px-[22px] pb-5 pt-1 text-[14px] text-ink-500">Aucun rendez-vous aujourd’hui.</p>
+            <p className="px-[22px] pb-5 pt-1 text-[14px] text-ink-500">
+              Aucun rendez-vous aujourd’hui.
+            </p>
           )}
           <div className="h-3" />
         </motion.section>

@@ -19,7 +19,12 @@ interface RelativesEditorProps {
  * « Proches » section of the edit panel (R-25). Each link added or removed is confirmed, then
  * saved at once on both records, independently of « Enregistrer » / « Annuler ».
  */
-export function RelativesEditor({ patientId, patientName, relatives, onChanged }: RelativesEditorProps) {
+export function RelativesEditor({
+  patientId,
+  patientName,
+  relatives,
+  onChanged,
+}: RelativesEditorProps) {
   const toast = useToast()
   const [asking, setAsking] = useState<string | null>(null)
   const [linkOpen, setLinkOpen] = useState(false)
@@ -35,8 +40,8 @@ export function RelativesEditor({ patientId, patientName, relatives, onChanged }
     <fieldset className="flex flex-col gap-2.5 rounded-[18px] bg-white p-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_10px_26px_-18px_rgba(15,30,70,0.35)]">
       <legend className="float-left mb-1 w-full text-[15px] font-extrabold">Proches</legend>
       <span className="text-[12px] text-ink-500">
-        Liens vers d’autres fiches patients. Chaque ajout ou retrait est confirmé puis enregistré tout
-        de suite, sur les deux fiches.
+        Liens vers d’autres fiches patients. Chaque ajout ou retrait est confirmé puis enregistré
+        tout de suite, sur les deux fiches.
       </span>
       {relatives.map((r) => {
         const name = `${r.prenom} ${r.nom}`
@@ -46,7 +51,9 @@ export function RelativesEditor({ patientId, patientName, relatives, onChanged }
             key={r.patientId}
             className={cn(
               'flex flex-wrap items-center gap-2.5 rounded-2xl px-2.5 py-2',
-              isAsking ? 'bg-[#FFFAFA] shadow-[inset_0_0_0_1px_rgba(194,39,45,0.2)]' : 'bg-surface-field',
+              isAsking
+                ? 'bg-[#FFFAFA] shadow-[inset_0_0_0_1px_rgba(194,39,45,0.2)]'
+                : 'bg-surface-field',
             )}
           >
             <Avatar prenom={r.prenom} nom={r.nom} size="sm" />
@@ -55,7 +62,11 @@ export function RelativesEditor({ patientId, patientName, relatives, onChanged }
               <span className="text-[12px] text-ink-500">{relationLabel(r.relation)}</span>
             </span>
             {isAsking ? (
-              <div role="alertdialog" aria-label={`Retirer le lien avec ${name}`} className="flex flex-wrap items-center gap-2">
+              <div
+                role="alertdialog"
+                aria-label={`Retirer le lien avec ${name}`}
+                className="flex flex-wrap items-center gap-2"
+              >
                 <span className="text-[13px] font-semibold text-red-ink">
                   Retirer le lien avec {name} ? Il disparaîtra aussi de sa fiche.
                 </span>
@@ -81,7 +92,9 @@ export function RelativesEditor({ patientId, patientName, relatives, onChanged }
           </div>
         )
       })}
-      {relatives.length === 0 && <span className="text-[14px] text-ink-500">Aucun proche lié.</span>}
+      {relatives.length === 0 && (
+        <span className="text-[14px] text-ink-500">Aucun proche lié.</span>
+      )}
       <Button
         className="self-start"
         icon={<Icon name="plus" size={16} strokeWidth={2.6} />}

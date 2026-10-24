@@ -45,7 +45,9 @@ export function Segmented<T extends string | number | null>({
             onClick={() => onChange(option.value)}
             className={cn(
               'btn min-h-[44px] rounded-[10px] px-3 text-[14px]',
-              active ? 'btn-primary pop disabled:!opacity-100' : 'btn-ink bg-transparent text-ink-600 hover:text-ink-900',
+              active
+                ? 'btn-primary pop disabled:!opacity-100'
+                : 'btn-ink bg-transparent text-ink-600 hover:text-ink-900',
             )}
           >
             {option.label}

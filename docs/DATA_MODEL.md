@@ -127,3 +127,9 @@ Table clé / valeur (`key` TEXT PK, `value` TEXT JSON). Clés principales :
 
 ## communes
 Table chargée au premier lancement depuis `resources/communes.csv` (`commune;code_postal`, 35 576 lignes). Index sur `code_postal`.
+
+## Choix d'implémentation (validés)
+- **`patients.search_key`** : calculé par l'application (nom et prénom sans accents, en minuscules) à chaque écriture, et non par une colonne générée SQL, car SQLite ne sait pas retirer les accents. La recherche sur la commune et le métier utilise une fonction `fold()` enregistrée à l'ouverture de la connexion, jamais stockée dans le schéma.
+- **Unicité R-08** : l'index unique partiel exclut les séances `source = 'import'`, car l'import conserve les doublons de l'historique (MIGRATION.md).
+- **Colonnes ajoutées** : `journal.patient_id` (bouton « Historique » de la fiche), `patients.commentaire_updated_at` (« Modifié le … »), `avoirs.annee` et `avoirs.sequence` (numérotation continue des avoirs).
+- **Purge R-14** : au démarrage, les fiches supprimées depuis plus de 30 jours sont purgées ; leurs lignes de journal ne gardent que « Patient n° X ». Les lignes au-delà de la durée de conservation (R-20) sont purgées au même moment.

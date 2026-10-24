@@ -17,7 +17,9 @@ export const DEFAULT_TARIFS_CENTS = [0, 5000, 5500, 6000, 6500] as const
 export const DEFAULT_TARIF_CENTS = 6000
 
 export function tarifLabel(cents: number): string {
-  return cents === 0 ? 'Gratuit' : `${cents % 100 === 0 ? cents / 100 : (cents / 100).toFixed(2).replace('.', ',')} €`
+  return cents === 0
+    ? 'Gratuit'
+    : `${cents % 100 === 0 ? cents / 100 : (cents / 100).toFixed(2).replace('.', ',')} €`
 }
 
 export const paiementLabel = (p: Paiement) => PAIEMENT_OPTIONS.find((o) => o.value === p)!.label
@@ -127,7 +129,10 @@ export const CANCEL_REASONS = [
  * R-06 / R-07 · The bin icon: a planned session can be cancelled, a done one deleted, but never
  * an invoiced session (the invoice must be deleted first, R-13) nor a cancelled one.
  */
-export function binAction(s: { status: SeanceStatus; invoiced: boolean }): 'cancel' | 'delete' | null {
+export function binAction(s: {
+  status: SeanceStatus
+  invoiced: boolean
+}): 'cancel' | 'delete' | null {
   if (s.invoiced || s.status === 'cancelled') return null
   return s.status === 'done' ? 'delete' : 'cancel'
 }

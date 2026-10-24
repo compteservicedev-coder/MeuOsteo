@@ -19,7 +19,8 @@ export function runMaintenance(runtime: Pick<Runtime, 'db' | 'patients'>, now = 
       DEFAULT_JOURNAL_RETENTION,
     )
     const lines = purgeJournal(runtime.db, journalCutoff(now, months))
-    if (purged || lines) log.info(`Maintenance: ${purged} record(s) purged, ${lines} journal line(s)`)
+    if (purged || lines)
+      log.info(`Maintenance: ${purged} record(s) purged, ${lines} journal line(s)`)
   } catch (error) {
     log.error('Maintenance failed', error)
   }

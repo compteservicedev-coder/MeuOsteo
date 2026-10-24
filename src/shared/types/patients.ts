@@ -96,8 +96,7 @@ export interface PatientDetail {
 }
 
 export type SavePatientResult =
-  | { ok: true; id: string; changed: string[] }
-  | { ok: false; errors: PatientErrors }
+  { ok: true; id: string; changed: string[] } | { ok: false; errors: PatientErrors }
 
 export interface DuplicateView {
   id: string
@@ -108,7 +107,10 @@ export interface DuplicateView {
   criteria: DuplicateCriterion[]
 }
 
-export interface DuplicateQuery extends Pick<PatientDraft, 'nom' | 'prenom' | 'ddn' | 'portable' | 'fixe' | 'email'> {
+export interface DuplicateQuery extends Pick<
+  PatientDraft,
+  'nom' | 'prenom' | 'ddn' | 'portable' | 'fixe' | 'email'
+> {
   excludeId?: string
 }
 
@@ -122,8 +124,7 @@ export interface LinkCandidate {
 }
 
 export type LinkResult =
-  | { ok: true }
-  | { ok: false; reason: 'self' | 'already_linked' | 'not_found' }
+  { ok: true } | { ok: false; reason: 'self' | 'already_linked' | 'not_found' }
 
 export interface DeletedPatientView {
   id: string
@@ -161,5 +162,4 @@ export type SeanceFailure =
 export type SeanceResult = { ok: true; seance: SeanceView } | SeanceFailure
 
 export type CreateSeanceResult =
-  | { ok: true; seance: SeanceView; existing: boolean }
-  | { ok: false; reason: 'not_found' }
+  { ok: true; seance: SeanceView; existing: boolean } | { ok: false; reason: 'not_found' }

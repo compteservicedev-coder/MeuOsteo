@@ -15,7 +15,15 @@ const DOT: Record<JournalType, string> = {
 }
 
 /** « Historique » of the record (R-20): one line per action, never any medical content. */
-export function HistoryPanel({ patientId, version, onClose }: { patientId: string; version: number; onClose: () => void }) {
+export function HistoryPanel({
+  patientId,
+  version,
+  onClose,
+}: {
+  patientId: string
+  version: number
+  onClose: () => void
+}) {
   const [lines, setLines] = useState<JournalLineView[] | null>(null)
   useEffect(() => {
     void window.api.patients.journal(patientId).then(setLines)
@@ -45,7 +53,10 @@ export function HistoryPanel({ patientId, version, onClose }: { patientId: strin
       <ul className="flex flex-col gap-2.5">
         {lines?.map((l) => (
           <li key={l.id} className="flex gap-3">
-            <span aria-hidden="true" className={`mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full ${DOT[l.type]}`} />
+            <span
+              aria-hidden="true"
+              className={`mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full ${DOT[l.type]}`}
+            />
             <span className="flex flex-col">
               <span className="text-[14px] font-semibold">{l.action}</span>
               <span className="text-[12px] text-ink-500">
@@ -54,7 +65,9 @@ export function HistoryPanel({ patientId, version, onClose }: { patientId: strin
             </span>
           </li>
         ))}
-        {lines?.length === 0 && <li className="text-[14px] text-ink-500">Aucune action enregistrée.</li>}
+        {lines?.length === 0 && (
+          <li className="text-[14px] text-ink-500">Aucune action enregistrée.</li>
+        )}
       </ul>
       <p className="flex flex-wrap justify-between gap-2 border-t border-[#EDF0F6] pt-3 text-[12px] text-ink-500">
         Une ligne par action, sans contenu médical · 24 mois

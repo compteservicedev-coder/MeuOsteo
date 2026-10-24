@@ -28,26 +28,36 @@ describe('séances (règles R-01 à R-08)', () => {
   it('R-01 séance réalisée : statut de paiement, annulée : « Annulée »', () => {
     const done = { date: '2026-10-09', status: 'done' as const }
     expect(statusLabel({ ...done, paiement: 'cheque' }, TODAY)).toBe('Réglée · chèque')
-    expect(statusLabel({ ...done, paiement: 'virement_attente' }, TODAY)).toBe('Paiement en attente')
+    expect(statusLabel({ ...done, paiement: 'virement_attente' }, TODAY)).toBe(
+      'Paiement en attente',
+    )
     expect(shortStatusLabel({ ...done, paiement: 'virement_recu' }, TODAY)).toBe('Virement')
     expect(shortStatusLabel({ ...done, paiement: 'virement_attente' }, TODAY)).toBe('En attente')
     expect(statusLabel({ date: TODAY, status: 'cancelled', paiement: null }, TODAY)).toBe('Annulée')
   })
 
   it('R-01 étiquette « Facturée » s’il existe une facture active, sinon l’origine du RDV', () => {
-    expect(listTag({ status: 'done', source: 'doctolib', heure: '11:30', invoiced: true })).toBe('Facturée')
-    expect(listTag({ status: 'done', source: 'doctolib', heure: '11:30', invoiced: false })).toBeNull()
-    expect(listTag({ status: 'planned', source: 'doctolib', heure: '11:30', invoiced: false })).toBe(
-      'Doctolib · 11:30',
+    expect(listTag({ status: 'done', source: 'doctolib', heure: '11:30', invoiced: true })).toBe(
+      'Facturée',
     )
-    expect(listTag({ status: 'planned', source: 'manual', heure: null, invoiced: false })).toBe('Hors Doctolib')
+    expect(
+      listTag({ status: 'done', source: 'doctolib', heure: '11:30', invoiced: false }),
+    ).toBeNull()
+    expect(
+      listTag({ status: 'planned', source: 'doctolib', heure: '11:30', invoiced: false }),
+    ).toBe('Doctolib · 11:30')
+    expect(listTag({ status: 'planned', source: 'manual', heure: null, invoiced: false })).toBe(
+      'Hors Doctolib',
+    )
   })
 
   it('R-02 « Séance réalisée » exige date passée ou du jour, motif et paiement', () => {
-    expect(markDoneErrors({ date: TODAY, motif: 'Lombalgie', paiement: 'cheque' }, TODAY)).toEqual([])
-    expect(markDoneErrors({ date: '2026-10-25', motif: 'Lombalgie', paiement: 'cheque' }, TODAY)).toEqual([
-      'future',
-    ])
+    expect(markDoneErrors({ date: TODAY, motif: 'Lombalgie', paiement: 'cheque' }, TODAY)).toEqual(
+      [],
+    )
+    expect(
+      markDoneErrors({ date: '2026-10-25', motif: 'Lombalgie', paiement: 'cheque' }, TODAY),
+    ).toEqual(['future'])
     expect(markDoneErrors({ date: TODAY, motif: '  ', paiement: null }, TODAY)).toEqual([
       'motif_missing',
       'payment_missing',
@@ -71,8 +81,12 @@ describe('séances (règles R-01 à R-08)', () => {
       fields: true,
       dateAndTarif: true,
     })
-    expect(editability({ status: 'planned' }, { editing: false, invoiced: false }).fields).toBe(true)
-    expect(editability({ status: 'cancelled' }, { editing: false, invoiced: false }).fields).toBe(false)
+    expect(editability({ status: 'planned' }, { editing: false, invoiced: false }).fields).toBe(
+      true,
+    )
+    expect(editability({ status: 'cancelled' }, { editing: false, invoiced: false }).fields).toBe(
+      false,
+    )
   })
 
   it('R-04 séance facturée : date et tarif restent bloqués en modification, sauf déverrouillage', () => {
@@ -80,9 +94,10 @@ describe('séances (règles R-01 à R-08)', () => {
       fields: true,
       dateAndTarif: false,
     })
-    expect(editability({ status: 'done' }, { editing: true, invoiced: true, unlocked: true }).dateAndTarif).toBe(
-      true,
-    )
+    expect(
+      editability({ status: 'done' }, { editing: true, invoiced: true, unlocked: true })
+        .dateAndTarif,
+    ).toBe(true)
   })
 
   it('R-06 R-07 corbeille : annuler une séance à venir, supprimer une réalisée, jamais si facturée', () => {

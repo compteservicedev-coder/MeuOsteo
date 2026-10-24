@@ -67,7 +67,12 @@ export function startRuntime({
     store: createSecurityStore(db),
     journal: (line) => addJournalLine(db, line),
   })
-  const runtime = { db, accessCode, patients: new PatientService(db), seances: new SeanceService(db) }
+  const runtime = {
+    db,
+    accessCode,
+    patients: new PatientService(db),
+    seances: new SeanceService(db),
+  }
   runMaintenance(runtime)
   return { ok: true, runtime }
 }
