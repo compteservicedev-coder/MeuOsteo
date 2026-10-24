@@ -1,0 +1,41 @@
+appId: fr.meuosteo.app
+productName: MeuOsteo
+copyright: Copyright © 2026 MeuOsteo
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**/*
+  - package.json
+  # Development tool (`npm run seed`, fake data generator): never shipped.
+  - '!out/main/chunks/seedRunner-*.js'
+  # Only the Windows binary of the SQLite module is needed in the installer.
+  - '!**/node_modules/better-sqlite3-multiple-ciphers/{deps,src}/**'
+  - '!**/node_modules/better-sqlite3-multiple-ciphers/binding.gyp'
+  - '!**/node_modules/better-sqlite3-multiple-ciphers/prebuilds/{linux,linuxmusl,darwin}-*.node'
+  - '!**/node_modules/better-sqlite3-multiple-ciphers/prebuilds/win32-arm64.node'
+  # C++ headers used only to compile the module.
+  - '!**/node_modules/node-addon-api/**'
+extraResources:
+  - from: resources/communes.csv
+    to: communes.csv
+  - from: src/main/db/migrations
+    to: migrations
+asarUnpack:
+  - '**/*.node'
+# The SQLite module ships N-API prebuilds that work with Electron as is.
+npmRebuild: false
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+nsis:
+  artifactName: MeuOsteo-Setup-${version}.${ext}
+  oneClick: true
+  perMachine: false
+  # Patient data lives in %APPDATA%/MeuOsteo and must survive uninstall/reinstall.
+  deleteAppDataOnUninstall: false
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: MeuOsteo
