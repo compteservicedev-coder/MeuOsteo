@@ -1,12 +1,16 @@
 import * as Tabs from '@radix-ui/react-tabs'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import type { GmailStatus } from '@shared/types/invoices'
 import { Page } from '../components/layout/Page'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
+import { CabinetTab } from '../features/settings/CabinetTab'
 import { DeletedPatientsCard } from '../features/settings/DeletedPatientsCard'
+import { MessagerieTab } from '../features/settings/MessagerieTab'
 import { LegacyImportTab } from '../features/import/LegacyImportTab'
 import { SecurityTab } from '../features/settings/SecurityTab'
 import { cn } from '../lib/cn'
@@ -24,22 +28,8 @@ interface TabDef {
 /** Tabs of SPEC §8, in order. */
 const TABS: TabDef[] = [
   { id: 'securite', label: 'Sécurité', icon: 'shield' },
-  {
-    id: 'messagerie',
-    label: 'Messagerie Gmail',
-    icon: 'mail',
-    lot: 'lots 3 et 4',
-    summary:
-      'Adresse Gmail, mot de passe d’application, libellé lu, test de connexion en 3 étapes.',
-  },
-  {
-    id: 'cabinet',
-    label: 'Cabinet & factures',
-    icon: 'invoice',
-    lot: 'lot 3',
-    summary:
-      'Identité du cabinet, ADELI, SIRET, signature, tarifs, mention TVA et modèle d’e-mail.',
-  },
+  { id: 'messagerie', label: 'Messagerie Gmail', icon: 'mail' },
+  { id: 'cabinet', label: 'Cabinet & factures', icon: 'invoice' },
   {
     id: 'agenda',
     label: 'Agenda',
@@ -69,8 +59,16 @@ const TABS: TabDef[] = [
 ]
 
 export function ParametresPage() {
-  const [tab, setTab] = useState('securite')
+  const [params] = useSearchParams()
+  const [tab, setTab] = useState(() => {
+    const wanted = params.get('onglet')
+    return TABS.some((t) => t.id === wanted) ? wanted! : 'securite'
+  })
   const { status } = useSecurity()
+  const [gmail, setGmail] = useState<GmailStatus | null>(null)
+  useEffect(() => {
+    void window.api.gmail.getStatus().then(setGmail)
+  }, [])
 
   return (
     <Page>
@@ -104,6 +102,20 @@ export function ParametresPage() {
                 >
                   <Icon name={t.icon} size={18} />
                   <span className="grow text-left">{t.label}</span>
+                  {t.id === 'messagerie' && gmail && (
+                    <span
+                      className={cn(
+                        'rounded-pill px-2 py-0.5 text-[11px] font-extrabold',
+                        active
+                          ? 'bg-white/20 text-white'
+                          : gmail.connected
+                            ? 'bg-aqua-50 text-aqua-ink'
+                            : 'bg-red-50 text-red-ink',
+                      )}
+                    >
+                      {gmail.connected ? 'Connecté' : 'Déconnecté'}
+                    </span>
+                  )}
                   {t.id === 'securite' && (
                     <span
                       className={cn(
@@ -135,6 +147,10 @@ export function ParametresPage() {
                   <Tabs.Content key={t.id} value={t.id} className="focus-visible:outline-none">
                     {t.id === 'securite' ? (
                       <SecurityTab />
+                    ) : t.id === 'messagerie' ? (
+                      <MessagerieTab onStatus={setGmail} />
+                    ) : t.id === 'cabinet' ? (
+                      <CabinetTab />
                     ) : t.id === 'donnees' ? (
                       <div className="flex flex-col gap-4">
                         <LegacyImportTab />

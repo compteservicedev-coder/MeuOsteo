@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { safeStorage } from 'electron'
 import type { StartupError } from '@shared/types/app'
 import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
@@ -9,7 +10,11 @@ import { log } from './logger'
 import { runMaintenance } from './maintenance'
 import { appPaths } from './paths'
 import { AccessCodeService } from './services/accessCode'
+import { GmailSettingsService, type SecretBox } from './services/gmail'
+import { InvoiceService } from './services/invoices'
+import { createGmailMailer } from './services/mailer'
 import { PatientService } from './services/patients'
+import { createElectronPdfRenderer } from './services/pdfRenderer'
 import { SeanceService } from './services/seances'
 import { createSecurityStore } from './services/securityStore'
 
@@ -18,6 +23,36 @@ export interface Runtime {
   accessCode: AccessCodeService
   patients: PatientService
   seances: SeanceService
+  invoices: InvoiceService
+  gmail: GmailSettingsService
+  mailer: ReturnType<typeof createGmailMailer>
+}
+
+/**
+ * safeStorage (DPAPI on Windows) for the Gmail password. Development machines without a keyring
+ * fall back to plain base64, like the database key (never in the installed application).
+ */
+function secretBox(allowUnprotected: boolean): SecretBox {
+  const protectedBox = safeStorage.isEncryptionAvailable()
+  if (!protectedBox && !allowUnprotected) {
+    return {
+      encrypt: () => {
+        throw new Error('Secret protection unavailable')
+      },
+      decrypt: () => {
+        throw new Error('Secret protection unavailable')
+      },
+    }
+  }
+  return protectedBox
+    ? {
+        encrypt: (plain) => safeStorage.encryptString(plain).toString('base64'),
+        decrypt: (enc) => safeStorage.decryptString(Buffer.from(enc, 'base64')),
+      }
+    : {
+        encrypt: (plain) => `plain:${Buffer.from(plain).toString('base64')}`,
+        decrypt: (enc) => Buffer.from(enc.replace(/^plain:/, ''), 'base64').toString(),
+      }
 }
 
 export type RuntimeResult = { ok: true; runtime: Runtime } | { ok: false; error: StartupError }
@@ -67,11 +102,24 @@ export function startRuntime({
     store: createSecurityStore(db),
     journal: (line) => addJournalLine(db, line),
   })
-  const runtime = {
+  const gmail = new GmailSettingsService(db, secretBox(allowUnprotectedKey))
+  const mailer = createGmailMailer(() => gmail.credentials())
+  const invoices = new InvoiceService({
+    db,
+    dataDir: appPaths.userData,
+    pdf: createElectronPdfRenderer(join(appPaths.userData, 'tmp')),
+    mailer,
+  })
+  const runtime: Runtime = {
     db,
     accessCode,
     patients: new PatientService(db),
-    seances: new SeanceService(db),
+    seances: new SeanceService(db, undefined, {
+      onInvoiceChanged: (factureId) => void invoices.writePdf(factureId),
+    }),
+    invoices,
+    gmail,
+    mailer,
   }
   runMaintenance(runtime)
   return { ok: true, runtime }

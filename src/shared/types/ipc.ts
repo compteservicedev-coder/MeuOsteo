@@ -25,6 +25,22 @@ import type {
   LegacyImportRequest,
   LegacyImportResult,
 } from './legacyImport'
+import type {
+  DeleteInvoiceResult,
+  GmailSettingsInput,
+  GmailStatus,
+  GmailTestResult,
+  InvoiceActionResult,
+  InvoiceDetail,
+  InvoicePreview,
+  InvoiceRow,
+  InvoiceSettingsInput,
+  InvoiceSettingsView,
+  IssueResult,
+  SaveFileResult,
+  SendOutcome,
+  UnlockReason,
+} from './invoices'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
   ChangeCodeResult,
@@ -98,6 +114,35 @@ export interface IpcInvokeContract {
   'seances:cancel': { args: [id: string, reason: string]; result: SeanceResult }
   'seances:restore': { args: [id: string]; result: SeanceResult }
   'seances:delete': { args: [id: string]; result: { ok: true } | SeanceFailure }
+  'seances:unlock': {
+    args: [id: string, reason: UnlockReason]
+    result: { ok: true } | SeanceFailure
+  }
+  'seances:relock': { args: [id: string]; result: void }
+  'invoices:preview': { args: [seanceId: string]; result: InvoicePreview }
+  'invoices:issue': { args: [seanceId: string, options: { send: boolean }]; result: IssueResult }
+  'invoices:list': { args: []; result: InvoiceRow[] }
+  'invoices:detail': { args: [id: string]; result: InvoiceDetail | null }
+  'invoices:send': { args: [id: string]; result: SendOutcome }
+  'invoices:print': { args: [id: string]; result: InvoiceActionResult }
+  'invoices:save-pdf': { args: [id: string]; result: SaveFileResult }
+  'invoices:open-pdf': { args: [id: string]; result: InvoiceActionResult }
+  'invoices:mark-paid': { args: [id: string]; result: InvoiceActionResult }
+  'invoices:delete': { args: [id: string]; result: DeleteInvoiceResult }
+  'invoices:export-selection': {
+    args: [rows: string[][], fileName: string]
+    result: SaveFileResult
+  }
+  'invoices:export-accounting': { args: []; result: SaveFileResult }
+  'invoices:get-settings': { args: []; result: InvoiceSettingsView }
+  'invoices:save-settings': { args: [input: InvoiceSettingsInput]; result: InvoiceSettingsView }
+  'invoices:choose-signature': { args: []; result: InvoiceSettingsView }
+  'invoices:remove-signature': { args: []; result: InvoiceSettingsView }
+  'invoices:set-numbering-start': { args: [sequence: number]; result: InvoiceSettingsView }
+  'gmail:get-status': { args: []; result: GmailStatus }
+  'gmail:save': { args: [input: GmailSettingsInput]; result: GmailStatus }
+  'gmail:test': { args: []; result: GmailTestResult }
+  'gmail:set-connected': { args: [connected: boolean]; result: GmailStatus }
 }
 
 export type IpcChannel = keyof IpcInvokeContract
@@ -175,5 +220,33 @@ export interface MeuOsteoApi {
     cancel(id: string, reason: string): Promise<SeanceResult>
     restore(id: string): Promise<SeanceResult>
     delete(id: string): Promise<{ ok: true } | SeanceFailure>
+    /** R-04 « Déverrouiller date et tarif… ». */
+    unlock(id: string, reason: UnlockReason): Promise<{ ok: true } | SeanceFailure>
+    relock(id: string): Promise<void>
+  }
+  invoices: {
+    preview(seanceId: string): Promise<InvoicePreview>
+    issue(seanceId: string, options: { send: boolean }): Promise<IssueResult>
+    list(): Promise<InvoiceRow[]>
+    detail(id: string): Promise<InvoiceDetail | null>
+    send(id: string): Promise<SendOutcome>
+    print(id: string): Promise<InvoiceActionResult>
+    savePdf(id: string): Promise<SaveFileResult>
+    openPdf(id: string): Promise<InvoiceActionResult>
+    markPaid(id: string): Promise<InvoiceActionResult>
+    delete(id: string): Promise<DeleteInvoiceResult>
+    exportSelection(rows: string[][], fileName: string): Promise<SaveFileResult>
+    exportAccounting(): Promise<SaveFileResult>
+    getSettings(): Promise<InvoiceSettingsView>
+    saveSettings(input: InvoiceSettingsInput): Promise<InvoiceSettingsView>
+    chooseSignature(): Promise<InvoiceSettingsView>
+    removeSignature(): Promise<InvoiceSettingsView>
+    setNumberingStart(sequence: number): Promise<InvoiceSettingsView>
+  }
+  gmail: {
+    getStatus(): Promise<GmailStatus>
+    save(input: GmailSettingsInput): Promise<GmailStatus>
+    test(): Promise<GmailTestResult>
+    setConnected(connected: boolean): Promise<GmailStatus>
   }
 }

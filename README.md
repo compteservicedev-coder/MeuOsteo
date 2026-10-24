@@ -13,7 +13,7 @@ Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopa
 | 0 · Socle                   | Projet, base chiffrée, IPC typé, interface de base, code d'accès, CI | ✅      |
 | 1 · Patients et fiche       | Recherche, fiche, séances, proches, journal, suppression             | ✅      |
 | 2 · Reprise de l'historique | Import du `.xlsm` avec rapport, doublons R-19 et fusion              | ✅      |
-| 3 · Facturation             |                                                                      | à venir |
+| 3 · Facturation             | Émission, PDF, envoi Gmail, registre, avoirs, export comptable       | ✅      |
 | 4 · Planning et Doctolib    |                                                                      | à venir |
 | 5 · Pilotage et finitions   |                                                                      | à venir |
 

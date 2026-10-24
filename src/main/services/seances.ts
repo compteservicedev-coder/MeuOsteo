@@ -5,7 +5,14 @@
 import { and, eq, ne, sql } from 'drizzle-orm'
 import { ulid } from 'ulid'
 import { formatIsoDateFr, isValidIsoDate, isoDateInParis } from '@shared/domain/dates'
-import { patientJournal } from '@shared/domain/journal'
+import {
+  formatEurosShort,
+  modePaiementLabel,
+  reglementOf,
+  UNLOCK_REASONS,
+  type UnlockReason,
+} from '@shared/domain/invoice'
+import { lockJournal, patientJournal } from '@shared/domain/journal'
 import {
   CANCEL_REASONS,
   binAction,
@@ -22,12 +29,14 @@ import type {
 import type { AppDatabase, DbOrTx } from '../db/client'
 import { addJournalLine } from '../db/repositories/journalRepository'
 import { getSetting } from '../db/repositories/settingsRepository'
-import { patients, seances } from '../db/schema'
+import { factures, patients, seances } from '../db/schema'
 import { DEFAULT_TARIFS_SETTING, tarifsSettingSchema } from './settingsSchemas'
 
 type SeanceRow = typeof seances.$inferSelect
 
-function toView(row: SeanceRow, invoice: { numero: string } | null): SeanceView {
+type InvoiceRef = { id: string; numero: string }
+
+function toView(row: SeanceRow, invoice: InvoiceRef | null): SeanceView {
   return {
     id: row.id,
     patientId: row.patientId,
@@ -48,15 +57,15 @@ function toView(row: SeanceRow, invoice: { numero: string } | null): SeanceView 
 }
 
 /** Active invoices (`statut = 'emise'`) of the given sessions. */
-function invoicesBySeance(db: DbOrTx, ids: string[]): Map<string, { numero: string }> {
+function invoicesBySeance(db: DbOrTx, ids: string[]): Map<string, InvoiceRef> {
   if (ids.length === 0) return new Map()
-  const rows = db.all<{ seance_id: string; numero: string }>(
-    sql`SELECT seance_id, numero FROM factures WHERE statut = 'emise' AND seance_id IN (${sql.join(
+  const rows = db.all<{ seance_id: string; id: string; numero: string }>(
+    sql`SELECT seance_id, id, numero FROM factures WHERE statut = 'emise' AND seance_id IN (${sql.join(
       ids.map((id) => sql`${id}`),
       sql`, `,
     )})`,
   )
-  return new Map(rows.map((r) => [r.seance_id, { numero: r.numero }]))
+  return new Map(rows.map((r) => [r.seance_id, { id: r.id, numero: r.numero }]))
 }
 
 /** Sessions of a patient, most recent first (future ones on top). */
@@ -69,10 +78,19 @@ export function listSeances(db: DbOrTx, patientId: string): SeanceView[] {
   return rows.sort(compareSeancesDesc).map((r) => toView(r, invoices.get(r.id) ?? null))
 }
 
+export interface SeanceServiceOptions {
+  /** Called after a save changed the invoice of the session (its PDF must be regenerated). */
+  onInvoiceChanged?: (factureId: string) => void
+}
+
 export class SeanceService {
+  /** R-04: invoiced sessions whose date and tarif were unlocked, with the reason given. */
+  private readonly unlocked = new Map<string, UnlockReason>()
+
   constructor(
     private readonly db: AppDatabase,
     private readonly now: () => Date = () => new Date(),
+    private readonly options: SeanceServiceOptions = {},
   ) {}
 
   private today(): string {
@@ -151,12 +169,13 @@ export class SeanceService {
     const invoiced = view.invoice !== null
     const date = changes.date ?? row.date
     const tarif = changes.tarifCents ?? row.tarifCents
-    // R-04: the unlock flow comes with invoicing (lot 3); until then both stay locked.
-    if (invoiced && (date !== row.date || tarif !== row.tarifCents)) {
+    // R-04: date and tarif of an invoiced session stay locked unless unlocked with a reason.
+    if (invoiced && !this.unlocked.has(row.id) && (date !== row.date || tarif !== row.tarifCents)) {
       return { ok: false, reason: 'locked' }
     }
     if (!isValidIsoDate(date)) return { ok: false, reason: 'invalid_date' }
     if (row.status === 'done' && date > this.today()) return { ok: false, reason: 'invalid_date' }
+    if (invoiced && tarif <= 0) return { ok: false, reason: 'locked' }
     if (date !== row.date) {
       const other = this.sameDay(row.patientId, date, row.id)
       if (other) return { ok: false, reason: 'same_day', existingId: other.id }
@@ -175,8 +194,133 @@ export class SeanceService {
     if (!loaded) return { ok: false, reason: 'not_found' }
     const checked = this.checkChanges(loaded.row, loaded.view, changes)
     if ('ok' in checked) return checked
-    this.db.update(seances).set(checked).where(eq(seances.id, id)).run()
+    const invoice = loaded.view.invoice
+    let invoiceChanged = false
+    this.db.transaction((tx) => {
+      tx.update(seances).set(checked).where(eq(seances.id, id)).run()
+      if (invoice)
+        invoiceChanged = this.syncInvoice(tx, loaded.row, { ...loaded.row, ...checked }, invoice)
+    })
+    this.unlocked.delete(id)
+    if (invoice && invoiceChanged) this.options.onInvoiceChanged?.(invoice.id)
     return this.reload(id)
+  }
+
+  private patientName(db: DbOrTx, patientId: string): string {
+    const p = db
+      .select({ nom: patients.nom, prenom: patients.prenom })
+      .from(patients)
+      .where(eq(patients.id, patientId))
+      .get()
+    return p ? `${p.prenom} ${p.nom}` : 'Patient'
+  }
+
+  /**
+   * Keeps the invoice of an edited session in step: date and tarif after an R-04 unlock
+   * (« modifiée », journal), payment received or expected. Returns true if the invoice changed.
+   */
+  private syncInvoice(
+    tx: DbOrTx,
+    before: SeanceRow,
+    after: SeanceRow,
+    invoice: InvoiceRef,
+  ): boolean {
+    const reason = this.unlocked.get(before.id)
+    const subject = this.patientName(tx, before.patientId)
+    const changes: string[] = []
+    if (after.tarifCents !== before.tarifCents) {
+      changes.push(
+        `tarif ${formatEurosShort(before.tarifCents)} → ${formatEurosShort(after.tarifCents)}`,
+      )
+    }
+    if (after.date !== before.date) {
+      changes.push(`date ${formatIsoDateFr(before.date)} → ${formatIsoDateFr(after.date)}`)
+    }
+    const set: Partial<typeof factures.$inferInsert> = {}
+    if (changes.length > 0) {
+      set.snapDateSeance = after.date
+      set.montantCents = after.tarifCents
+      set.modifiedAt = this.now().toISOString()
+      set.modifiedNote = reason ?? null
+      addJournalLine(
+        tx,
+        {
+          type: 'facture',
+          subject,
+          action: `Facture ${invoice.numero} modifiée : ${changes.join(', ')}`,
+          patientId: before.patientId,
+        },
+        this.now(),
+      )
+    } else if (reason) {
+      addJournalLine(
+        tx,
+        {
+          type: 'verrouillage',
+          subject,
+          action: lockJournal.relockedUnchanged(formatIsoDateFr(before.date)),
+          patientId: before.patientId,
+        },
+        this.now(),
+      )
+    }
+    if (after.paiement !== before.paiement) {
+      const reglement = reglementOf(after.paiement)
+      set.reglement = reglement
+      set.modePaiement = modePaiementLabel(after.paiement)
+      set.acquitteeLe =
+        reglement === 'acquittee' && after.paiement === 'virement_recu' ? this.today() : null
+    }
+    if (Object.keys(set).length === 0) return false
+    tx.update(factures).set(set).where(eq(factures.id, invoice.id)).run()
+    return true
+  }
+
+  /**
+   * R-04 « Déverrouiller date et tarif… »: only on an invoiced, done session, with a reason.
+   * Journal: « Séance du … déverrouillée (facture N) · motif : … ».
+   */
+  unlock(id: string, reason: string): { ok: true } | SeanceFailure {
+    const loaded = this.load(id)
+    if (!loaded) return { ok: false, reason: 'not_found' }
+    const { row, view } = loaded
+    if (row.status !== 'done' || !view.invoice) return { ok: false, reason: 'not_editable' }
+    if (!(UNLOCK_REASONS as readonly string[]).includes(reason)) {
+      return { ok: false, reason: 'not_editable' }
+    }
+    this.unlocked.set(id, reason as UnlockReason)
+    addJournalLine(
+      this.db,
+      {
+        type: 'verrouillage',
+        subject: this.patientName(this.db, row.patientId),
+        action: lockJournal.unlocked(formatIsoDateFr(row.date), view.invoice.numero, reason),
+        patientId: row.patientId,
+      },
+      this.now(),
+    )
+    return { ok: true }
+  }
+
+  /** « Annuler » of an unlocked edit: locked again, the invoice is unchanged. */
+  relock(id: string): void {
+    if (!this.unlocked.delete(id)) return
+    const row = this.db.select().from(seances).where(eq(seances.id, id)).get()
+    if (!row) return
+    addJournalLine(
+      this.db,
+      {
+        type: 'verrouillage',
+        subject: this.patientName(this.db, row.patientId),
+        action: lockJournal.relockedUnchanged(formatIsoDateFr(row.date)),
+        patientId: row.patientId,
+      },
+      this.now(),
+    )
+  }
+
+  isUnlocked(id: string): boolean {
+    return this.unlocked.has(id)
   }
 
   /** R-02 « ✓ Séance réalisée »: saves the changes, then locks the session as `done`. */

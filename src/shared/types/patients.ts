@@ -75,7 +75,7 @@ export interface SeanceView {
   cancelReason: string | null
   cancelledAt: string | null
   /** Active invoice attached to the session (R-10), if any. */
-  invoice: { numero: string } | null
+  invoice: { id: string; numero: string } | null
 }
 
 export interface RelativeView {

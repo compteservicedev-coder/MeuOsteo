@@ -1,0 +1,1 @@
+ALTER TABLE `factures` ADD `acquittee_le` text;

@@ -76,3 +76,47 @@ export const seanceChangesSchema = z
   .partial()
 
 export const cancelReasonSchema = text(60)
+
+// --- Invoicing (lot 3) ---------------------------------------------------------------------
+
+export const unlockReasonSchema = z.enum([
+  'Erreur de saisie',
+  'Erreur de date',
+  'Changement de tarif',
+  'Autre',
+])
+
+export const issueOptionsSchema = z.object({ send: z.boolean() })
+
+const cents = z.number().int().min(0).max(100_000)
+
+export const invoiceSettingsInputSchema = z.object({
+  cabinet: z.object({
+    nom: text(80),
+    titre: text(80),
+    adresse: text(200),
+    telephone: text(30),
+    adeli: text(20),
+    siret: text(20),
+  }),
+  tarifs: z.object({ list: z.array(cents).max(12), defaultCents: cents }),
+  mentionTva: text(200),
+  emailTemplate: z.object({ subject: text(200), body: text(2000) }),
+})
+
+export const numberingStartSchema = z.number().int().min(1).max(9999)
+
+/** « Exporter la sélection »: rows of text cells, built by the renderer. */
+export const csvRowsSchema = z.array(z.array(text(300)).max(20)).max(50_000)
+export const fileNameSchema = z
+  .string()
+  .min(1)
+  .max(80)
+  .regex(/^[^\\/:*?"<>|]+$/)
+
+export const gmailSettingsInputSchema = z.object({
+  address: z.string().trim().max(120),
+  password: z.string().max(64).nullable(),
+  label: text(60),
+  frequency: z.union([z.literal(5), z.literal(15), z.literal(0)]),
+})
