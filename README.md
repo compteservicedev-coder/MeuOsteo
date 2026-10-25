@@ -14,8 +14,10 @@ Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopa
 | 1 · Patients et fiche       | Recherche, fiche, séances, proches, journal, suppression             | ✅      |
 | 2 · Reprise de l'historique | Import du `.xlsm` avec rapport, doublons R-19 et fusion              | ✅      |
 | 3 · Facturation             | Émission, PDF, envoi Gmail, registre, avoirs, export comptable       | ✅      |
-| 4 · Planning et Doctolib    |                                                                      | à venir |
+| 4 · Planning et Doctolib    | Planning, blocages, nouveau RDV, rapprochement, Gmail IMAP, export   | ✅ (1)  |
 | 5 · Pilotage et finitions   |                                                                      | à venir |
+
+(1) Les vrais e-mails Doctolib ne sont pas encore lus : leur parseur attend des exemples `.eml` réels (seul un parseur de test existe). L'import de l'export Doctolib fonctionne.
 
 Le détail des lots est dans `docs/ROADMAP.md`.
 

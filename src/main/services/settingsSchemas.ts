@@ -67,3 +67,16 @@ export const DEFAULT_GMAIL: GmailSetting = {
   connected: false,
   lastUid: {},
 }
+
+/** `agenda` setting (Paramètres > Agenda, SPEC §8.4). */
+export const agendaSettingSchema = z.object({
+  days: z.array(z.enum(['L', 'Ma', 'Me', 'J', 'V', 'S', 'D'])),
+  opening: z.string().regex(/^\d{2}:\d{2}$/),
+  closing: z.string().regex(/^\d{2}:\d{2}$/),
+  durationMinutes: z.union([z.literal(45), z.literal(60), z.literal(75)]),
+  weeks: z.union([z.literal(1), z.literal(2)]),
+  autoAttach: z.boolean(),
+})
+
+/** `dismissed_alerts`: « À rapprocher » alerts the practitioner has acknowledged. */
+export const dismissedAlertsSchema = z.array(z.string())

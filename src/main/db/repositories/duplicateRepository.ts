@@ -283,20 +283,3 @@ export function mergeDuplicatePair(
       .get()?.n ?? 0
   return { ok: true, keptId: keep.id, name: `${merged.prenom} ${merged.nom}`, seances: total }
 }
-
-/** Pending Doctolib appointments, for the « À rapprocher » panel (resolved from lot 4). */
-export function listPendingRdv(db: AppDatabase) {
-  return db
-    .select({
-      key: doctolibRdv.key,
-      nomAffiche: doctolibRdv.nomAffiche,
-      date: doctolibRdv.date,
-      heure: doctolibRdv.heure,
-      match: doctolibRdv.match,
-    })
-    .from(doctolibRdv)
-    .where(inArray(doctolibRdv.match, ['pending_new', 'pending_multi']))
-    .orderBy(asc(doctolibRdv.date), asc(doctolibRdv.heure))
-    .all()
-    .map((r) => ({ ...r, match: r.match as 'pending_new' | 'pending_multi' }))
-}

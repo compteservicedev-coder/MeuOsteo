@@ -8,6 +8,7 @@ import { ReconcilePanel } from './ReconcilePanel'
 
 const TASKS: ReconcileTasks = {
   doctolib: [],
+  alerts: [],
   duplicates: [
     {
       a: { id: 'A', name: 'Sophie Lambert' },
@@ -65,6 +66,8 @@ function mockApi(tasks: ReconcileTasks[]) {
       .fn()
       .mockResolvedValue({ ok: true, keptId: 'A', name: 'Sophie Lambert-Durand', seances: 4 }),
   }
+  // Later reloads (data-changed events) keep answering with the last state.
+  reconcile.listTasks.mockResolvedValue(tasks.at(-1))
   for (const t of tasks) reconcile.listTasks.mockResolvedValueOnce(t)
   Object.assign(window, { api: { reconcile } as unknown as MeuOsteoApi })
   return reconcile
@@ -81,7 +84,7 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('« À rapprocher » · doublon possible (Planning.dc.html)', () => {
   it('R-19 compare champ par champ et fusionne après confirmation', async () => {
-    const api = mockApi([TASKS, { doctolib: [], duplicates: [] }])
+    const api = mockApi([TASKS, { doctolib: [], alerts: [], duplicates: [] }])
     renderPanel()
     expect(await screen.findByText('Sophie Lambert · Sophie Lambert-Durand')).toBeInTheDocument()
     expect(screen.getByText('Même date de naissance et même portable')).toBeInTheDocument()
@@ -114,7 +117,7 @@ describe('« À rapprocher » · doublon possible (Planning.dc.html)', () => {
   })
 
   it('R-19 « Ce ne sont pas les mêmes personnes » mémorise la paire', async () => {
-    const api = mockApi([TASKS, { doctolib: [], duplicates: [] }])
+    const api = mockApi([TASKS, { doctolib: [], alerts: [], duplicates: [] }])
     renderPanel()
     await userEvent.click(await screen.findByRole('button', { name: 'Comparer les fiches' }))
     const dialog = await screen.findByRole('dialog')

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { AlertTask } from './planning'
 import {
   MERGE_FIELDS,
   type DuplicateReason,
@@ -22,11 +23,13 @@ export interface PendingRdvTask {
   date: string
   heure: string | null
   match: 'pending_new' | 'pending_multi'
+  motif?: string | null
 }
 
 export interface ReconcileTasks {
   duplicates: DuplicateTask[]
   doctolib: PendingRdvTask[]
+  alerts: AlertTask[]
 }
 
 export interface MergeRecordSummary {

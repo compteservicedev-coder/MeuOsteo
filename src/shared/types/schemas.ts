@@ -120,3 +120,34 @@ export const gmailSettingsInputSchema = z.object({
   label: text(60),
   frequency: z.union([z.literal(5), z.literal(15), z.literal(0)]),
 })
+
+// --- Planning et Doctolib (lot 4) ----------------------------------------------------------
+
+export const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
+export const timeSchema = z.string().regex(/^\d{1,2}:\d{2}$/)
+export const creneauSchema = z.enum(['day', 'am', 'pm'])
+
+export const newRdvInputSchema = z.object({
+  patientId: idSchema,
+  date: isoDateSchema,
+  heure: z.union([timeSchema, z.literal('')]),
+  motif: text(120),
+})
+
+export const blockInputSchema = z.object({
+  from: isoDateSchema,
+  to: isoDateSchema,
+  creneau: creneauSchema,
+  motif: text(60),
+})
+
+export const rdvKeySchema = z.string().min(1).max(120)
+
+export const agendaSettingsSchema = z.object({
+  days: z.array(z.enum(['L', 'Ma', 'Me', 'J', 'V', 'S', 'D'])).max(7),
+  opening: timeSchema,
+  closing: timeSchema,
+  durationMinutes: z.union([z.literal(45), z.literal(60), z.literal(75)]),
+  weeks: z.union([z.literal(1), z.literal(2)]),
+  autoAttach: z.boolean(),
+})

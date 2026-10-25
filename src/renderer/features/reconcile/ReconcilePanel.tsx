@@ -5,9 +5,11 @@ import type { DuplicateTask, PendingRdvTask, ReconcileTasks } from '@shared/type
 import { Button } from '../../components/ui/Button'
 import { Icon } from '../../components/ui/Icon'
 import { cn } from '../../lib/cn'
-import { notifyDataChanged } from '../../lib/dataEvents'
+import { notifyDataChanged, useDataChanged } from '../../lib/dataEvents'
 import { EASE_SOFT } from '../../lib/motion'
 import { MergeDialog } from './MergeDialog'
+import { RdvTaskDialog } from './RdvTaskDialog'
+import { Link } from 'react-router-dom'
 
 const KIND_STYLES = {
   duplicate: 'bg-red-50 text-red-ink',
@@ -27,9 +29,17 @@ const rdvWhen = (r: PendingRdvTask) => {
 }
 
 /** Panel « À rapprocher » (SPEC §3): each settled case folds away. */
-export function ReconcilePanel() {
+export function ReconcilePanel({
+  requestedKey = null,
+  onRequestHandled,
+}: {
+  /** A planning card « À rapprocher » was clicked: open its task. */
+  requestedKey?: string | null
+  onRequestHandled?: () => void
+} = {}) {
   const [tasks, setTasks] = useState<ReconcileTasks | null>(null)
   const [open, setOpen] = useState<DuplicateTask | null>(null)
+  const [rdvTask, setRdvTask] = useState<PendingRdvTask | null>(null)
 
   const load = useCallback(
     () =>
@@ -42,14 +52,23 @@ export function ReconcilePanel() {
   useEffect(() => {
     void load()
   }, [load])
+  useDataChanged(load)
+
+  useEffect(() => {
+    if (!requestedKey || !tasks) return
+    const task = tasks.doctolib.find((t) => t.key === requestedKey)
+    if (task) setRdvTask(task)
+    onRequestHandled?.()
+  }, [requestedKey, tasks, onRequestHandled])
 
   const resolved = useCallback(() => {
     setOpen(null)
+    setRdvTask(null)
     notifyDataChanged()
     void load()
   }, [load])
 
-  const count = tasks ? tasks.duplicates.length + tasks.doctolib.length : 0
+  const count = tasks ? tasks.duplicates.length + tasks.doctolib.length + tasks.alerts.length : 0
 
   return (
     <aside
@@ -75,7 +94,43 @@ export function ReconcilePanel() {
               kind={r.match === 'pending_new' ? 'Nouveau patient' : 'Plusieurs fiches possibles'}
               kindStyle={KIND_STYLES[r.match]}
               title={r.nomAffiche}
-              sub={`${rdvWhen(r)} · rapprochement des RDV Doctolib au lot 4`}
+              sub={`${rdvWhen(r)}${r.motif ? ` · ${r.motif}` : ''}`}
+              action={
+                <Button size="sm" onClick={() => setRdvTask(r)}>
+                  {r.match === 'pending_new' ? 'Créer la fiche…' : 'Choisir la fiche…'}
+                </Button>
+              }
+            />
+          ))}
+          {tasks?.alerts.map((a) => (
+            <TaskItem
+              key={a.id}
+              kind="Alerte"
+              kindStyle={KIND_STYLES.pending_multi}
+              title={a.title}
+              sub={a.sub}
+              action={
+                <span className="flex flex-wrap gap-2">
+                  {a.patientId && (
+                    <Link
+                      to={`/patients/${a.patientId}${a.seanceId ? `?seance=${a.seanceId}` : ''}`}
+                      className="btn btn-secondary btn-ink min-h-[44px] rounded-[11px] px-3 text-[14px]"
+                    >
+                      Ouvrir la fiche
+                    </Link>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={async () => {
+                      await window.api.doctolib.dismissAlert(a.id)
+                      resolved()
+                    }}
+                  >
+                    C’est noté
+                  </Button>
+                </span>
+              }
             />
           ))}
           {tasks?.duplicates.map((t) => (
@@ -105,6 +160,7 @@ export function ReconcilePanel() {
         Seuls les cas ambigus arrivent ici.
       </p>
       <MergeDialog task={open} onClose={() => setOpen(null)} onResolved={resolved} />
+      <RdvTaskDialog task={rdvTask} onClose={() => setRdvTask(null)} onResolved={resolved} />
     </aside>
   )
 }

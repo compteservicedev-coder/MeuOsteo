@@ -138,15 +138,32 @@ export function registerInvoiceHandlers(register: ReturnType<typeof createRegist
     gmail.save(input),
   )
   register('gmail:set-connected', z.tuple([z.boolean()]), ({ gmail }, c) => gmail.setConnected(c))
-  register('gmail:test', none, async ({ mailer }): Promise<GmailTestResult> => {
+  register('gmail:test', none, async ({ mailer, sync }): Promise<GmailTestResult> => {
+    // GMAIL_DOCTOLIB.md §2: IMAP login and label, then a test e-mail to the address itself.
     const steps: GmailTestResult['steps'] = []
-    const login = await mailer.verify()
+    const label = await sync.countLabel()
+    const LABEL_ERRORS: Record<string, string> = {
+      auth: 'Adresse ou mot de passe d’application refusé par Gmail',
+      network: 'Gmail injoignable : vérifiez la connexion internet',
+      label: 'Connexion réussie, mais le libellé est introuvable dans Gmail',
+      other: 'Connexion à Gmail impossible',
+    }
+    const loginOk = label.ok || label.error === 'label'
     steps.push({
       step: 'login',
-      ok: login.ok,
-      detail: detailOf(login, 'Connexion à Gmail réussie'),
+      ok: loginOk,
+      detail: loginOk
+        ? 'Connexion à Gmail réussie'
+        : LABEL_ERRORS[label.ok ? 'other' : label.error]!,
     })
-    if (login.ok) {
+    if (loginOk) {
+      steps.push({
+        step: 'label',
+        ok: label.ok,
+        detail: label.ok
+          ? `${label.count} e-mail${label.count > 1 ? 's' : ''} trouvé${label.count > 1 ? 's' : ''} sous le libellé`
+          : LABEL_ERRORS['label']!,
+      })
       const sent = await mailer.sendTest()
       steps.push({
         step: 'send',
@@ -154,6 +171,7 @@ export function registerInvoiceHandlers(register: ReturnType<typeof createRegist
         detail: detailOf(sent, sent.ok ? `E-mail de test envoyé à ${sent.to}` : ''),
       })
     }
-    return { steps, ok: steps.every((s) => s.ok) && steps.length === 2 }
+    if (steps.every((s) => s.ok)) void sync.run()
+    return { steps, ok: steps.length === 3 && steps.every((s) => s.ok) }
   })
 }

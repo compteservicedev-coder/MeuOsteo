@@ -1,0 +1,20 @@
+From: MeuOsteo test <rdv-test@meuosteo.invalid>
+To: cabinet.fictif@exemple.fr
+Subject: [MeuOsteo test] Rendez-vous modifié
+Date: Wed, 21 Oct 2026 14:32:00 +0200
+Message-ID: <test-002@meuosteo.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Message de test fictif.
+
+Type : Modification
+Date : 2026-10-28
+Heure : 14:00
+Ancienne date : 2026-10-27
+Ancienne heure : 10:30
+Patient : Inès Garnier
+Téléphone : 06 48 12 77 30
+E-mail : ines.garnier@exemple.fr
+Motif : Première consultation

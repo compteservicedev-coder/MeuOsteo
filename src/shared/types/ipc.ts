@@ -41,6 +41,20 @@ import type {
   SendOutcome,
   UnlockReason,
 } from './invoices'
+import type {
+  AttachResult,
+  BlockInput,
+  BlockPreview,
+  CreateAndAttachResult,
+  DaySlots,
+  ExportImportResult,
+  NewRdvInput,
+  NewRdvResult,
+  PlanningView,
+  RdvCandidates,
+  SyncStatus,
+} from './planning'
+import type { AgendaSettings } from '../domain/planning'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
   ChangeCodeResult,
@@ -143,6 +157,28 @@ export interface IpcInvokeContract {
   'gmail:save': { args: [input: GmailSettingsInput]; result: GmailStatus }
   'gmail:test': { args: []; result: GmailTestResult }
   'gmail:set-connected': { args: [connected: boolean]; result: GmailStatus }
+  'planning:weeks': { args: [monday: string]; result: PlanningView }
+  'planning:blocked-dates': { args: [from: string, to: string]; result: string[] }
+  'planning:day-slots': { args: [date: string, patientId: string | null]; result: DaySlots }
+  'planning:create-rdv': { args: [input: NewRdvInput]; result: NewRdvResult }
+  'planning:preview-block': { args: [input: BlockInput]; result: BlockPreview }
+  'planning:add-blocks': { args: [input: BlockInput]; result: { ok: boolean; days: number } }
+  'planning:remove-block': { args: [id: string]; result: boolean }
+  'agenda:get': { args: []; result: AgendaSettings }
+  'agenda:save': { args: [settings: AgendaSettings]; result: AgendaSettings }
+  'doctolib:candidates': { args: [key: string]; result: RdvCandidates | null }
+  'doctolib:attach': {
+    args: [key: string, patientId: string, remember: boolean]
+    result: AttachResult
+  }
+  'doctolib:create-and-attach': {
+    args: [key: string, draft: PatientDraft]
+    result: CreateAndAttachResult
+  }
+  'doctolib:dismiss-alert': { args: [id: string]; result: void }
+  'doctolib:import-export': { args: []; result: ExportImportResult }
+  'sync:get-status': { args: []; result: SyncStatus }
+  'sync:run': { args: []; result: SyncStatus }
 }
 
 export type IpcChannel = keyof IpcInvokeContract
@@ -153,6 +189,8 @@ export type IpcResult<C extends IpcChannel> = IpcInvokeContract[C]['result']
 export interface IpcEventContract {
   /** The interface was locked by main (system sleep, session lock). */
   'security:locked': []
+  /** The Gmail synchronisation changed state (running, done, error). */
+  'sync:status': [status: SyncStatus]
 }
 
 export type IpcEvent = keyof IpcEventContract
@@ -242,6 +280,32 @@ export interface MeuOsteoApi {
     chooseSignature(): Promise<InvoiceSettingsView>
     removeSignature(): Promise<InvoiceSettingsView>
     setNumberingStart(sequence: number): Promise<InvoiceSettingsView>
+  }
+  planning: {
+    weeks(monday: string): Promise<PlanningView>
+    blockedDates(from: string, to: string): Promise<string[]>
+    daySlots(date: string, patientId: string | null): Promise<DaySlots>
+    createRdv(input: NewRdvInput): Promise<NewRdvResult>
+    previewBlock(input: BlockInput): Promise<BlockPreview>
+    addBlocks(input: BlockInput): Promise<{ ok: boolean; days: number }>
+    removeBlock(id: string): Promise<boolean>
+  }
+  agenda: {
+    get(): Promise<AgendaSettings>
+    save(settings: AgendaSettings): Promise<AgendaSettings>
+  }
+  doctolib: {
+    candidates(key: string): Promise<RdvCandidates | null>
+    attach(key: string, patientId: string, remember: boolean): Promise<AttachResult>
+    createAndAttach(key: string, draft: PatientDraft): Promise<CreateAndAttachResult>
+    dismissAlert(id: string): Promise<void>
+    importExport(): Promise<ExportImportResult>
+  }
+  sync: {
+    getStatus(): Promise<SyncStatus>
+    run(): Promise<SyncStatus>
+    /** Returns an unsubscribe function. */
+    onStatus(listener: (status: SyncStatus) => void): () => void
   }
   gmail: {
     getStatus(): Promise<GmailStatus>
