@@ -1,6 +1,7 @@
 import { registerAppHandlers } from './appHandlers'
 import { registerInvoiceHandlers } from './invoiceHandlers'
 import { registerPatientHandlers } from './patientHandlers'
+import { registerPilotageHandlers } from './pilotageHandlers'
 import { registerPlanningHandlers } from './planningHandlers'
 import { registerLegacyImportHandlers } from './legacyImportHandlers'
 import { registerReconcileHandlers } from './reconcileHandlers'
@@ -16,4 +17,5 @@ export function registerIpcHandlers(ctx: IpcContext, version: string): void {
   registerPatientHandlers(register)
   registerInvoiceHandlers(register)
   registerPlanningHandlers(register)
+  registerPilotageHandlers(register)
 }

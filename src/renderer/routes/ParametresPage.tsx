@@ -1,14 +1,16 @@
 import * as Tabs from '@radix-ui/react-tabs'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { GmailStatus } from '@shared/types/invoices'
 import { Page } from '../components/layout/Page'
 import { PageHeader } from '../components/layout/PageHeader'
-import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
 import { AgendaTab } from '../features/settings/AgendaTab'
+import { BackupTab } from '../features/settings/BackupTab'
+import { ExportCard } from '../features/settings/ExportCard'
+import { JournalTab } from '../features/settings/JournalTab'
 import { CabinetTab } from '../features/settings/CabinetTab'
 import { DeletedPatientsCard } from '../features/settings/DeletedPatientsCard'
 import { MessagerieTab } from '../features/settings/MessagerieTab'
@@ -21,9 +23,6 @@ interface TabDef {
   id: string
   label: string
   icon: IconName
-  /** Lot that brings the tab (placeholder until then). */
-  lot?: string
-  summary?: string
 }
 
 /** Tabs of SPEC §8, in order. */
@@ -32,20 +31,8 @@ const TABS: TabDef[] = [
   { id: 'messagerie', label: 'Messagerie Gmail', icon: 'mail' },
   { id: 'cabinet', label: 'Cabinet & factures', icon: 'invoice' },
   { id: 'agenda', label: 'Agenda', icon: 'calendar' },
-  {
-    id: 'sauvegarde',
-    label: 'Sauvegarde',
-    icon: 'download',
-    lot: 'lot 5',
-    summary: 'Dossier de sauvegarde, copies conservées, sauvegarde et restauration.',
-  },
-  {
-    id: 'journal',
-    label: 'Journal',
-    icon: 'history',
-    lot: 'lot 5',
-    summary: 'Journal complet filtrable, durée de conservation et export CSV.',
-  },
+  { id: 'sauvegarde', label: 'Sauvegarde', icon: 'download' },
+  { id: 'journal', label: 'Journal', icon: 'history' },
   {
     id: 'donnees',
     label: 'Données & import',
@@ -130,38 +117,36 @@ export function ParametresPage() {
             })}
           </Tabs.List>
           <div className="min-w-0 flex-[999_1_520px]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={tab}
-                initial={{ opacity: 0, x: 18 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.35, ease: EASE_SOFT }}
-              >
-                {TABS.map((t) => (
-                  <Tabs.Content key={t.id} value={t.id} className="focus-visible:outline-none">
-                    {t.id === 'securite' ? (
-                      <SecurityTab />
-                    ) : t.id === 'messagerie' ? (
-                      <MessagerieTab onStatus={setGmail} />
-                    ) : t.id === 'agenda' ? (
-                      <AgendaTab />
-                    ) : t.id === 'cabinet' ? (
-                      <CabinetTab />
-                    ) : t.id === 'donnees' ? (
-                      <div className="flex flex-col gap-4">
-                        <LegacyImportTab />
-                        <DeletedPatientsCard />
-                      </div>
-                    ) : (
-                      <Card title={t.label} description={`Disponible au ${t.lot}`}>
-                        <p className="text-[15px] text-ink-600">{t.summary}</p>
-                      </Card>
-                    )}
-                  </Tabs.Content>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, x: 18 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, ease: EASE_SOFT }}
+            >
+              {TABS.map((t) => (
+                <Tabs.Content key={t.id} value={t.id} className="focus-visible:outline-none">
+                  {t.id === 'securite' ? (
+                    <SecurityTab />
+                  ) : t.id === 'messagerie' ? (
+                    <MessagerieTab onStatus={setGmail} />
+                  ) : t.id === 'sauvegarde' ? (
+                    <BackupTab />
+                  ) : t.id === 'journal' ? (
+                    <JournalTab />
+                  ) : t.id === 'agenda' ? (
+                    <AgendaTab />
+                  ) : t.id === 'cabinet' ? (
+                    <CabinetTab />
+                  ) : (
+                    <div className="flex flex-col gap-4">
+                      <LegacyImportTab />
+                      <DeletedPatientsCard />
+                      <ExportCard />
+                    </div>
+                  )}
+                </Tabs.Content>
+              ))}
+            </motion.div>
           </div>
         </Tabs.Root>
       </motion.div>

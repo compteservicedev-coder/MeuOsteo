@@ -34,6 +34,12 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.node } },
   },
   {
+    // End-to-end script: reports its steps on the console.
+    files: ['e2e/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node } },
+    rules: { 'no-console': 'off' },
+  },
+  {
     files: ['src/renderer/**/*.{ts,tsx}'],
     languageOptions: { globals: { ...globals.browser } },
     plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh, 'jsx-a11y': jsxA11y },
