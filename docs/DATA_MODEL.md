@@ -134,3 +134,9 @@ Table chargée au premier lancement depuis `resources/communes.csv` (`commune;co
 - **Unicité R-08** : l'index unique partiel exclut les séances `source = 'import'`, car l'import conserve les doublons de l'historique (MIGRATION.md).
 - **Colonnes ajoutées** : `journal.patient_id` (bouton « Historique » de la fiche), `patients.commentaire_updated_at` (« Modifié le … »), `avoirs.annee` et `avoirs.sequence` (numérotation continue des avoirs).
 - **Purge R-14** : au démarrage, les fiches supprimées depuis plus de 30 jours sont purgées ; leurs lignes de journal ne gardent que « Patient n° X ». Les lignes au-delà de la durée de conservation (R-20) sont purgées au même moment.
+- **Facturation (lot 3)** :
+  - `factures.acquittee_le` (colonne ajoutée) : date de réception d'un virement arrivé après l'émission (« Marquer le virement comme reçu ») ; la mention devient « Acquittée le … » et le PDF est régénéré.
+  - `factures.mode_paiement` garde le libellé imprimé (« chèque », « espèces », « virement »), et `pdf_path` un chemin relatif à `userData` (`factures/2026/2026-0001.pdf`, `factures/2026/AV-2026-0001.pdf` pour les avoirs).
+  - Le « prochain numéro » est calculé (plus grande séquence de l'année + 1), jamais stocké. Le réglage `invoice_start` (`{ "2026": 143 }`) permet de reprendre une numérotation commencée dans un autre outil, uniquement avant la première facture de l'année.
+  - L'émission et la suppression (avoir) se font dans une transaction `BEGIN IMMEDIATE` : le verrou d'écriture est pris avant de lire le numéro.
+  - Réglages : `cabinet` (nom, titre, adresse, téléphone, ADELI, SIRET, fichier de signature dans `userData`), `mention_tva`, `email_template` (`subject`, `body`), `gmail` (mot de passe chiffré par `safeStorage`).

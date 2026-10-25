@@ -10,8 +10,10 @@ import {
   statusLabel,
   tarifLabel,
 } from '@shared/domain/seance'
+import { UNLOCK_REASONS, invoiceAction, type UnlockReason } from '@shared/domain/invoice'
 import type { SeanceView } from '@shared/types/patients'
 import { Button } from '../../../components/ui/Button'
+import { Dialog } from '../../../components/ui/Dialog'
 import { Input, Textarea } from '../../../components/ui/Field'
 import { Icon } from '../../../components/ui/Icon'
 import { Segmented } from '../../../components/ui/Segmented'
@@ -47,6 +49,11 @@ export interface SeanceDetailProps {
   onMarkDone: () => void
   onRestore: () => void
   onCompleteAddress: () => void
+  /** R-04: reason given to unlock date and tarif of the invoiced session, or `null`. */
+  unlocked: UnlockReason | null
+  onUnlock: (reason: UnlockReason) => Promise<boolean>
+  onGenerateInvoice: () => void
+  onViewInvoice: () => void
 }
 
 function Banner({
@@ -76,7 +83,7 @@ function Banner({
   )
 }
 
-/** What the footer says about invoicing (R-10); the invoice buttons come with lot 3. */
+/** What the footer says about invoicing (R-10), next to the invoice buttons. */
 function invoiceHint(
   s: SeanceView,
   today: string,
@@ -114,9 +121,19 @@ export function SeanceDetail(props: SeanceDetailProps) {
   const { seance: s, draft, onChange, editing, dirty, today, bin } = props
   const [reason, setReason] = useState<string | null>(null)
   useEffect(() => setReason(null), [bin, s.id])
+  const [unlockAsk, setUnlockAsk] = useState(false)
+  const [unlockReason, setUnlockReason] = useState<UnlockReason | null>(null)
+  const [unlocking, setUnlocking] = useState(false)
 
   const invoiced = s.invoice !== null
-  const { fields, dateAndTarif } = editability(s, { editing, invoiced })
+  const { fields, dateAndTarif } = editability(s, {
+    editing,
+    invoiced: invoiced && !props.unlocked,
+  })
+  const footerAction = invoiceAction(
+    { status: s.status, tarifCents: s.tarifCents, invoiced },
+    { editing, addressComplete: props.addressComplete },
+  )
   const status = displayStatus(s, today)
   const action = binAction({ status: s.status, invoiced })
   const isDone = s.status === 'done'
@@ -204,9 +221,23 @@ export function SeanceDetail(props: SeanceDetailProps) {
             <span className="flex items-center gap-2 py-1.5">
               <Icon name="edit" size={15} strokeWidth={2.4} className="shrink-0" />
               {s.invoice
-                ? `Modification en cours · date et tarif restent liés à la facture N° ${s.invoice.numero}.`
+                ? props.unlocked
+                  ? `Modification en cours · date et tarif déverrouillés (${props.unlocked.toLowerCase()}).`
+                  : `Modification en cours · date et tarif restent liés à la facture N° ${s.invoice.numero}.`
                 : 'Modification d’une séance réalisée en cours.'}
             </span>
+            {s.invoice && !props.unlocked && (
+              <Button
+                size="sm"
+                icon={<Icon name="key" size={15} />}
+                onClick={() => {
+                  setUnlockReason(null)
+                  setUnlockAsk(true)
+                }}
+              >
+                Déverrouiller date et tarif…
+              </Button>
+            )}
           </Banner>
         )}
         {s.status === 'planned' && (status !== 'to_complete' || s.source !== 'doctolib') && (
@@ -408,13 +439,78 @@ export function SeanceDetail(props: SeanceDetailProps) {
                   </Button>
                 </>
               )}
-              {isDone && !editing && !s.invoice && s.tarifCents > 0 && !props.addressComplete && (
-                <Button onClick={props.onCompleteAddress}>Compléter l’adresse</Button>
+              {footerAction === 'complete_address' && (
+                <Button
+                  className="!border-[rgba(224,146,47,0.45)] !bg-[linear-gradient(180deg,#FFFFFF,#FFF6EA)] !text-[#7A4207]"
+                  icon={<Icon name="pin" size={16} />}
+                  onClick={props.onCompleteAddress}
+                >
+                  Compléter l’adresse
+                </Button>
+              )}
+              {footerAction === 'generate' && (
+                <Button
+                  variant="primary"
+                  icon={<Icon name="invoice" size={17} strokeWidth={2.2} />}
+                  onClick={props.onGenerateInvoice}
+                >
+                  Générer la facture
+                </Button>
+              )}
+              {footerAction === 'view' && (
+                <Button icon={<Icon name="invoice" size={17} />} onClick={props.onViewInvoice}>
+                  Voir la facture
+                </Button>
               )}
             </div>
           </div>
         )}
       </motion.div>
+      <Dialog
+        alert
+        open={unlockAsk}
+        onOpenChange={setUnlockAsk}
+        title="Déverrouiller la date et le tarif ?"
+        description={`Cette séance est liée à la facture N° ${s.invoice?.numero ?? ''}. Si vous changez la date ou le tarif, la facture sera marquée « modifiée » et son PDF régénéré. Le déverrouillage est inscrit au journal avec son motif.`}
+        footer={
+          <>
+            <Button onClick={() => setUnlockAsk(false)}>Retour</Button>
+            <Button
+              variant="primary"
+              disabled={!unlockReason}
+              loading={unlocking}
+              onClick={async () => {
+                if (!unlockReason) return
+                setUnlocking(true)
+                const ok = await props.onUnlock(unlockReason)
+                setUnlocking(false)
+                if (ok) setUnlockAsk(false)
+              }}
+            >
+              Déverrouiller
+            </Button>
+          </>
+        }
+      >
+        <div role="group" aria-label="Motif du déverrouillage" className="flex flex-wrap gap-2">
+          {UNLOCK_REASONS.map((r) => (
+            <button
+              key={r}
+              type="button"
+              aria-pressed={unlockReason === r}
+              onClick={() => setUnlockReason(r)}
+              className={cn(
+                'btn min-h-[44px] rounded-[11px] px-3.5 text-[14px]',
+                unlockReason === r
+                  ? 'pop border-0 bg-[linear-gradient(180deg,#E0922F,#B86A12)] text-white shadow-[0_6px_14px_-8px_rgba(184,106,18,0.9)]'
+                  : 'btn-ink border border-[#E9C9A0] bg-[#FFF6EA] text-[#7A4207]',
+              )}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+      </Dialog>
     </motion.section>
   )
 }

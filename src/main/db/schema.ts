@@ -188,6 +188,8 @@ export const factures = sqliteTable(
     montantCents: integer('montant_cents').notNull(),
     reglement: text('reglement', { enum: REGLEMENTS }).notNull(),
     modePaiement: text('mode_paiement'),
+    /** Day the payment was received when it came after the issue (« Marquer le virement reçu »). */
+    acquitteeLe: text('acquittee_le'),
     snapCabinet: text('snap_cabinet', { mode: 'json' }).$type<CabinetSnapshot>().notNull(),
     pdfPath: text('pdf_path'),
     modifiedAt: text('modified_at'),

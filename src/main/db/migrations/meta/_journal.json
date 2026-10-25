@@ -8,6 +8,13 @@
       "when": 1792853858148,
       "tag": "0000_initial_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792881341705,
+      "tag": "0001_invoice_paid_date",
+      "breakpoints": true
     }
   ]
 }

@@ -16,11 +16,13 @@ import {
   existingSessionMessage,
   markDoneErrors,
 } from '@shared/domain/seance'
+import type { UnlockReason } from '@shared/domain/invoice'
 import type { PatientDetail, SeanceFailure, SeanceView } from '@shared/types/patients'
 import { Page } from '../components/layout/Page'
 import { useToast } from '../components/toast/toastContext'
 import { Button } from '../components/ui/Button'
 import { Icon } from '../components/ui/Icon'
+import { IssueInvoiceDialog } from '../features/invoices/IssueInvoiceDialog'
 import { PatientEditDrawer } from '../features/patients/PatientEditDrawer'
 import { ADDRESS_FIELDS } from '../features/patients/draft'
 import { CommentPanel } from '../features/patients/fiche/CommentPanel'
@@ -101,6 +103,8 @@ function FicheScreen({ id }: { id: string }) {
   const [historyOpen, setHistoryOpen] = useState(false)
   const [historyVersion, setHistoryVersion] = useState(0)
   const [flash, setFlash] = useState(0)
+  const [unlocked, setUnlocked] = useState<UnlockReason | null>(null)
+  const [invoiceFor, setInvoiceFor] = useState<string | null>(null)
 
   const selected = detail?.seances.find((s) => s.id === selectedId)
   const dirty = isDirty(draft, selected)
@@ -116,6 +120,7 @@ function FicheScreen({ id }: { id: string }) {
     setSelectedId(seance?.id ?? null)
     setDraft(seance ? draftOf(seance) : null)
     setEditing(false)
+    setUnlocked(null)
     setBin(null)
     setSwap((n) => n + 1)
   }
@@ -153,6 +158,11 @@ function FicheScreen({ id }: { id: string }) {
     const wasEditing = editing
     if (Object.keys(changes).length === 0) {
       if (wasEditing) {
+        if (unlocked) {
+          await window.api.seances.relock(selected.id)
+          setUnlocked(null)
+          setHistoryVersion((n) => n + 1)
+        }
         setEditing(false)
         toast.show('Modifications enregistrées · séance reverrouillée')
       }
@@ -167,8 +177,16 @@ function FicheScreen({ id }: { id: string }) {
     }
     applySeance(result.seance)
     setEditing(false)
+    const invoiceTouched =
+      selected.invoice !== null && (changes.date !== undefined || changes.tarifCents !== undefined)
+    if (unlocked || selected.invoice) setHistoryVersion((n) => n + 1)
+    setUnlocked(null)
     toast.show(
-      wasEditing ? 'Modifications enregistrées · séance reverrouillée' : 'Séance enregistrée',
+      invoiceTouched
+        ? `Facture N° ${selected.invoice!.numero} modifiée · PDF régénéré`
+        : wasEditing
+          ? 'Modifications enregistrées · séance reverrouillée'
+          : 'Séance enregistrée',
     )
     return true
   }
@@ -243,6 +261,8 @@ function FicheScreen({ id }: { id: string }) {
     if (choice === 'discard' && selected) {
       setDraft(draftOf(selected))
       setEditing(false)
+      if (unlocked) void window.api.seances.relock(selected.id)
+      setUnlocked(null)
     }
     perform(action)
   }
@@ -442,7 +462,29 @@ function FicheScreen({ id }: { id: string }) {
             onCancelEdit={() => {
               setDraft(draftOf(selected))
               setEditing(false)
+              if (unlocked) {
+                void window.api.seances
+                  .relock(selected.id)
+                  .then(() => setHistoryVersion((n) => n + 1))
+              }
+              setUnlocked(null)
             }}
+            unlocked={unlocked}
+            onUnlock={async (reason) => {
+              const r = await window.api.seances.unlock(selected.id, reason)
+              if (!r.ok) {
+                toast.show(failureMessage(r, prenom), 'error')
+                return false
+              }
+              setUnlocked(reason)
+              setHistoryVersion((n) => n + 1)
+              toast.show('Date et tarif déverrouillés · inscrit au journal', 'info')
+              return true
+            }}
+            onGenerateInvoice={() => setInvoiceFor(selected.id)}
+            onViewInvoice={() =>
+              navigate(`/factures?patient=${id}&facture=${selected.invoice?.id ?? ''}`)
+            }
             onSave={() => void save()}
             onMarkDone={() => void markDone()}
             onRestore={() => void restore()}
@@ -498,6 +540,16 @@ function FicheScreen({ id }: { id: string }) {
         onDeleted={() => {
           setDrawer(null)
           void reload()
+        }}
+      />
+
+      <IssueInvoiceDialog
+        seanceId={invoiceFor}
+        patientId={id}
+        onClose={() => setInvoiceFor(null)}
+        onIssued={() => {
+          void reload()
+          setHistoryVersion((n) => n + 1)
         }}
       />
 
