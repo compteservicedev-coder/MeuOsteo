@@ -41,7 +41,7 @@ import type {
   TodayAppointment,
 } from '@shared/types/patients'
 import { z } from 'zod'
-import type { AppDatabase } from '../db/client'
+import type { AppDatabase, DbOrTx } from '../db/client'
 import { addJournalLine } from '../db/repositories/journalRepository'
 import { getSetting, setSetting } from '../db/repositories/settingsRepository'
 import { journal, patientLinks, patients, seances } from '../db/schema'
@@ -228,12 +228,13 @@ export class PatientService {
     }
   }
 
-  create(draft: PatientDraft): SavePatientResult {
+  /** `within`: an open transaction to join (a savepoint), e.g. « Créer la fiche et rattacher ». */
+  create(draft: PatientDraft, within?: DbOrTx): SavePatientResult {
     const errors = validatePatient(draft, this.today())
     if (Object.keys(errors).length > 0) return { ok: false, errors }
     const data = normalizePatient(draft)
     const id = ulid()
-    this.db.transaction((tx) => {
+    ;(within ?? this.db).transaction((tx) => {
       const max = tx
         .select({ max: sql<number | null>`max(${patients.shortNo})` })
         .from(patients)
