@@ -66,6 +66,8 @@ function mockApi(tasks: ReconcileTasks[]) {
       .fn()
       .mockResolvedValue({ ok: true, keptId: 'A', name: 'Sophie Lambert-Durand', seances: 4 }),
   }
+  // Later reloads (data-changed events) keep answering with the last state.
+  reconcile.listTasks.mockResolvedValue(tasks.at(-1))
   for (const t of tasks) reconcile.listTasks.mockResolvedValueOnce(t)
   Object.assign(window, { api: { reconcile } as unknown as MeuOsteoApi })
   return reconcile
