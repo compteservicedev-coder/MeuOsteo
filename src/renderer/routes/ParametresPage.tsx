@@ -8,6 +8,7 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/ui/Card'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useSecurity } from '../features/access/securityState'
+import { AgendaTab } from '../features/settings/AgendaTab'
 import { CabinetTab } from '../features/settings/CabinetTab'
 import { DeletedPatientsCard } from '../features/settings/DeletedPatientsCard'
 import { MessagerieTab } from '../features/settings/MessagerieTab'
@@ -30,13 +31,7 @@ const TABS: TabDef[] = [
   { id: 'securite', label: 'Sécurité', icon: 'shield' },
   { id: 'messagerie', label: 'Messagerie Gmail', icon: 'mail' },
   { id: 'cabinet', label: 'Cabinet & factures', icon: 'invoice' },
-  {
-    id: 'agenda',
-    label: 'Agenda',
-    icon: 'calendar',
-    lot: 'lot 4',
-    summary: 'Jours de consultation, horaires, durée d’une séance et rattachement automatique.',
-  },
+  { id: 'agenda', label: 'Agenda', icon: 'calendar' },
   {
     id: 'sauvegarde',
     label: 'Sauvegarde',
@@ -149,6 +144,8 @@ export function ParametresPage() {
                       <SecurityTab />
                     ) : t.id === 'messagerie' ? (
                       <MessagerieTab onStatus={setGmail} />
+                    ) : t.id === 'agenda' ? (
+                      <AgendaTab />
                     ) : t.id === 'cabinet' ? (
                       <CabinetTab />
                     ) : t.id === 'donnees' ? (

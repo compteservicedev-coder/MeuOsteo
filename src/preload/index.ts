@@ -92,6 +92,35 @@ const api: MeuOsteoApi = {
     removeSignature: () => invoke('invoices:remove-signature'),
     setNumberingStart: (sequence) => invoke('invoices:set-numbering-start', sequence),
   },
+  planning: {
+    weeks: (monday) => invoke('planning:weeks', monday),
+    blockedDates: (from, to) => invoke('planning:blocked-dates', from, to),
+    daySlots: (date, patientId) => invoke('planning:day-slots', date, patientId),
+    createRdv: (input) => invoke('planning:create-rdv', input),
+    previewBlock: (input) => invoke('planning:preview-block', input),
+    addBlocks: (input) => invoke('planning:add-blocks', input),
+    removeBlock: (id) => invoke('planning:remove-block', id),
+  },
+  agenda: {
+    get: () => invoke('agenda:get'),
+    save: (settings) => invoke('agenda:save', settings),
+  },
+  doctolib: {
+    candidates: (key) => invoke('doctolib:candidates', key),
+    attach: (key, patientId, remember) => invoke('doctolib:attach', key, patientId, remember),
+    createAndAttach: (key, draft) => invoke('doctolib:create-and-attach', key, draft),
+    dismissAlert: (id) => invoke('doctolib:dismiss-alert', id),
+    importExport: () => invoke('doctolib:import-export'),
+  },
+  sync: {
+    getStatus: () => invoke('sync:get-status'),
+    run: () => invoke('sync:run'),
+    onStatus: (listener) => {
+      const handler = (_event: unknown, status: Parameters<typeof listener>[0]) => listener(status)
+      ipcRenderer.on('sync:status', handler)
+      return () => ipcRenderer.removeListener('sync:status', handler)
+    },
+  },
   gmail: {
     getStatus: () => invoke('gmail:get-status'),
     save: (input) => invoke('gmail:save', input),

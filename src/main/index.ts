@@ -52,6 +52,8 @@ function startApp(): void {
     setTimeout(() => {
       started = startRuntime({ allowUnprotectedKey: !app.isPackaged })
       resolveStartup(started)
+      // Gmail: at start-up, then at the chosen frequency (GMAIL_DOCTOLIB.md §2).
+      if (started.ok) started.runtime.sync.start()
     }, 0)
 
     // R-21: the code is asked again after a system sleep or a session lock.

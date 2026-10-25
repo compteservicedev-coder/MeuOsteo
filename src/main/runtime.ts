@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { safeStorage } from 'electron'
+import { BrowserWindow, safeStorage } from 'electron'
 import type { StartupError } from '@shared/types/app'
 import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
 import { ensureCommunesLoaded } from './db/communes'
@@ -10,11 +10,14 @@ import { log } from './logger'
 import { runMaintenance } from './maintenance'
 import { appPaths } from './paths'
 import { AccessCodeService } from './services/accessCode'
+import { RdvPipeline } from './services/doctolib/pipeline'
 import { GmailSettingsService, type SecretBox } from './services/gmail'
+import { GmailSync } from './services/gmailSync'
 import { InvoiceService } from './services/invoices'
 import { createGmailMailer } from './services/mailer'
 import { PatientService } from './services/patients'
 import { createElectronPdfRenderer } from './services/pdfRenderer'
+import { PlanningService } from './services/planning'
 import { SeanceService } from './services/seances'
 import { createSecurityStore } from './services/securityStore'
 
@@ -26,6 +29,9 @@ export interface Runtime {
   invoices: InvoiceService
   gmail: GmailSettingsService
   mailer: ReturnType<typeof createGmailMailer>
+  planning: PlanningService
+  pipeline: RdvPipeline
+  sync: GmailSync
 }
 
 /**
@@ -110,21 +116,35 @@ export function startRuntime({
     pdf: createElectronPdfRenderer(join(appPaths.userData, 'tmp')),
     mailer,
   })
+  const patients = new PatientService(db)
+  const pipeline = new RdvPipeline(db, patients)
+  const sync = new GmailSync({
+    db,
+    gmail,
+    pipeline,
+    onStatus: (status) => {
+      for (const w of BrowserWindow.getAllWindows()) w.webContents.send('sync:status', status)
+    },
+  })
   const runtime: Runtime = {
     db,
     accessCode,
-    patients: new PatientService(db),
+    patients,
     seances: new SeanceService(db, undefined, {
       onInvoiceChanged: (factureId) => void invoices.writePdf(factureId),
     }),
     invoices,
     gmail,
     mailer,
+    planning: new PlanningService(db),
+    pipeline,
+    sync,
   }
   runMaintenance(runtime)
   return { ok: true, runtime }
 }
 
 export function stopRuntime(runtime: Runtime): void {
+  runtime.sync.stop()
   closeDatabase(runtime.db)
 }

@@ -1,10 +1,10 @@
 import { z } from 'zod'
+import { isoDateInParis } from '@shared/domain/dates'
 import { mergeRequestSchema, patientIdSchema } from '@shared/types/reconcile'
 import {
   getMergeComparison,
   ignoreDuplicatePair,
   listDuplicateTasks,
-  listPendingRdv,
   mergeDuplicatePair,
 } from '../db/repositories/duplicateRepository'
 import { log } from '../logger'
@@ -12,9 +12,10 @@ import type { createRegistrar } from './register'
 
 /** « À rapprocher » (SPEC §3) and the merge of duplicates (R-19). */
 export function registerReconcileHandlers(register: ReturnType<typeof createRegistrar>): void {
-  register('reconcile:list-tasks', z.tuple([]), ({ db }) => ({
+  register('reconcile:list-tasks', z.tuple([]), ({ db, pipeline }) => ({
     duplicates: listDuplicateTasks(db),
-    doctolib: listPendingRdv(db),
+    doctolib: pipeline.pendingTasks(),
+    alerts: pipeline.alerts(isoDateInParis(new Date())),
   }))
 
   register('duplicates:compare', z.tuple([patientIdSchema, patientIdSchema]), ({ db }, a, b) =>

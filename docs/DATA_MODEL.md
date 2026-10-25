@@ -140,3 +140,7 @@ Table chargée au premier lancement depuis `resources/communes.csv` (`commune;co
   - Le « prochain numéro » est calculé (plus grande séquence de l'année + 1), jamais stocké. Le réglage `invoice_start` (`{ "2026": 143 }`) permet de reprendre une numérotation commencée dans un autre outil, uniquement avant la première facture de l'année.
   - L'émission et la suppression (avoir) se font dans une transaction `BEGIN IMMEDIATE` : le verrou d'écriture est pris avant de lire le numéro.
   - Réglages : `cabinet` (nom, titre, adresse, téléphone, ADELI, SIRET, fichier de signature dans `userData`), `mention_tva`, `email_template` (`subject`, `body`), `gmail` (mot de passe chiffré par `safeStorage`).
+- **Planning et Doctolib (lot 4)** :
+  - Réglages : `agenda` (jours, horaires, durée, semaines affichées, rattachement automatique), `sync_state` (dernière synchronisation, e-mails non reconnus), `dismissed_alerts` (alertes « À rapprocher » vues).
+  - `doctolib_rdv.key` = `rdv_` + hash FNV-1a 64 bits de (date, heure, nom affiché sans accents, téléphone normalisé). Une modification change la clé de la ligne existante ; l'idempotence s'appuie aussi sur les Message-ID déjà traités.
+  - Les séances importées (`source = import`) ne sont pas affichées dans le planning.
