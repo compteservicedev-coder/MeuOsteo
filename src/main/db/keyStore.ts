@@ -70,6 +70,15 @@ function readKey(keyFile: string, { protector, allowUnprotected }: LoadKeyOption
   }
 }
 
+/** Writes a key file (protected by safeStorage), e.g. the key of a backup from another PC. */
+export function writeDatabaseKey(
+  keyFile: string,
+  hexKey: string,
+  options: Pick<LoadKeyOptions, 'protector' | 'allowUnprotected'>,
+): void {
+  writeKey(keyFile, hexKey, options as LoadKeyOptions)
+}
+
 function writeKey(keyFile: string, hexKey: string, options: LoadKeyOptions): void {
   const { protector, allowUnprotected } = options
   let file: KeyFile

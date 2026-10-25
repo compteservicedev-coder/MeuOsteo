@@ -7,6 +7,12 @@ import { app } from 'electron'
  * Must be called before `app.whenReady()`.
  */
 export function configureUserDataPath(): void {
+  // End-to-end tests (`npm run e2e`) run on a throw-away folder; never in the installed app.
+  const override = !app.isPackaged ? process.env['MEUOSTEO_USER_DATA'] : undefined
+  if (override) {
+    app.setPath('userData', override)
+    return
+  }
   const folder = app.isPackaged ? 'MeuOsteo' : 'MeuOsteo-dev'
   app.setPath('userData', join(app.getPath('appData'), folder))
 }

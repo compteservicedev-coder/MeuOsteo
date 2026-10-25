@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { BrowserWindow, safeStorage } from 'electron'
+import { BrowserWindow, app, safeStorage } from 'electron'
 import type { StartupError } from '@shared/types/app'
 import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
 import { ensureCommunesLoaded } from './db/communes'
 import { DatabaseKeyError, loadOrCreateDatabaseKey } from './db/keyStore'
+import { BackupService, applyPendingRestore } from './services/backup'
+import { DashboardService } from './services/dashboard'
 import { addJournalLine } from './db/repositories/journalRepository'
 import { log } from './logger'
 import { runMaintenance } from './maintenance'
@@ -32,6 +34,11 @@ export interface Runtime {
   planning: PlanningService
   pipeline: RdvPipeline
   sync: GmailSync
+  backup: BackupService
+  dashboard: DashboardService
+  /** Database key (hex), to check backups made with it. Never sent to the renderer unasked. */
+  databaseKey: string
+  allowUnprotectedKey: boolean
 }
 
 /**
@@ -71,6 +78,8 @@ export function startRuntime({
 }): RuntimeResult {
   let hexKey: string
   try {
+    // R-22: a restore prepared before the restart replaces the database now.
+    applyPendingRestore(appPaths.databaseFile, appPaths.keyFile)
     hexKey = loadOrCreateDatabaseKey({
       keyFile: appPaths.keyFile,
       databaseFile: appPaths.databaseFile,
@@ -126,6 +135,11 @@ export function startRuntime({
       for (const w of BrowserWindow.getAllWindows()) w.webContents.send('sync:status', status)
     },
   })
+  const backup = new BackupService({
+    db,
+    databaseFile: appPaths.databaseFile,
+    defaultFolder: join(app.getPath('documents'), 'MeuOsteo Sauvegardes'),
+  })
   const runtime: Runtime = {
     db,
     accessCode,
@@ -139,6 +153,10 @@ export function startRuntime({
     planning: new PlanningService(db),
     pipeline,
     sync,
+    backup,
+    dashboard: new DashboardService(db, invoices, () => backup.setting().lastAt),
+    databaseKey: hexKey,
+    allowUnprotectedKey,
   }
   runMaintenance(runtime)
   return { ok: true, runtime }

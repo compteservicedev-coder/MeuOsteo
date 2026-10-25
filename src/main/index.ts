@@ -70,6 +70,9 @@ function startApp(): void {
   app.on('window-all-closed', () => app.quit())
 
   app.on('will-quit', () => {
+    // R-22: a backup at each closing (skipped right after a restore was prepared).
+    if (started?.ok && !process.env['MEUOSTEO_SKIP_CLOSE_BACKUP'])
+      started.runtime.backup.backupNow()
     if (started?.ok) stopRuntime(started.runtime)
     log.info('Application closed')
   })

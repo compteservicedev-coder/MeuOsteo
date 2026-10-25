@@ -23,7 +23,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "seed": "electron-vite build && electron . --seed",
     "make:fake-xlsm": "tsx scripts/make-fake-xlsm.ts",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "e2e": "electron-vite build && node e2e/critical.mjs"
   },
   "dependencies": {
     "better-sqlite3-multiple-ciphers": "^13.0.3",
@@ -68,6 +69,7 @@
     "globals": "^17.13.0",
     "jsdom": "^26.1.0",
     "jszip": "^3.10.2",
+    "playwright": "^1.63.0",
     "postcss": "^8.5.31",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",

@@ -121,6 +121,28 @@ const api: MeuOsteoApi = {
       return () => ipcRenderer.removeListener('sync:status', handler)
     },
   },
+  dashboard: {
+    get: () => invoke('dashboard:get'),
+    markReceived: (id) => invoke('dashboard:mark-received', id),
+  },
+  backup: {
+    getStatus: () => invoke('backup:get-status'),
+    run: () => invoke('backup:run'),
+    chooseFolder: () => invoke('backup:choose-folder'),
+    setKeep: (keep) => invoke('backup:set-keep', keep),
+    showKey: () => invoke('backup:show-key'),
+    restore: () => invoke('backup:restore'),
+    restoreWithKey: (fileId, key) => invoke('backup:restore-with-key', fileId, key),
+  },
+  journal: {
+    list: (type) => invoke('journal:list', type),
+    getRetention: () => invoke('journal:get-retention'),
+    setRetention: (months) => invoke('journal:set-retention', months),
+    export: () => invoke('journal:export'),
+  },
+  data: {
+    exportAll: () => invoke('data:export-all'),
+  },
   gmail: {
     getStatus: () => invoke('gmail:get-status'),
     save: (input) => invoke('gmail:save', input),

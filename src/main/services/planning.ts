@@ -33,8 +33,6 @@ import type {
 import type { AppDatabase } from '../db/client'
 import { getSetting, setSetting } from '../db/repositories/settingsRepository'
 import { blocages, doctolibRdv, patients, seances } from '../db/schema'
-import { addJournalLine } from '../db/repositories/journalRepository'
-import { SETTINGS_SUBJECT } from '@shared/domain/journal'
 import { DEFAULT_TARIFS_SETTING, agendaSettingSchema, tarifsSettingSchema } from './settingsSchemas'
 
 const byTime = (a: { heure: string | null }, b: { heure: string | null }) =>
@@ -63,11 +61,6 @@ export class PlanningService {
     }
     if (toMinutes(clean.closing) <= toMinutes(clean.opening)) clean.closing = DEFAULT_AGENDA.closing
     setSetting(this.db, 'agenda', clean)
-    addJournalLine(
-      this.db,
-      { type: 'reglage', subject: SETTINGS_SUBJECT, action: 'Agenda modifié' },
-      this.now(),
-    )
     return clean
   }
 

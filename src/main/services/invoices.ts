@@ -30,7 +30,6 @@ import {
   type AccountingLine,
   type CabinetIdentity,
 } from '@shared/domain/invoice'
-import { SETTINGS_SUBJECT } from '@shared/domain/journal'
 import { formatAddress, isAddressComplete } from '@shared/domain/patient'
 import type {
   CabinetSnapshotView,
@@ -49,7 +48,7 @@ import type {
 import type { AppDatabase, DbOrTx } from '../db/client'
 import { addJournalLine } from '../db/repositories/journalRepository'
 import { getSetting, setSetting } from '../db/repositories/settingsRepository'
-import { avoirs, envois, factures, patients, seances } from '../db/schema'
+import { avoirs, envois, factures, journal, patients, seances } from '../db/schema'
 import { log } from '../logger'
 import { renderInvoiceHtml } from './invoiceHtml'
 import {
@@ -201,11 +200,6 @@ export class InvoiceService {
       })
       setSetting(tx, 'mention_tva', input.mentionTva.trim())
       setSetting(tx, 'email_template', input.emailTemplate)
-      addJournalLine(
-        tx,
-        { type: 'reglage', subject: SETTINGS_SUBJECT, action: 'Cabinet et factures modifiés' },
-        this.now(),
-      )
     })
     return this.settingsView()
   }
@@ -217,11 +211,6 @@ export class InvoiceService {
     const file = `signature${ext === '.jpeg' ? '.jpg' : ext}`
     writeFileSync(join(this.deps.dataDir, file), content)
     setSetting(this.db, 'cabinet', { ...this.cabinetSetting(), signature: file })
-    addJournalLine(
-      this.db,
-      { type: 'reglage', subject: SETTINGS_SUBJECT, action: 'Signature des factures modifiée' },
-      this.now(),
-    )
     return this.settingsView()
   }
 
@@ -236,15 +225,6 @@ export class InvoiceService {
     if (this.lastSequence(this.db, annee) === null && sequence >= 1 && sequence <= 9999) {
       const starts = getSetting(this.db, 'invoice_start', invoiceStartSchema, {})
       setSetting(this.db, 'invoice_start', { ...starts, [String(annee)]: sequence })
-      addJournalLine(
-        this.db,
-        {
-          type: 'reglage',
-          subject: SETTINGS_SUBJECT,
-          action: `Numérotation ${annee} reprise à ${formatInvoiceNumber(annee, sequence)}`,
-        },
-        this.now(),
-      )
     }
     return this.settingsView()
   }
@@ -398,6 +378,19 @@ export class InvoiceService {
     log.info(`Invoice issued (${record.factureId})`)
     const pdf = await this.writePdf(record.factureId)
     const sent = options.send ? await this.send(record.factureId) : null
+    if (sent?.ok) {
+      // R-20: « Facture N émise (60 €) · envoyée par e-mail », on the same line.
+      this.db
+        .update(journal)
+        .set({ action: sql`${journal.action} || ' · envoyée par e-mail'` })
+        .where(
+          and(
+            eq(journal.type, 'facture'),
+            sql`${journal.action} LIKE ${`Facture ${record.numero} émise%`}`,
+          ),
+        )
+        .run()
+    }
     return { ...record, pdf, sent }
   }
 
@@ -485,20 +478,7 @@ export class InvoiceService {
       },
     })
     this.recordEnvoi(factureId, 'email', to, outcome.ok, outcome.ok ? null : outcome.error)
-    if (outcome.ok) {
-      addJournalLine(
-        this.db,
-        {
-          type: 'facture',
-          subject: row.snapPatientNom,
-          action: `Facture ${row.numero} envoyée par e-mail`,
-          patientId: row.patientId,
-        },
-        this.now(),
-      )
-    } else {
-      log.warn(`Invoice e-mail failed (${factureId}): ${outcome.error}`)
-    }
+    if (!outcome.ok) log.warn(`Invoice e-mail failed (${factureId}): ${outcome.error}`)
     return outcome
   }
 
@@ -627,16 +607,6 @@ export class InvoiceService {
           .where(eq(seances.id, f.seanceId))
           .run()
       }
-      addJournalLine(
-        tx,
-        {
-          type: 'facture',
-          subject: f.snapPatientNom,
-          action: `Virement reçu pour la facture ${f.numero}`,
-          patientId: f.patientId,
-        },
-        this.now(),
-      )
     })
     await this.writePdf(id)
     return { ok: true }

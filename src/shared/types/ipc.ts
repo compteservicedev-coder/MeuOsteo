@@ -55,6 +55,14 @@ import type {
   SyncStatus,
 } from './planning'
 import type { AgendaSettings } from '../domain/planning'
+import type { JournalType } from '../domain/journal'
+import type {
+  BackupRunResult,
+  BackupStatus,
+  DashboardView,
+  JournalEntry,
+  RestoreResult,
+} from './pilotage'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
   ChangeCodeResult,
@@ -179,6 +187,20 @@ export interface IpcInvokeContract {
   'doctolib:import-export': { args: []; result: ExportImportResult }
   'sync:get-status': { args: []; result: SyncStatus }
   'sync:run': { args: []; result: SyncStatus }
+  'dashboard:get': { args: []; result: DashboardView }
+  'dashboard:mark-received': { args: [seanceId: string]; result: boolean }
+  'backup:get-status': { args: []; result: BackupStatus }
+  'backup:run': { args: []; result: BackupRunResult }
+  'backup:choose-folder': { args: []; result: BackupStatus }
+  'backup:set-keep': { args: [keep: number]; result: BackupStatus }
+  'backup:show-key': { args: []; result: string }
+  'backup:restore': { args: []; result: RestoreResult }
+  'backup:restore-with-key': { args: [fileId: string, key: string]; result: RestoreResult }
+  'journal:list': { args: [type: JournalType | null]; result: JournalEntry[] }
+  'journal:get-retention': { args: []; result: 12 | 24 | 36 }
+  'journal:set-retention': { args: [months: 12 | 24 | 36]; result: 12 | 24 | 36 }
+  'journal:export': { args: []; result: SaveFileResult }
+  'data:export-all': { args: []; result: SaveFileResult }
 }
 
 export type IpcChannel = keyof IpcInvokeContract
@@ -306,6 +328,28 @@ export interface MeuOsteoApi {
     run(): Promise<SyncStatus>
     /** Returns an unsubscribe function. */
     onStatus(listener: (status: SyncStatus) => void): () => void
+  }
+  dashboard: {
+    get(): Promise<DashboardView>
+    markReceived(seanceId: string): Promise<boolean>
+  }
+  backup: {
+    getStatus(): Promise<BackupStatus>
+    run(): Promise<BackupRunResult>
+    chooseFolder(): Promise<BackupStatus>
+    setKeep(keep: number): Promise<BackupStatus>
+    showKey(): Promise<string>
+    restore(): Promise<RestoreResult>
+    restoreWithKey(fileId: string, key: string): Promise<RestoreResult>
+  }
+  journal: {
+    list(type: JournalType | null): Promise<JournalEntry[]>
+    getRetention(): Promise<12 | 24 | 36>
+    setRetention(months: 12 | 24 | 36): Promise<12 | 24 | 36>
+    export(): Promise<SaveFileResult>
+  }
+  data: {
+    exportAll(): Promise<SaveFileResult>
   }
   gmail: {
     getStatus(): Promise<GmailStatus>
