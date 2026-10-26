@@ -145,14 +145,14 @@ export function SeanceDetail(props: SeanceDetailProps) {
     <motion.section
       variants={staggerItem}
       aria-labelledby="h-seance"
-      className="min-w-0 flex-[999_1_420px] rounded-card-lg border border-line-faint bg-white px-[22px] py-5 shadow-[inset_0_1px_0_#FFFFFF,0_1px_2px_rgba(15,30,70,0.06),0_22px_46px_-22px_rgba(15,30,70,0.35)]"
+      className="flex min-w-0 flex-[999_1_420px] flex-col rounded-card-lg border border-line-faint bg-white px-[22px] py-5 shadow-[inset_0_1px_0_#FFFFFF,0_1px_2px_rgba(15,30,70,0.06),0_22px_46px_-22px_rgba(15,30,70,0.35)] lg:overflow-y-auto"
     >
       <motion.div
         key={props.swap}
         initial={{ opacity: 0, x: 18 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.45, ease: EASE_SOFT }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 lg:flex-1"
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -294,26 +294,28 @@ export function SeanceDetail(props: SeanceDetailProps) {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 lg:min-h-[130px] lg:flex-1">
           <label htmlFor="s-an" className="text-label text-ink-600">
             Anamnèse
           </label>
           <Textarea
             id="s-an"
             rows={4}
+            className="lg:min-h-[96px] lg:grow"
             value={draft.anamnese}
             disabled={!fields}
             onChange={(e) => onChange({ anamnese: e.target.value })}
             placeholder={fields ? 'Histoire de la plainte, contexte, évolution…' : ''}
           />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 lg:min-h-[130px] lg:flex-1">
           <label htmlFor="s-pr" className="text-label text-ink-600">
             Pratique
           </label>
           <Textarea
             id="s-pr"
             rows={4}
+            className="lg:min-h-[96px] lg:grow"
             value={draft.pratique}
             disabled={!fields}
             onChange={(e) => onChange({ pratique: e.target.value })}

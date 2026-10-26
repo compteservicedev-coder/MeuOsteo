@@ -408,7 +408,7 @@ function FicheScreen({ id }: { id: string }) {
   const index = selected ? detail.seances.findIndex((s) => s.id === selected.id) : -1
 
   return (
-    <Page>
+    <Page fill>
       <FicheBanner
         detail={detail}
         flash={flash}
@@ -427,7 +427,7 @@ function FicheScreen({ id }: { id: string }) {
         />
       )}
 
-      <div className="flex flex-wrap items-stretch gap-[18px]">
+      <div className="flex flex-wrap items-stretch gap-[18px] lg:min-h-0 lg:flex-1 lg:flex-nowrap">
         <SeanceList
           seances={detail.seances}
           selectedId={selectedId}

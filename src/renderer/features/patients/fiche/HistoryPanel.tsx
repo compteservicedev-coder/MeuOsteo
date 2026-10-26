@@ -35,7 +35,7 @@ export function HistoryPanel({
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: EASE_SOFT }}
-      className="flex flex-col gap-3 rounded-card-lg border border-line-faint bg-white px-6 py-5 shadow-card"
+      className="flex shrink-0 flex-col gap-3 rounded-card-lg border border-line-faint bg-white px-6 py-5 shadow-card lg:max-h-[34%] lg:overflow-y-auto"
     >
       <div className="flex items-center justify-between">
         <h2 id="h-hist" className="text-section">

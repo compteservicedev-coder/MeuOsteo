@@ -30,7 +30,7 @@ export function SeanceList({
     <motion.section
       variants={staggerItem}
       aria-labelledby="h-list"
-      className="flex min-w-0 max-w-full flex-[1_1_230px] flex-col overflow-hidden rounded-card-lg border border-line-faint bg-white shadow-card"
+      className="flex min-w-0 max-w-full flex-[1_1_230px] flex-col overflow-hidden rounded-card-lg border border-line-faint bg-white shadow-card lg:max-w-[260px] lg:flex-[0_0_clamp(210px,17vw,260px)]"
     >
       <div className="flex items-center justify-between gap-2 px-4 pb-3 pt-4">
         <h2 id="h-list" className="text-[16px] font-extrabold">

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatIsoDateFr } from '@shared/domain/dates'
 import {
@@ -38,27 +38,7 @@ const drop = {
 
 /** Paramètres > Données & import (SPEC §8.7, docs/MIGRATION.md). */
 export function LegacyImportTab() {
-  const [version, setVersion] = useState<string | null>(null)
-  useEffect(() => {
-    void window.api.app
-      .getStartupState()
-      .then((s) => s.ok && setVersion(s.version))
-      .catch(() => undefined)
-  }, [])
-
-  return (
-    <div className="flex flex-col gap-4">
-      <LegacyImportCard />
-      <Card title="Export & application">
-        <p className="text-[14px] text-ink-600">
-          Export complet (Excel) et export pour le comptable : disponibles aux lots 3 et 5.
-        </p>
-        <p className="text-[13px] text-ink-500">
-          MeuOsteo {version ?? ''} · données sur cet ordinateur uniquement
-        </p>
-      </Card>
-    </div>
-  )
+  return <LegacyImportCard />
 }
 
 function LegacyImportCard() {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { isBackupRecent } from '@shared/domain/backup'
 import { formatElapsedFr } from '@shared/domain/dates'
 import type { TodaySummary } from '@shared/types/app'
@@ -22,6 +22,7 @@ const MAIN_ITEMS: NavItem[] = [
 ]
 
 const SETTINGS_ITEM: NavItem = { to: '/parametres', label: 'Paramètres', icon: 'settings' }
+const HELP_ITEM: NavItem = { to: '/aide', label: 'Aide & FAQ', icon: 'help' }
 
 /** Refreshes the badge and the backup indicator every minute. */
 function useShellSummary(): TodaySummary | null {
@@ -104,10 +105,12 @@ export function Sidebar() {
         />
       ))}
       <div className="min-h-6 grow" />
+      <NavEntry item={HELP_ITEM} />
       <NavEntry item={SETTINGS_ITEM} />
-      <div
-        className="mt-2 flex items-center justify-center gap-2.5 rounded-control bg-white/[0.06] px-3 py-2.5 text-[12px] text-nav-text shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] min-[1100px]:justify-start"
-        title={backupLabel}
+      <Link
+        to="/parametres?onglet=sauvegarde"
+        className="mt-2 flex items-center justify-center gap-2.5 rounded-control bg-white/[0.06] px-3 py-2.5 text-[12px] text-nav-text shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:bg-white/[0.1] hover:text-white min-[1100px]:justify-start"
+        title={`${backupLabel} · la base est copiée à chaque fermeture de l’application`}
       >
         <span
           aria-hidden="true"
@@ -117,7 +120,7 @@ export function Sidebar() {
           )}
         />
         <span className="sr-only min-[1100px]:not-sr-only">{backupLabel}</span>
-      </div>
+      </Link>
     </nav>
   )
 }
