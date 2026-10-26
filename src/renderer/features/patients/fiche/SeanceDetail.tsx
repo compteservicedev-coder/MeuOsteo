@@ -152,7 +152,7 @@ export function SeanceDetail(props: SeanceDetailProps) {
         initial={{ opacity: 0, x: 18 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.45, ease: EASE_SOFT }}
-        className="flex flex-col gap-4 lg:flex-1"
+        className="flex flex-col gap-4 lg:min-h-0 lg:flex-1 lg:gap-3"
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -294,28 +294,28 @@ export function SeanceDetail(props: SeanceDetailProps) {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-1.5 lg:min-h-[130px] lg:flex-1">
+        <div className="flex flex-col gap-1.5 lg:min-h-[96px] lg:flex-[1_1_0]">
           <label htmlFor="s-an" className="text-label text-ink-600">
             Anamnèse
           </label>
           <Textarea
             id="s-an"
             rows={4}
-            className="lg:min-h-[96px] lg:grow"
+            className="lg:min-h-[64px] lg:flex-[1_1_0] lg:resize-none"
             value={draft.anamnese}
             disabled={!fields}
             onChange={(e) => onChange({ anamnese: e.target.value })}
             placeholder={fields ? 'Histoire de la plainte, contexte, évolution…' : ''}
           />
         </div>
-        <div className="flex flex-col gap-1.5 lg:min-h-[130px] lg:flex-1">
+        <div className="flex flex-col gap-1.5 lg:min-h-[96px] lg:flex-[1_1_0]">
           <label htmlFor="s-pr" className="text-label text-ink-600">
             Pratique
           </label>
           <Textarea
             id="s-pr"
             rows={4}
-            className="lg:min-h-[96px] lg:grow"
+            className="lg:min-h-[64px] lg:flex-[1_1_0] lg:resize-none"
             value={draft.pratique}
             disabled={!fields}
             onChange={(e) => onChange({ pratique: e.target.value })}

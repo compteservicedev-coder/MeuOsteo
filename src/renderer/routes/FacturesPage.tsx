@@ -487,22 +487,31 @@ export function FacturesPage() {
 
         <AnimatePresence>
           {selectedId && (
+            // One panel for every invoice: switching invoices only fades its content, so the list
+            // never shrinks while an old panel leaves.
             <motion.aside
-              key={selectedId}
+              key="detail"
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.45, ease: EASE_SOFT }}
               className="min-w-0 flex-[1_1_340px]"
             >
-              <InvoiceDetailPanel
-                id={selectedId}
-                onClose={() => select(null)}
-                onChanged={() => void load()}
-                onOpenSeance={(patientId, seanceId) =>
-                  navigate(`/patients/${patientId}?seance=${seanceId}`)
-                }
-              />
+              <motion.div
+                key={selectedId}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.35, ease: EASE_SOFT }}
+              >
+                <InvoiceDetailPanel
+                  id={selectedId}
+                  onClose={() => select(null)}
+                  onChanged={() => void load()}
+                  onOpenSeance={(patientId, seanceId) =>
+                    navigate(`/patients/${patientId}?seance=${seanceId}`)
+                  }
+                />
+              </motion.div>
             </motion.aside>
           )}
         </AnimatePresence>

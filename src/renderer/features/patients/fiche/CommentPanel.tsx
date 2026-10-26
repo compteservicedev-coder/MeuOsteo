@@ -117,7 +117,7 @@ export function CommentPanel({
     <motion.aside
       variants={staggerItem}
       aria-labelledby="h-com"
-      className="flex min-w-0 flex-[1_1_320px] flex-col gap-3 rounded-card-lg border border-[rgba(15,76,69,0.1)] bg-[linear-gradient(180deg,#F4FEFB_0%,#E3FAF5_100%)] p-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_18px_40px_-22px_rgba(15,76,69,0.45)] lg:flex-[0_0_clamp(300px,28vw,460px)] lg:overflow-y-auto"
+      className="flex min-w-0 flex-[1_1_320px] flex-col gap-3 rounded-card-lg border border-[rgba(15,76,69,0.1)] bg-[linear-gradient(180deg,#F4FEFB_0%,#E3FAF5_100%)] p-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_18px_40px_-22px_rgba(15,76,69,0.45)] lg:flex-[0_0_clamp(280px,24vw,440px)] lg:overflow-y-auto"
     >
       <div className="flex items-start gap-2.5">
         <div
