@@ -8,6 +8,28 @@ import { staggerItem } from '../../../lib/motion'
 /** Saved 800 ms after the last keystroke (SPEC §5.4). */
 export const COMMENT_AUTOSAVE_MS = 800
 
+const HIDDEN_KEY = 'fiche.commentHidden'
+
+/** Per-computer convenience: the panel stays hidden from one record to the next. */
+function useHiddenPreference(): [boolean, (hidden: boolean) => void] {
+  const [hidden, setHidden] = useState(() => {
+    try {
+      return window.localStorage.getItem(HIDDEN_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+  const update = (next: boolean) => {
+    setHidden(next)
+    try {
+      window.localStorage.setItem(HIDDEN_KEY, next ? '1' : '0')
+    } catch {
+      // Not remembered: the panel simply shows again next time.
+    }
+  }
+  return [hidden, update]
+}
+
 interface CommentPanelProps {
   patientId: string
   sexe: 'F' | 'M' | null
@@ -32,6 +54,7 @@ export function CommentPanel({
   const pending = useRef<string | null>(null)
   const timer = useRef<number | undefined>(undefined)
   const tagInputId = useId()
+  const [hidden, setHidden] = useHiddenPreference()
 
   const flush = () => {
     window.clearTimeout(timer.current)
@@ -67,13 +90,36 @@ export function CommentPanel({
     if (!tags.includes(tag)) saveTags([...tags, tag])
   }
 
+  if (hidden) {
+    return (
+      <motion.aside
+        variants={staggerItem}
+        aria-label="Commentaire inter-séances (masqué)"
+        className="flex shrink-0 flex-col items-center gap-3 rounded-card-lg border border-[rgba(15,76,69,0.1)] bg-[linear-gradient(180deg,#F4FEFB_0%,#E3FAF5_100%)] px-1.5 py-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_18px_40px_-22px_rgba(15,76,69,0.45)]"
+      >
+        <button
+          type="button"
+          onClick={() => setHidden(false)}
+          aria-label="Afficher le commentaire inter-séances"
+          title="Afficher le commentaire"
+          className="btn btn-ink h-11 w-11 bg-white/70 px-0 text-aqua-ink hover:bg-white"
+        >
+          <Icon name="eye" size={18} />
+        </button>
+        <span className="text-[12px] font-bold tracking-[0.06em] text-[#2F6B63] [writing-mode:vertical-rl]">
+          Commentaire{text.trim() ? ' · rédigé' : ''}
+        </span>
+      </motion.aside>
+    )
+  }
+
   return (
     <motion.aside
       variants={staggerItem}
       aria-labelledby="h-com"
-      className="flex min-w-0 flex-[1_1_250px] flex-col gap-3 rounded-card-lg border border-[rgba(15,76,69,0.1)] bg-[linear-gradient(180deg,#F4FEFB_0%,#E3FAF5_100%)] p-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_18px_40px_-22px_rgba(15,76,69,0.45)]"
+      className="flex min-w-0 flex-[1_1_320px] flex-col gap-3 rounded-card-lg border border-[rgba(15,76,69,0.1)] bg-[linear-gradient(180deg,#F4FEFB_0%,#E3FAF5_100%)] p-[18px] shadow-[inset_0_1px_0_#FFFFFF,0_18px_40px_-22px_rgba(15,76,69,0.45)] lg:flex-[0_0_clamp(300px,28vw,460px)] lg:overflow-y-auto"
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-start gap-2.5">
         <div
           aria-hidden="true"
           className="flex h-[38px] w-[38px] items-center justify-center rounded-control bg-[linear-gradient(145deg,#5EEAD4,#0EA5C6)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_16px_-8px_rgba(14,165,198,0.9)]"
@@ -89,6 +135,18 @@ export function CommentPanel({
             séance à l’autre
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            flush()
+            setHidden(true)
+          }}
+          aria-label="Masquer le commentaire inter-séances"
+          title="Masquer le commentaire"
+          className="btn btn-ghost btn-ink ml-auto h-11 w-11 shrink-0 px-0 text-[#2F6B63] hover:bg-white/70"
+        >
+          <Icon name="eyeOff" size={18} />
+        </button>
       </div>
       <label htmlFor="commentaire" className="sr-only">
         Commentaire inter-séances
@@ -98,7 +156,7 @@ export function CommentPanel({
         value={text}
         onChange={(e) => onChange(e.target.value)}
         onBlur={flush}
-        className="field min-h-[340px] grow resize-y rounded-[14px] border-[rgba(15,76,69,0.16)] bg-white/75 px-3.5 py-3 text-[14px] leading-relaxed focus:!border-cyan-500 focus:!shadow-[0_0_0_4px_rgba(14,165,198,0.18)]"
+        className="field min-h-[220px] grow resize-y rounded-[14px] border-[rgba(15,76,69,0.16)] bg-white/75 px-3.5 py-3 text-[14px] leading-relaxed focus:!border-cyan-500 focus:!shadow-[0_0_0_4px_rgba(14,165,198,0.18)] lg:min-h-[160px] lg:resize-none"
       />
       <div className="flex flex-col gap-2">
         <span className="text-[12px] font-bold uppercase tracking-[0.06em] text-[#2F6B63]">

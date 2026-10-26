@@ -142,9 +142,9 @@
     outline: none;
   }
 
-  /* Read-only (a done session): plain text, no frame (DESIGN.md « Lecture seule »). */
+  /* Read-only (a done, locked session): light blue frame, so locked text reads as kept. */
   .field:disabled {
-    @apply cursor-default resize-none border-transparent bg-transparent pl-0.5 text-ink-900 shadow-none;
+    @apply cursor-default resize-none border-[#D6E2FA] bg-[#F1F6FF] text-ink-900 shadow-none;
     -webkit-text-fill-color: theme('colors.ink.900');
     opacity: 1;
   }

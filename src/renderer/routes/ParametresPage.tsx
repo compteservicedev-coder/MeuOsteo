@@ -46,6 +46,11 @@ export function ParametresPage() {
     const wanted = params.get('onglet')
     return TABS.some((t) => t.id === wanted) ? wanted! : 'securite'
   })
+  // A link to another tab (the backup indicator of the sidebar) while already here.
+  const wantedTab = params.get('onglet')
+  useEffect(() => {
+    if (wantedTab && TABS.some((t) => t.id === wantedTab)) setTab(wantedTab)
+  }, [wantedTab])
   const { status } = useSecurity()
   const [gmail, setGmail] = useState<GmailStatus | null>(null)
   useEffect(() => {
