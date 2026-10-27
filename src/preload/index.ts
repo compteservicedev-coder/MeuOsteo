@@ -73,6 +73,17 @@ const api: MeuOsteoApi = {
     unlock: (id, reason) => invoke('seances:unlock', id, reason),
     relock: (id) => invoke('seances:relock', id),
   },
+  documents: {
+    list: (patientId) => invoke('documents:list', patientId),
+    add: (patientId, uploads) => invoke('documents:add', patientId, uploads),
+    chooseAndAdd: (patientId) => invoke('documents:choose-and-add', patientId),
+    update: (id, changes) => invoke('documents:update', id, changes),
+    delete: (id) => invoke('documents:delete', id),
+    content: (id) => invoke('documents:content', id),
+    email: (id) => invoke('documents:email', id),
+    open: (id) => invoke('documents:open', id),
+    saveAs: (id) => invoke('documents:save-as', id),
+  },
   invoices: {
     preview: (seanceId) => invoke('invoices:preview', seanceId),
     issue: (seanceId, options) => invoke('invoices:issue', seanceId, options),

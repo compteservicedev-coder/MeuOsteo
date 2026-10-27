@@ -7,6 +7,7 @@
  */
 import { sql } from 'drizzle-orm'
 import {
+  blob,
   check,
   index,
   integer,
@@ -16,6 +17,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/sqlite-core'
 import { ulid } from 'ulid'
+import { DOCUMENT_CATEGORIES } from '../../shared/domain/documents'
 
 const nowIso = sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`
 
@@ -374,6 +376,39 @@ export const journal = sqliteTable(
     check('journal_action_length_check', sql`length(${t.action}) <= 140`),
   ],
 )
+
+/** R-26 · Documents attached to a record. Metadata only: the bytes live in `document_contents`. */
+export const documents = sqliteTable(
+  'documents',
+  {
+    id: id(),
+    patientId: text('patient_id')
+      .notNull()
+      .references(() => patients.id, { onDelete: 'cascade' }),
+    titre: text('titre').notNull(),
+    categorie: text('categorie', { enum: DOCUMENT_CATEGORIES }).notNull(),
+    /** Name of the file as imported, for its extension and « Enregistrer sous… ». */
+    fileName: text('file_name').notNull(),
+    mime: text('mime').notNull(),
+    sizeBytes: integer('size_bytes').notNull(),
+    /** Date of the document itself (YYYY-MM-DD), the import day by default. */
+    docDate: text('doc_date').notNull(),
+    ...timestamps(),
+  },
+  (t) => [
+    index('documents_patient_idx').on(t.patientId),
+    check('documents_categorie_check', oneOf('categorie', DOCUMENT_CATEGORIES)),
+    check('documents_size_check', sql`${t.sizeBytes} > 0`),
+  ],
+)
+
+/** The file itself, apart so that listing documents never reads megabytes. */
+export const documentContents = sqliteTable('document_contents', {
+  documentId: text('document_id')
+    .primaryKey()
+    .references(() => documents.id, { onDelete: 'cascade' }),
+  bytes: blob('bytes', { mode: 'buffer' }).notNull(),
+})
 
 /** Key / JSON value settings (cabinet, tarifs, security, gmail, backup…). */
 export const settings = sqliteTable('settings', {

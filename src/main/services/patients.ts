@@ -224,6 +224,11 @@ export class PatientService {
           .prepare(`SELECT count(*) AS n FROM factures WHERE patient_id = ?`)
           .get(id) as { n: number }
       ).n,
+      documentCount: (
+        this.db.$client
+          .prepare(`SELECT count(*) AS n FROM documents WHERE patient_id = ?`)
+          .get(id) as { n: number }
+      ).n,
       tarifsCents: tarifs.list,
     }
   }

@@ -33,6 +33,8 @@ describe('base SQLite chiffrée', () => {
       'communes',
       'contact_memory',
       'doctolib_rdv',
+      'document_contents',
+      'documents',
       'duplicate_ignored',
       'envois',
       'factures',

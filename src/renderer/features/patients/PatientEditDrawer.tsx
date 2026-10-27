@@ -529,7 +529,7 @@ export function PatientEditDrawer({
           onOpenChange={setDeleteOpen}
           alert
           title={`Supprimer ${detail.patient.prenom} ${detail.patient.nom} ?`}
-          description={`La fiche, ses ${detail.seances.length} séances et le commentaire inter-séances seront supprimés. Les ${detail.invoiceCount} factures émises restent dans le registre (obligation de conservation). La suppression est inscrite dans le journal. La fiche reste récupérable pendant 30 jours.`}
+          description={`La fiche, ses ${detail.seances.length} séances, ses ${detail.documentCount} documents et le commentaire inter-séances seront supprimés. Les ${detail.invoiceCount} factures émises restent dans le registre (obligation de conservation). La suppression est inscrite dans le journal. La fiche reste récupérable pendant 30 jours.`}
           footer={
             <>
               <Button onClick={() => setDeleteOpen(false)}>Annuler</Button>

@@ -1,5 +1,6 @@
 import { Menu, app, powerMonitor, type BrowserWindow } from 'electron'
 import { registerIpcHandlers } from './ipc'
+import { clearOpenedDocuments } from './ipc/documentHandlers'
 import { initLogger, log } from './logger'
 import { configureUserDataPath } from './paths'
 import { startRuntime, stopRuntime, type RuntimeResult } from './runtime'
@@ -51,6 +52,7 @@ function startApp(): void {
     // Opening the database is synchronous: let the window paint the opening screen first.
     setTimeout(() => {
       started = startRuntime({ allowUnprotectedKey: !app.isPackaged })
+      clearOpenedDocuments()
       resolveStartup(started)
       // Gmail: at start-up, then at the chosen frequency (GMAIL_DOCTOLIB.md §2).
       if (started.ok) started.runtime.sync.start()
@@ -74,6 +76,7 @@ function startApp(): void {
     if (started?.ok && !process.env['MEUOSTEO_SKIP_CLOSE_BACKUP'])
       started.runtime.backup.backupNow()
     if (started?.ok) stopRuntime(started.runtime)
+    clearOpenedDocuments()
     log.info('Application closed')
   })
 }

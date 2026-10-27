@@ -7,6 +7,7 @@ import { ensureCommunesLoaded } from './db/communes'
 import { DatabaseKeyError, loadOrCreateDatabaseKey } from './db/keyStore'
 import { BackupService, applyPendingRestore } from './services/backup'
 import { DashboardService } from './services/dashboard'
+import { DocumentService } from './services/documents'
 import { addJournalLine } from './db/repositories/journalRepository'
 import { log } from './logger'
 import { runMaintenance } from './maintenance'
@@ -28,6 +29,7 @@ export interface Runtime {
   accessCode: AccessCodeService
   patients: PatientService
   seances: SeanceService
+  documents: DocumentService
   invoices: InvoiceService
   gmail: GmailSettingsService
   mailer: ReturnType<typeof createGmailMailer>
@@ -148,6 +150,7 @@ export function startRuntime({
       onInvoiceChanged: (factureId) => void invoices.writePdf(factureId),
     }),
     invoices,
+    documents: new DocumentService(db),
     gmail,
     mailer,
     planning: new PlanningService(db),

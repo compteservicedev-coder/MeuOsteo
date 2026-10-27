@@ -115,6 +115,12 @@ PK `(patient_a, patient_b)`. La relation vue depuis b est l'inverse (`enfant` �
 ## journal
 `id`, `at`, `type` (`patient` \| `facture` \| `verrouillage` \| `reglage`), `subject` (≤ 60 caractères : nom du patient, ou « Patient n° X » après suppression), `action` (≤ 140 caractères). Jamais de contenu médical. Purge selon la durée de conservation choisie (R-20).
 
+## documents
+R-26. `id`, `patient_id` (FK, suppression en cascade avec la fiche), `titre`, `categorie` (`imagerie` \| `compte_rendu` \| `courrier` \| `ordonnance` \| `administratif` \| `photo` \| `autre`), `file_name` (nom d'origine), `mime`, `size_bytes` (> 0, ≤ 25 Mo), `doc_date` (date du document), `created_at`, `updated_at`. Index sur `patient_id`.
+
+## document_contents
+`document_id` (PK et FK vers `documents`, cascade), `bytes` (BLOB). Le contenu est à part pour que la liste des documents ne lise jamais les fichiers. Comme le reste de la base, il est chiffré (SQLCipher) et inclus dans les sauvegardes.
+
 ## settings
 Table clé / valeur (`key` TEXT PK, `value` TEXT JSON). Clés principales :
 - **Cabinet** : `cabinet` (nom, titre, adresse, téléphone, ADELI, SIRET, chemin de la signature).

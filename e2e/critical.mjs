@@ -1,6 +1,7 @@
+/* global DataTransfer -- built inside the page by page.evaluateHandle. */
 /**
  * Parcours critique (ROADMAP lot 5) on the built application, with an empty, throw-away data
- * folder: opening → new patient → session done → practice details → invoice issued (PDF
+ * folder: opening → new patient → session done → documents → practice details → invoice issued (PDF
  * archived) → register → « Supprimer la facture ». Run with `npm run e2e` (Linux: `xvfb-run -a`).
  */
 import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
@@ -73,6 +74,26 @@ await step('séance du jour réalisée', async () => {
     .click()
   await page.getByRole('button', { name: 'Séance réalisée' }).click()
   await page.getByText('Séance réalisée · elle est maintenant verrouillée').waitFor()
+})
+
+await step('documents (R-26) : glisser-déposer, aperçu', async () => {
+  await page.getByRole('button', { name: /^Documents \(0\)$/ }).click()
+  const drawer = page.getByRole('dialog', { name: 'Documents' })
+  const files = await page.evaluateHandle(() => {
+    const dt = new DataTransfer()
+    dt.items.add(new File(['Retour du Dr Lune : RAS.'], 'Courrier Dr Lune.txt'))
+    dt.items.add(new File(['%PDF-1.4'], 'IRM_lombaire.pdf', { type: 'application/pdf' }))
+    return dt
+  })
+  await drawer.getByText('Glissez des fichiers ici').dispatchEvent('drop', { dataTransfer: files })
+  await page.getByText('2 documents ajoutés').waitFor()
+  await drawer.getByRole('button', { name: 'Aperçu de « IRM lombaire »' }).waitFor()
+  await drawer.getByRole('button', { name: 'Aperçu de « Courrier Dr Lune »' }).click()
+  await page.getByText('Retour du Dr Lune : RAS.').waitFor()
+  await page.keyboard.press('Escape')
+  await page.getByText('Retour du Dr Lune : RAS.').waitFor({ state: 'detached' })
+  await drawer.getByRole('button', { name: 'Fermer' }).click()
+  await page.getByRole('button', { name: /^Documents \(2\)$/ }).waitFor()
 })
 
 await step('émission de la facture et PDF archivé', async () => {

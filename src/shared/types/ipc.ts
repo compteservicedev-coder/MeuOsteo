@@ -63,6 +63,15 @@ import type {
   JournalEntry,
   RestoreResult,
 } from './pilotage'
+import type {
+  AddDocumentsResult,
+  DocumentActionResult,
+  DocumentChanges,
+  DocumentContent,
+  DocumentUpload,
+  DocumentView,
+  EmailPreview,
+} from './documents'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
   ChangeCodeResult,
@@ -141,6 +150,18 @@ export interface IpcInvokeContract {
     result: { ok: true } | SeanceFailure
   }
   'seances:relock': { args: [id: string]; result: void }
+  'documents:list': { args: [patientId: string]; result: DocumentView[] }
+  'documents:add': {
+    args: [patientId: string, uploads: DocumentUpload[]]
+    result: AddDocumentsResult | null
+  }
+  'documents:choose-and-add': { args: [patientId: string]; result: AddDocumentsResult | null }
+  'documents:update': { args: [id: string, changes: DocumentChanges]; result: DocumentView | null }
+  'documents:delete': { args: [id: string]; result: boolean }
+  'documents:content': { args: [id: string]; result: DocumentContent }
+  'documents:email': { args: [id: string]; result: EmailPreview | null }
+  'documents:open': { args: [id: string]; result: DocumentActionResult }
+  'documents:save-as': { args: [id: string]; result: SaveFileResult }
   'invoices:preview': { args: [seanceId: string]; result: InvoicePreview }
   'invoices:issue': { args: [seanceId: string, options: { send: boolean }]; result: IssueResult }
   'invoices:list': { args: []; result: InvoiceRow[] }
@@ -283,6 +304,18 @@ export interface MeuOsteoApi {
     /** R-04 « Déverrouiller date et tarif… ». */
     unlock(id: string, reason: UnlockReason): Promise<{ ok: true } | SeanceFailure>
     relock(id: string): Promise<void>
+  }
+  /** R-26 · Documents du patient. */
+  documents: {
+    list(patientId: string): Promise<DocumentView[]>
+    add(patientId: string, uploads: DocumentUpload[]): Promise<AddDocumentsResult | null>
+    chooseAndAdd(patientId: string): Promise<AddDocumentsResult | null>
+    update(id: string, changes: DocumentChanges): Promise<DocumentView | null>
+    delete(id: string): Promise<boolean>
+    content(id: string): Promise<DocumentContent>
+    email(id: string): Promise<EmailPreview | null>
+    open(id: string): Promise<DocumentActionResult>
+    saveAs(id: string): Promise<SaveFileResult>
   }
   invoices: {
     preview(seanceId: string): Promise<InvoicePreview>

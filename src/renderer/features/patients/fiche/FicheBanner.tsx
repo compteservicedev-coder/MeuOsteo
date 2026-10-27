@@ -24,6 +24,8 @@ interface FicheBannerProps {
   backTo: { id: string; name: string } | null
   onEdit: () => void
   onToggleHistory: () => void
+  documentCount: number
+  onOpenDocuments: () => void
   onOpenRelative: (id: string) => void
   onBack: () => void
 }
@@ -40,6 +42,8 @@ export function FicheBanner({
   backTo,
   onEdit,
   onToggleHistory,
+  documentCount,
+  onOpenDocuments,
   onOpenRelative,
   onBack,
 }: FicheBannerProps) {
@@ -123,6 +127,10 @@ export function FicheBanner({
           >
             <Icon name="history" size={17} />
             Historique
+          </button>
+          <button type="button" onClick={onOpenDocuments} className={glassButton}>
+            <Icon name="folder" size={17} />
+            Documents ({documentCount})
           </button>
           <Link to={`/factures?patient=${p.id}`} className={glassButton}>
             <Icon name="invoice" size={17} />
