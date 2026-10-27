@@ -121,6 +121,9 @@ R-26. `id`, `patient_id` (FK, suppression en cascade avec la fiche), `titre`, `c
 ## document_contents
 `document_id` (PK et FK vers `documents`, cascade), `bytes` (BLOB). Le contenu est à part pour que la liste des documents ne lise jamais les fichiers. Comme le reste de la base, il est chiffré (SQLCipher) et inclus dans les sauvegardes.
 
+## monthly_statements
+R-27. `month` (PK, `AAAA-MM`), `overrides` (JSON `{ id de séance: { included?, mode? } }`), `exceptional` (JSON `[{ id, label, cents }]`), `created_at`, `updated_at`. Les séances elles-mêmes ne sont jamais modifiées par le bilan.
+
 ## settings
 Table clé / valeur (`key` TEXT PK, `value` TEXT JSON). Clés principales :
 - **Cabinet** : `cabinet` (nom, titre, adresse, téléphone, ADELI, SIRET, chemin de la signature).
@@ -129,6 +132,7 @@ Table clé / valeur (`key` TEXT PK, `value` TEXT JSON). Clés principales :
 - **Agenda** : `agenda` (jours, horaires, durée, semaines affichées, rattachement automatique).
 - **Sécurité** : `security` (code activé, hash du code, sel, délai de verrouillage, hash de la clé de secours).
 - **Gmail** : `gmail` (adresse, mot de passe chiffré, libellé, fréquence, dernier UID par dossier).
+- **Bilan mensuel** : `budget` (taux de cotisations et de réserve en centièmes de %, frais fixes et provisions : libellé, montant en centimes, `mensuel` \| `annuel`).
 - **Sauvegarde et journal** : `backup` (dossier, nombre de copies, dernière date), `journal_retention_months`.
 - **Reprise de l'historique** : `import_dates_to_fix` (`{ id de séance: date lue dans le fichier }`), séances importées avec une « date à corriger » (MIGRATION.md). L'entrée est retirée quand la date est corrigée.
 

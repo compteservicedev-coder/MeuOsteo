@@ -138,6 +138,14 @@ await step('journal (R-20) filtré sur les factures', async () => {
   await page.getByText(/Facture \d{4}-0001 émise \(60 €\)/).waitFor()
 })
 
+await step('bilan mensuel (R-27) : séance du jour retenue', async () => {
+  await nav('Bilan mensuel')
+  await page.getByRole('heading', { name: 'Bilan mensuel', level: 1 }).waitFor()
+  await page.getByText('1 séance retenue sur 1 · 60,00 €').waitFor()
+  await page.getByRole('checkbox', { name: /Compter la séance de Camille Essai/ }).uncheck()
+  await page.getByText('0 séance retenue sur 1 · 0,00 €').waitFor()
+})
+
 await app.close()
 console.log(steps.join('\n'))
 if (errors.length > 0) {

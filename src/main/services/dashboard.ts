@@ -112,7 +112,10 @@ export class DashboardService {
     if (!p) return false
     if (p.factureId) return (await this.invoices.markPaid(p.factureId)).ok
     this.db.transaction((tx) => {
-      tx.update(seances).set({ paiement: 'virement_recu' }).where(eq(seances.id, seanceId)).run()
+      tx.update(seances)
+        .set({ paiement: 'virement_recu', paiementRecuLe: isoDateInParis(this.now()) })
+        .where(eq(seances.id, seanceId))
+        .run()
     })
     return true
   }

@@ -438,9 +438,27 @@ export const GUIDE: GuideSection[] = [
   },
   {
     id: 'tableau',
-    title: 'Tableau de bord',
-    intro: 'Un coup d’œil sur votre activité du mois et de l’année.',
+    title: 'Tableau de bord et bilan',
+    intro: 'Un coup d’œil sur votre activité du mois et de l’année, et le bilan de fin de mois.',
     questions: [
+      {
+        q: 'Comment faire mon bilan de fin de mois ?',
+        a: [
+          'Menu « Bilan mensuel ». Choisissez le mois avec les flèches. La liste reprend les séances encaissées dans le mois : espèces et chèques le jour de la séance, virements le jour où vous les avez marqués reçus.',
+          'Décochez une séance pour ne pas la compter ; les virements encore attendus apparaissent « En attente », décochés, et peuvent être cochés.',
+          'Le moyen de paiement se corrige dans la liste : la correction ne vaut que pour le bilan, la séance et la facture ne changent pas.',
+          '« Exporter (Excel) » produit un fichier avec le détail, le récapitulatif par moyen de paiement et le calcul.',
+        ],
+      },
+      {
+        q: 'Comment est calculé « À garder sur le compte pro » et le salaire possible ?',
+        a: [
+          'Renseignez une fois pour toutes « Réglages du calcul » : votre taux de cotisations (donné par l’URSSAF ou votre comptable), une réserve de sécurité facultative, vos frais fixes et vos provisions, chacun par mois ou par an.',
+          '• À garder sur le compte pro = cotisations + réserve + 1/12 des frais annuels + provisions.',
+          '• Salaire possible = chiffre d’affaires retenu − ce qu’il faut garder − frais mensuels − dépenses exceptionnelles du mois.',
+          'Si le mois ne couvre pas tout, MeuOsteo affiche le montant qui manque au lieu d’un salaire. Ce calcul est une aide : il ne remplace pas votre comptable.',
+        ],
+      },
       {
         q: 'Que signifient les quatre compteurs ?',
         a: [

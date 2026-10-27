@@ -15,7 +15,8 @@
 2. **Patients**.
 3. **Factures**.
 4. **Tableau de bord**.
-5. *(en bas)* **Paramètres**, puis l'indicateur « Sauvegarde auto · il y a X min ».
+5. **Bilan mensuel** (R-27).
+6. *(en bas)* **Aide & FAQ**, **Paramètres**, puis l'indicateur « Sauvegarde auto · il y a X min ».
 
 Le menu Planning affiche un badge avec le nombre de cas « À rapprocher ».
 
@@ -196,6 +197,14 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 - **Paiements en attente** : liste avec un bouton « Marquer reçu » ; la ligne se replie une fois traitée.
 - **Dernières factures.**
 
+### 7.1 Bilan mensuel (R-27)
+- **Mois** : navigation ‹ mois › ; « Réglages du calcul » ; « Exporter (Excel) » (feuilles Encaissements, Récapitulatif, Épargne et salaire).
+- **Encaissements du mois** : une ligne par séance réalisée et encaissée dans le mois, avec une case « retenue » (cochée par défaut), la date d'encaissement, le patient (lien vers la fiche), le moyen de paiement (liste modifiable), le montant et le n° de facture. Les virements attendus pour des séances du mois apparaissent « En attente », décochés. « Tout cocher / Tout décocher ».
+- **Par moyen de paiement** : nombre et total des lignes retenues pour espèces, chèque, virement, autre ; total retenu.
+- **Épargne & salaire** : CA retenu − cotisations (% du CA) − réserve de sécurité (% du CA) − 1/12 des frais fixes annuels − provisions = **à garder sur le compte pro** ; puis − frais fixes mensuels − dépenses exceptionnelles du mois = **salaire possible**, ou « Mois non couvert : il manque X ».
+- **Dépenses exceptionnelles du mois** : libellé et montant, ajout et retrait.
+- **Réglages du calcul** (communs à tous les mois) : taux de cotisations, taux de réserve, frais fixes et provisions (libellé, montant, par mois ou par an).
+
 ---
 
 ## 8. Paramètres (`Parametres.dc.html`), en onglets
@@ -293,6 +302,12 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
   - **Aperçu dans l'application** : images, PDF, e-mails `.eml` (expéditeur, destinataires, objet, date, texte, noms des pièces jointes) et `.txt`. Les autres (Word, `.msg`, DICOM…) s'ouvrent avec le logiciel du PC, via une copie déchiffrée temporaire effacée au démarrage et à la fermeture.
   - **Cycle de vie** : la suppression d'un document est immédiate et définitive. La suppression de la fiche (R-14) les masque, la purge les supprime. La fusion (R-19) les reporte sur la fiche conservée. L'export complet en liste les métadonnées.
   - **Journal et logs** : aucun événement de journal (R-20) ; les logs techniques ne contiennent que des nombres, jamais un titre ni un nom de fichier.
+
+- **R-27 · Bilan mensuel** :
+  - **Mois d'une séance** : le mois de son encaissement. Espèces, chèque ou paiement non renseigné : le jour de la séance. Virement reçu : le jour où il est marqué reçu (`seances.paiement_recu_le`, sinon la date d'acquittement de la facture, sinon le jour de la séance). Virement en attente : pas encaissé, la ligne apparaît décochée dans le mois de la séance. Les séances annulées et gratuites ne comptent pas.
+  - **Choix du bilan** : cocher ou décocher une ligne et corriger son moyen de paiement ne modifient **que le bilan** (table `monthly_statements`), jamais la séance ni la facture.
+  - **Calcul** : montants en centimes, pourcentages au centième, montants annuels ramenés au mois (÷ 12, arrondi au centime). Le salaire possible n'est jamais négatif : le manque est affiché à la place.
+  - **Journal** : aucun événement (R-20).
 
 ---
 

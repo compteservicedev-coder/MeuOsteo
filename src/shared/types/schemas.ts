@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { PIN_MAX_LENGTH, PIN_MIN_LENGTH } from '../domain/accessCode'
 import { DOCUMENT_CATEGORIES, MAX_DOCUMENT_TITLE } from '../domain/documents'
+import { BILAN_MODES, BUDGET_PERIODS } from '../domain/bilan'
 
 /** Runtime validation of IPC arguments: main never trusts what the renderer sends. */
 export const pinSchema = z.string().regex(new RegExp(`^\\d{${PIN_MIN_LENGTH},${PIN_MAX_LENGTH}}$`))
@@ -166,4 +167,32 @@ export const documentChangesSchema = z.object({
   titre: z.string().trim().min(1).max(MAX_DOCUMENT_TITLE),
   categorie: z.enum(DOCUMENT_CATEGORIES),
   docDate: isoDateSchema,
+})
+
+export const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+export const lineOverrideSchema = z.object({
+  included: z.boolean().optional(),
+  mode: z.enum(BILAN_MODES).optional(),
+})
+const amountCentsSchema = z.number().int().min(0).max(100_000_000)
+export const exceptionalExpensesSchema = z
+  .array(
+    z.object({ id: idSchema, label: z.string().trim().min(1).max(80), cents: amountCentsSchema }),
+  )
+  .max(50)
+const budgetItemsSchema = z
+  .array(
+    z.object({
+      id: idSchema,
+      label: z.string().trim().min(1).max(80),
+      cents: amountCentsSchema,
+      period: z.enum(BUDGET_PERIODS),
+    }),
+  )
+  .max(50)
+export const budgetSettingsSchema = z.object({
+  cotisationsBp: z.number().int().min(0).max(10_000),
+  reserveBp: z.number().int().min(0).max(10_000),
+  fixedCosts: budgetItemsSchema,
+  provisions: budgetItemsSchema,
 })
