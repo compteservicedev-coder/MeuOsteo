@@ -603,7 +603,7 @@ export class InvoiceService {
         .run()
       if (f.seanceId) {
         tx.update(seances)
-          .set({ paiement: 'virement_recu' })
+          .set({ paiement: 'virement_recu', paiementRecuLe: this.today() })
           .where(eq(seances.id, f.seanceId))
           .run()
       }

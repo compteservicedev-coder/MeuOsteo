@@ -19,6 +19,7 @@ const MAIN_ITEMS: NavItem[] = [
   { to: '/patients', label: 'Patients', icon: 'users' },
   { to: '/factures', label: 'Factures', icon: 'invoice' },
   { to: '/tableau-de-bord', label: 'Tableau de bord', icon: 'chart' },
+  { to: '/bilan', label: 'Bilan mensuel', icon: 'wallet' },
 ]
 
 const SETTINGS_ITEM: NavItem = { to: '/parametres', label: 'Paramètres', icon: 'settings' }

@@ -184,7 +184,12 @@ export class SeanceService {
     if (changes.motif !== undefined) values.motif = changes.motif?.trim() || null
     if (changes.anamnese !== undefined) values.anamnese = changes.anamnese || null
     if (changes.pratique !== undefined) values.pratique = changes.pratique || null
-    if (changes.paiement !== undefined) values.paiement = changes.paiement
+    if (changes.paiement !== undefined) {
+      values.paiement = changes.paiement
+      // R-27: the day a transfer is marked received is its month in the monthly statement.
+      if (changes.paiement !== 'virement_recu') values.paiementRecuLe = null
+      else if (row.paiement !== 'virement_recu') values.paiementRecuLe = this.today()
+    }
     return values
   }
 

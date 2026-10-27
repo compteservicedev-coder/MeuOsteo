@@ -72,6 +72,8 @@ import type {
   DocumentView,
   EmailPreview,
 } from './documents'
+import type { BilanView } from './bilan'
+import type { BudgetSettings, ExceptionalExpense, LineOverride } from '../domain/bilan'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
   ChangeCodeResult,
@@ -208,6 +210,18 @@ export interface IpcInvokeContract {
   'doctolib:import-export': { args: []; result: ExportImportResult }
   'sync:get-status': { args: []; result: SyncStatus }
   'sync:run': { args: []; result: SyncStatus }
+  'bilan:view': { args: [month: string]; result: BilanView }
+  'bilan:set-line': {
+    args: [month: string, seanceId: string, change: LineOverride]
+    result: BilanView
+  }
+  'bilan:set-all': { args: [month: string, included: boolean]; result: BilanView }
+  'bilan:set-exceptional': {
+    args: [month: string, list: ExceptionalExpense[]]
+    result: BilanView
+  }
+  'bilan:save-budget': { args: [settings: BudgetSettings]; result: BudgetSettings }
+  'bilan:export': { args: [month: string]; result: SaveFileResult }
   'dashboard:get': { args: []; result: DashboardView }
   'dashboard:mark-received': { args: [seanceId: string]; result: boolean }
   'backup:get-status': { args: []; result: BackupStatus }
@@ -361,6 +375,15 @@ export interface MeuOsteoApi {
     run(): Promise<SyncStatus>
     /** Returns an unsubscribe function. */
     onStatus(listener: (status: SyncStatus) => void): () => void
+  }
+  /** R-27 · Bilan mensuel. */
+  bilan: {
+    view(month: string): Promise<BilanView>
+    setLine(month: string, seanceId: string, change: LineOverride): Promise<BilanView>
+    setAll(month: string, included: boolean): Promise<BilanView>
+    setExceptional(month: string, list: ExceptionalExpense[]): Promise<BilanView>
+    saveBudget(settings: BudgetSettings): Promise<BudgetSettings>
+    export(month: string): Promise<SaveFileResult>
   }
   dashboard: {
     get(): Promise<DashboardView>

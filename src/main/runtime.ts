@@ -6,6 +6,7 @@ import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
 import { ensureCommunesLoaded } from './db/communes'
 import { DatabaseKeyError, loadOrCreateDatabaseKey } from './db/keyStore'
 import { BackupService, applyPendingRestore } from './services/backup'
+import { BilanService } from './services/bilan'
 import { DashboardService } from './services/dashboard'
 import { DocumentService } from './services/documents'
 import { addJournalLine } from './db/repositories/journalRepository'
@@ -38,6 +39,7 @@ export interface Runtime {
   sync: GmailSync
   backup: BackupService
   dashboard: DashboardService
+  bilan: BilanService
   /** Database key (hex), to check backups made with it. Never sent to the renderer unasked. */
   databaseKey: string
   allowUnprotectedKey: boolean
@@ -157,6 +159,7 @@ export function startRuntime({
     pipeline,
     sync,
     backup,
+    bilan: new BilanService(db),
     dashboard: new DashboardService(db, invoices, () => backup.setting().lastAt),
     databaseKey: hexKey,
     allowUnprotectedKey,

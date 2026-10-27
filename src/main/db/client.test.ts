@@ -39,6 +39,7 @@ describe('base SQLite chiffrée', () => {
       'envois',
       'factures',
       'journal',
+      'monthly_statements',
       'patient_links',
       'patients',
       'seances',

@@ -132,6 +132,14 @@ const api: MeuOsteoApi = {
       return () => ipcRenderer.removeListener('sync:status', handler)
     },
   },
+  bilan: {
+    view: (month) => invoke('bilan:view', month),
+    setLine: (month, seanceId, change) => invoke('bilan:set-line', month, seanceId, change),
+    setAll: (month, included) => invoke('bilan:set-all', month, included),
+    setExceptional: (month, list) => invoke('bilan:set-exceptional', month, list),
+    saveBudget: (settings) => invoke('bilan:save-budget', settings),
+    export: (month) => invoke('bilan:export', month),
+  },
   dashboard: {
     get: () => invoke('dashboard:get'),
     markReceived: (id) => invoke('dashboard:mark-received', id),

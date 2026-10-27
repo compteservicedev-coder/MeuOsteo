@@ -17,6 +17,7 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/sqlite-core'
 import { ulid } from 'ulid'
+import type { ExceptionalExpense, LineOverride } from '../../shared/domain/bilan'
 import { DOCUMENT_CATEGORIES } from '../../shared/domain/documents'
 
 const nowIso = sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`
@@ -133,6 +134,8 @@ export const seances = sqliteTable(
     pratique: text('pratique'),
     tarifCents: integer('tarif_cents').notNull().default(6000),
     paiement: text('paiement', { enum: PAIEMENTS }),
+    /** Day a transfer was marked received (R-27, month of the payment). */
+    paiementRecuLe: text('paiement_recu_le'),
     doneAt: text('done_at'),
     cancelReason: text('cancel_reason'),
     cancelledAt: text('cancelled_at'),
@@ -408,6 +411,21 @@ export const documentContents = sqliteTable('document_contents', {
     .primaryKey()
     .references(() => documents.id, { onDelete: 'cascade' }),
   bytes: blob('bytes', { mode: 'buffer' }).notNull(),
+})
+
+/** R-27 · choices of a monthly statement: ticked lines, corrected modes, exceptional expenses. */
+export const monthlyStatements = sqliteTable('monthly_statements', {
+  /** `YYYY-MM`. */
+  month: text('month').primaryKey(),
+  overrides: text('overrides', { mode: 'json' })
+    .$type<Record<string, LineOverride>>()
+    .notNull()
+    .default(sql`'{}'`),
+  exceptional: text('exceptional', { mode: 'json' })
+    .$type<ExceptionalExpense[]>()
+    .notNull()
+    .default(sql`'[]'`),
+  ...timestamps(),
 })
 
 /** Key / JSON value settings (cabinet, tarifs, security, gmail, backup…). */
