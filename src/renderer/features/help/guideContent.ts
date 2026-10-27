@@ -76,6 +76,16 @@ export const GUIDE: GuideSection[] = [
       'La fiche patient est au centre de tout : identité, proches, séances et commentaire qui suit la personne d’une séance à l’autre.',
     questions: [
       {
+        q: 'Comment ranger une radio, un courrier ou un e-mail dans le dossier ?',
+        a: [
+          'Dans la fiche, cliquez sur « Documents » dans le bandeau. Glissez-y un ou plusieurs fichiers depuis l’Explorateur Windows, ou utilisez « Ajouter des fichiers… ».',
+          'MeuOsteo propose un titre, une catégorie et une date : le crayon permet de les corriger. Les catégories servent de filtres en haut de la liste.',
+          'Pour un e-mail Gmail : ouvrez le message, menu ⋮ › « Télécharger le message », puis glissez le fichier .eml obtenu. Il s’affiche ensuite comme un e-mail, avec l’expéditeur, l’objet et le texte.',
+          'Les images, les PDF et les e-mails s’affichent dans l’application. Un fichier Word s’ouvre avec Word (bouton « Ouvrir avec le logiciel du PC ») ; « Enregistrer sous… » en sort une copie.',
+          'Les documents sont chiffrés avec la base et inclus dans chaque sauvegarde. Limite : 25 Mo par fichier.',
+        ],
+      },
+      {
         q: 'Comment retrouver un patient rapidement ?',
         a: [
           'Depuis n’importe quel écran, appuyez sur Ctrl+K : l’écran Patients s’ouvre avec le curseur dans la recherche.',

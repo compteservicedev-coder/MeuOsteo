@@ -6,7 +6,7 @@
 import ExcelJS from 'exceljs'
 import { asc } from 'drizzle-orm'
 import type { AppDatabase } from '../db/client'
-import { avoirs, factures, journal, patients, seances } from '../db/schema'
+import { avoirs, documents, factures, journal, patients, seances } from '../db/schema'
 
 const eur = (cents: number) => cents / 100
 
@@ -104,6 +104,20 @@ export async function buildFullExport(db: AppDatabase): Promise<Buffer> {
   )
   for (const r of db.select().from(avoirs).orderBy(asc(avoirs.annee), asc(avoirs.sequence)).all()) {
     a.addRow({ ...r, montant: eur(r.montantCents), facture: numeros.get(r.factureId) ?? '' })
+  }
+
+  // R-26: the list of documents; the files themselves are saved one by one from the record.
+  const d = sheet('Documents', [
+    ['Patient n°', 'patient', 10],
+    ['Titre', 'titre', 40],
+    ['Catégorie', 'categorie', 14],
+    ['Date', 'docDate', 12],
+    ['Fichier', 'fileName', 36],
+    ['Taille (octets)', 'sizeBytes', 14],
+    ['Ajouté le', 'createdAt', 22],
+  ])
+  for (const r of db.select().from(documents).orderBy(asc(documents.docDate)).all()) {
+    d.addRow({ ...r, patient: byPatient.get(r.patientId) ?? '' })
   }
 
   const j = sheet('Journal', [

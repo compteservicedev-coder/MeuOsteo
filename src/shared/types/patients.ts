@@ -92,6 +92,7 @@ export interface PatientDetail {
   seances: SeanceView[]
   relatives: RelativeView[]
   invoiceCount: number
+  documentCount: number
   tarifsCents: number[]
 }
 

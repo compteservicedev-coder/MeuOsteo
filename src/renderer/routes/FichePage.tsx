@@ -26,6 +26,7 @@ import { IssueInvoiceDialog } from '../features/invoices/IssueInvoiceDialog'
 import { PatientEditDrawer } from '../features/patients/PatientEditDrawer'
 import { ADDRESS_FIELDS } from '../features/patients/draft'
 import { CommentPanel } from '../features/patients/fiche/CommentPanel'
+import { DocumentsDrawer } from '../features/patients/fiche/DocumentsDrawer'
 import { FicheBanner } from '../features/patients/fiche/FicheBanner'
 import { HistoryPanel } from '../features/patients/fiche/HistoryPanel'
 import { PendingChangesDialog } from '../features/patients/fiche/PendingChangesDialog'
@@ -105,6 +106,7 @@ function FicheScreen({ id }: { id: string }) {
   const [flash, setFlash] = useState(0)
   const [unlocked, setUnlocked] = useState<UnlockReason | null>(null)
   const [invoiceFor, setInvoiceFor] = useState<string | null>(null)
+  const [documentsOpen, setDocumentsOpen] = useState(false)
 
   const selected = detail?.seances.find((s) => s.id === selectedId)
   const dirty = isDirty(draft, selected)
@@ -115,6 +117,11 @@ function FicheScreen({ id }: { id: string }) {
     setDetail(d)
     return d
   }, [id])
+
+  const setDocumentCount = useCallback(
+    (documentCount: number) => setDetail((d) => (d ? { ...d, documentCount } : d)),
+    [],
+  )
 
   const select = (seance: SeanceView | undefined) => {
     setSelectedId(seance?.id ?? null)
@@ -416,6 +423,8 @@ function FicheScreen({ id }: { id: string }) {
         backTo={trail.at(-1) ?? null}
         onEdit={() => setDrawer({ reason: null })}
         onToggleHistory={() => setHistoryOpen((o) => !o)}
+        documentCount={detail.documentCount}
+        onOpenDocuments={() => setDocumentsOpen(true)}
         onOpenRelative={openRelative}
         onBack={goBack}
       />
@@ -541,6 +550,14 @@ function FicheScreen({ id }: { id: string }) {
           setDrawer(null)
           void reload()
         }}
+      />
+
+      <DocumentsDrawer
+        open={documentsOpen}
+        onClose={() => setDocumentsOpen(false)}
+        patientId={id}
+        patientName={`${p.prenom} ${p.nom}`}
+        onCountChange={setDocumentCount}
       />
 
       <IssueInvoiceDialog

@@ -15,6 +15,13 @@
       "when": 1792881341705,
       "tag": "0001_invoice_paid_date",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793084692078,
+      "tag": "0002_patient_documents",
+      "breakpoints": true
     }
   ]
 }

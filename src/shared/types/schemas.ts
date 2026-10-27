@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PIN_MAX_LENGTH, PIN_MIN_LENGTH } from '../domain/accessCode'
+import { DOCUMENT_CATEGORIES, MAX_DOCUMENT_TITLE } from '../domain/documents'
 
 /** Runtime validation of IPC arguments: main never trusts what the renderer sends. */
 export const pinSchema = z.string().regex(new RegExp(`^\\d{${PIN_MIN_LENGTH},${PIN_MAX_LENGTH}}$`))
@@ -150,4 +151,19 @@ export const agendaSettingsSchema = z.object({
   durationMinutes: z.union([z.literal(45), z.literal(60), z.literal(75)]),
   weeks: z.union([z.literal(1), z.literal(2)]),
   autoAttach: z.boolean(),
+})
+
+export const documentUploadsSchema = z
+  .array(
+    z.object({
+      name: z.string().min(1).max(255),
+      bytes: z.instanceof(Uint8Array),
+    }),
+  )
+  .min(1)
+  .max(50)
+export const documentChangesSchema = z.object({
+  titre: z.string().trim().min(1).max(MAX_DOCUMENT_TITLE),
+  categorie: z.enum(DOCUMENT_CATEGORIES),
+  docDate: isoDateSchema,
 })

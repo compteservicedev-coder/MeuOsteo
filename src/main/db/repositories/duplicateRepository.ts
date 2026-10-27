@@ -27,6 +27,7 @@ import type { AppDatabase } from '../client'
 import {
   contactMemory,
   doctolibRdv,
+  documents,
   duplicateIgnored,
   factures,
   journal,
@@ -238,6 +239,7 @@ export function mergeDuplicatePair(
     db.update(doctolibRdv).set(move).where(eq(doctolibRdv.patientId, remove.id)).run()
     db.update(contactMemory).set(move).where(eq(contactMemory.patientId, remove.id)).run()
     db.update(journal).set(move).where(eq(journal.patientId, remove.id)).run()
+    db.update(documents).set(move).where(eq(documents.patientId, remove.id)).run()
 
     const involved = (id: string) =>
       or(eq(patientLinks.patientA, id), eq(patientLinks.patientB, id))

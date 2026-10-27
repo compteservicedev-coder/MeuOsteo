@@ -110,7 +110,7 @@ Il liste les cas que le système n'a pas pu résoudre seul. Chaque cas réglé d
 **Bandeau** :
 - **Contenu** : avatar avec initiales, nom, et la ligne « âge · sexe · situation (accordée) · enfants · profession ».
 - **Pastilles** : date de naissance, portable, fixe, e-mail, adresse. Une pastille vide devient un bouton en pointillés « Ajouter un fixe… » qui ouvre l'édition.
-- **Boutons** : « Modifier la fiche », « Historique » (R-20), « Ses factures (n) » (ouvre Factures filtré sur ce patient).
+- **Boutons** : « Modifier la fiche », « Historique » (R-20), « Documents (n) » (R-26, panneau latéral), « Ses factures (n) » (ouvre Factures filtré sur ce patient).
 - **Ligne « PROCHES »** (R-25), **en lecture seule** : une pastille par proche lié (initiales, nom, « · lien », chevron). **Un clic ouvre la fiche de ce proche** (même écran, en remplaçant le patient affiché ; refusé avec une notification s'il y a des modifications non enregistrées, R-05). Un bouton « Revenir à X » apparaît alors au bout de la ligne pour remonter le fil de navigation. Aucun bouton d'ajout ni de retrait dans le bandeau ; sans proche : « Aucun proche lié · à ajouter depuis « Modifier la fiche » ».
 - **Gestion des proches** : uniquement dans le panneau « Modifier la fiche » (§5.1), section « Proches ».
 
@@ -285,6 +285,14 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 - **R-23 · Blocages** : stockés par jour et par créneau (journée, matin avant 13 h, après-midi). Ils n'empêchent pas un RDV Doctolib d'arriver (une alerte s'affiche alors en cas de conflit) ; en revanche, dans la fenêtre « Nouveau RDV » (R-24), les créneaux bloqués ne sont pas sélectionnables. Aucun lien avec Doctolib n'existe dans ce sens (voir GMAIL_DOCTOLIB.md §5).
 - **R-24 · RDV positionné depuis le planning** : crée directement une séance `planned`, `source = manual`, avec `date` et `heure` (même objet que « Nouvelle » dans la fiche, R-08). Pas de chevauchement : un créneau est libre s'il n'y a aucun RDV non annulé à moins de 60 min (durée par défaut, réglable dans Paramètres > Agenda) et aucun blocage. Si un RDV Doctolib arrive ensuite pour le même patient et le même jour, il se rattache à cette séance (R-09). L'application **n'écrit jamais dans Doctolib** : le rappel de réserver le créneau dans Doctolib est systématique. Journal : rien de spécial (une séance n'est pas un événement journalisé, R-20), sauf la création de patient si « Nouveau patient » a été utilisé.
 - **R-25 · Proches** : lien **symétrique** entre deux fiches existantes, stocké une seule fois (`patient_links`) et affiché sur les deux fiches avec la relation inverse (Enfant ↔ Parent, Grand-parent ↔ Petit-enfant ; Conjoint, Frère / sœur et Autre sont symétriques). Un patient ne peut pas être lié à lui-même ni deux fois au même proche. Retirer le lien le supprime des deux fiches. La suppression d'un patient (R-14) masque ses liens, puis les supprime à la purge ; la fusion (R-19) reporte les liens sur la fiche conservée en éliminant les doublons. Journal (type Patient) : « Proche lié : Nom (lien) » et « Lien de proche retiré : Nom ».
+
+- **R-26 · Documents du patient** : fichiers rattachés à une fiche (imagerie, compte-rendu, courrier ou e-mail, ordonnance, administratif, photo, autre), ajoutés par glisser-déposer ou « Ajouter des fichiers… », plusieurs à la fois.
+  - **Stockage** : dans la base chiffrée (table `document_contents`, à part des métadonnées). Ils sont donc chiffrés sur le disque, inclus dans chaque sauvegarde et restaurés avec elle.
+  - **Limites** : 25 Mo par fichier, fichier vide refusé. Les fichiers refusés sont listés sans bloquer les autres (une transaction pour les fichiers acceptés).
+  - **Proposés à l'import** : titre (nom du fichier sans extension), catégorie (devinée d'après le nom et l'extension), date du document (le jour même). Les trois se modifient.
+  - **Aperçu dans l'application** : images, PDF, e-mails `.eml` (expéditeur, destinataires, objet, date, texte, noms des pièces jointes) et `.txt`. Les autres (Word, `.msg`, DICOM…) s'ouvrent avec le logiciel du PC, via une copie déchiffrée temporaire effacée au démarrage et à la fermeture.
+  - **Cycle de vie** : la suppression d'un document est immédiate et définitive. La suppression de la fiche (R-14) les masque, la purge les supprime. La fusion (R-19) les reporte sur la fiche conservée. L'export complet en liste les métadonnées.
+  - **Journal et logs** : aucun événement de journal (R-20) ; les logs techniques ne contiennent que des nombres, jamais un titre ni un nom de fichier.
 
 ---
 
