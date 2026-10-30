@@ -88,7 +88,7 @@ export class DocumentService {
     const today = isoDateInParis(this.clock())
     const refused: AddDocumentsResult['refused'] = []
     const accepted = uploads.filter((u) => {
-      const error = checkDocumentFile(u.bytes.byteLength)
+      const error = checkDocumentFile(u.name, u.bytes.byteLength)
       if (error) refused.push({ name: u.name, reason: error })
       return !error
     })

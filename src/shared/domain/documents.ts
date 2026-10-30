@@ -119,10 +119,67 @@ export function formatBytesFr(bytes: number): string {
   return `${mo.toFixed(mo < 10 ? 1 : 0).replace('.', ',')} Mo`
 }
 
-export type DocumentFileError = 'empty' | 'too_large'
+export type DocumentFileError = 'empty' | 'too_large' | 'executable'
 
-/** R-26 a file is refused when it is empty or above 25 Mo. */
-export function checkDocumentFile(sizeBytes: number): DocumentFileError | null {
+/**
+ * Programs, scripts, shortcuts and disk images: Windows would run them on « Ouvrir avec le
+ * logiciel du PC ». A medical record never needs one, an e-mail attachment may be a trap.
+ */
+const EXECUTABLE_EXTENSIONS = new Set([
+  'exe',
+  'com',
+  'scr',
+  'pif',
+  'cpl',
+  'msi',
+  'msp',
+  'mst',
+  'bat',
+  'cmd',
+  'ps1',
+  'psm1',
+  'psd1',
+  'vbs',
+  'vbe',
+  'js',
+  'jse',
+  'wsf',
+  'wsh',
+  'hta',
+  'jar',
+  'lnk',
+  'url',
+  'scf',
+  'reg',
+  'inf',
+  'msc',
+  'appref-ms',
+  'application',
+  'gadget',
+  'xll',
+  'iso',
+  'img',
+  'vhd',
+  'vhdx',
+  'dll',
+  'sys',
+  'chm',
+  'library-ms',
+  'search-ms',
+  'settingcontent-ms',
+  'appx',
+  'msix',
+  'appxbundle',
+])
+
+/** R-26 files that the application refuses to store or open. */
+export function isExecutableFile(fileName: string): boolean {
+  return EXECUTABLE_EXTENSIONS.has(extensionOf(fileName.trim().replace(/[. ]+$/, '')))
+}
+
+/** R-26 a file is refused when it is empty, above 25 Mo, or a program. */
+export function checkDocumentFile(fileName: string, sizeBytes: number): DocumentFileError | null {
+  if (isExecutableFile(fileName)) return 'executable'
   if (sizeBytes <= 0) return 'empty'
   if (sizeBytes > MAX_DOCUMENT_BYTES) return 'too_large'
   return null

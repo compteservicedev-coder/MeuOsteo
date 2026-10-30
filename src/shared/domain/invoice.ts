@@ -274,8 +274,19 @@ export interface AccountingLine {
   reference: string
 }
 
-const csvCell = (value: string) =>
-  /[";\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
+/**
+ * Excel runs a cell starting with = + - @ (or a tab / carriage return) as a formula. Names come
+ * from Doctolib e-mails too, so such text gets a leading apostrophe; plain numbers are kept.
+ */
+export function neutralizeFormula(value: string): string {
+  if (!/^[=+\-@\t\r]/.test(value) || /^-?\d+(?:[,.]\d+)?$/.test(value)) return value
+  return `'${value}`
+}
+
+const csvCell = (raw: string) => {
+  const value = neutralizeFormula(raw)
+  return /[";\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
+}
 
 /** Amount for spreadsheets: « 60,00 » / « -60,00 » (no currency sign, French decimal comma). */
 export const csvAmount = (cents: number) =>
