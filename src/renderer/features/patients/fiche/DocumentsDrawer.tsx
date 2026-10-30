@@ -4,6 +4,7 @@ import {
   DOCUMENT_CATEGORIES,
   DOCUMENT_CATEGORY_LABELS,
   MAX_DOCUMENT_BYTES,
+  checkDocumentFile,
   formatBytesFr,
   type DocumentCategory,
 } from '@shared/domain/documents'
@@ -26,6 +27,7 @@ const REFUSAL: Record<AddDocumentsResult['refused'][number]['reason'], string> =
   empty: 'fichier vide',
   too_large: `plus de ${formatBytesFr(MAX_DOCUMENT_BYTES)}`,
   unreadable: 'illisible',
+  executable: 'programme refusé',
 }
 
 const ICONS: Record<DocumentView['preview'], IconName> = {
@@ -111,9 +113,9 @@ export function DocumentsDrawer({
       const refused: AddDocumentsResult['refused'] = []
       const uploads: DocumentUpload[] = []
       for (const f of files.slice(0, 50)) {
-        // Checked here first: a heavy file is never read nor sent.
-        if (f.size > MAX_DOCUMENT_BYTES) refused.push({ name: f.name, reason: 'too_large' })
-        else if (f.size === 0) refused.push({ name: f.name, reason: 'empty' })
+        // Checked here first: a heavy file or a program is never read nor sent.
+        const error = checkDocumentFile(f.name, f.size)
+        if (error) refused.push({ name: f.name, reason: error })
         else uploads.push({ name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) })
       }
       const r = uploads.length

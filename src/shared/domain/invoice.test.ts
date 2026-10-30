@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   accountingCsv,
+  neutralizeFormula,
+  toCsv,
   envoiKind,
   formatAvoirNumber,
   formatEuros,
@@ -213,5 +215,17 @@ describe('Paramètres · tarifs et identifiants', () => {
     expect(isAdeli('12345')).toBe(false)
     expect(isSiret('123 456 789 00011')).toBe(true)
     expect(isSiret('123')).toBe(false)
+  })
+})
+
+describe('exports CSV', () => {
+  it('neutralise les formules Excel sans toucher aux montants', () => {
+    expect(neutralizeFormula('=HYPERLINK("http://x")')).toBe(`'=HYPERLINK("http://x")`)
+    expect(neutralizeFormula('+33 6 12')).toBe("'+33 6 12")
+    expect(neutralizeFormula('@SUM(A1)')).toBe("'@SUM(A1)")
+    expect(neutralizeFormula('-cmd')).toBe("'-cmd")
+    expect(neutralizeFormula('-60,00')).toBe('-60,00')
+    expect(neutralizeFormula('Camille Roux')).toBe('Camille Roux')
+    expect(toCsv([['=1+1', '-60,00']])).toBe("\uFEFF'=1+1;-60,00\r\n")
   })
 })

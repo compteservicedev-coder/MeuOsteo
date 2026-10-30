@@ -4,7 +4,7 @@ import { basename, join } from 'node:path'
 import { BrowserWindow, dialog, shell } from 'electron'
 import { ulid } from 'ulid'
 import { z } from 'zod'
-import { MAX_DOCUMENT_BYTES, safeFileName } from '@shared/domain/documents'
+import { MAX_DOCUMENT_BYTES, isExecutableFile, safeFileName } from '@shared/domain/documents'
 import type { AddDocumentsResult, DocumentUpload } from '@shared/types/documents'
 import { documentChangesSchema, documentUploadsSchema, idSchema } from '@shared/types/schemas'
 import { log } from '../logger'
@@ -46,6 +46,10 @@ export function registerDocumentHandlers(register: ReturnType<typeof createRegis
     const refused: AddDocumentsResult['refused'] = []
     for (const path of result.filePaths.slice(0, 50)) {
       const name = basename(path)
+      if (isExecutableFile(name)) {
+        refused.push({ name, reason: 'executable' })
+        continue
+      }
       try {
         // Checked before reading: a 2 Go video is never loaded in memory.
         if ((await stat(path)).size > MAX_DOCUMENT_BYTES) {
@@ -73,6 +77,8 @@ export function registerDocumentHandlers(register: ReturnType<typeof createRegis
   register('documents:open', byId, async ({ documents }, id) => {
     const file = documents.file(id)
     if (!file) return { ok: false, reason: 'not_found' }
+    // R-26: never hand a program to Windows, even one stored before the rule existed.
+    if (isExecutableFile(file.fileName)) return { ok: false, reason: 'error' }
     try {
       const folder = join(openedDocumentsFolder(), ulid())
       await mkdir(folder, { recursive: true })

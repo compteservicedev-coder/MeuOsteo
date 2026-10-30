@@ -297,7 +297,7 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 
 - **R-26 · Documents du patient** : fichiers rattachés à une fiche (imagerie, compte-rendu, courrier ou e-mail, ordonnance, administratif, photo, autre), ajoutés par glisser-déposer ou « Ajouter des fichiers… », plusieurs à la fois.
   - **Stockage** : dans la base chiffrée (table `document_contents`, à part des métadonnées). Ils sont donc chiffrés sur le disque, inclus dans chaque sauvegarde et restaurés avec elle.
-  - **Limites** : 25 Mo par fichier, fichier vide refusé. Les fichiers refusés sont listés sans bloquer les autres (une transaction pour les fichiers acceptés).
+  - **Limites** : 25 Mo par fichier, fichier vide refusé, programmes refusés (`.exe`, `.bat`, `.ps1`, `.lnk`, `.js`, `.iso`… : Windows les exécuterait à l'ouverture), y compris à l'ouverture d'un document plus ancien. Les fichiers refusés sont listés sans bloquer les autres (une transaction pour les fichiers acceptés).
   - **Proposés à l'import** : titre (nom du fichier sans extension), catégorie (devinée d'après le nom et l'extension), date du document (le jour même). Les trois se modifient.
   - **Aperçu dans l'application** : images, PDF, e-mails `.eml` (expéditeur, destinataires, objet, date, texte, noms des pièces jointes) et `.txt`. Les autres (Word, `.msg`, DICOM…) s'ouvrent avec le logiciel du PC, via une copie déchiffrée temporaire effacée au démarrage et à la fermeture.
   - **Cycle de vie** : la suppression d'un document est immédiate et définitive. La suppression de la fiche (R-14) les masque, la purge les supprime. La fusion (R-19) les reporte sur la fiche conservée. L'export complet en liste les métadonnées.

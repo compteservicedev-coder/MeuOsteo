@@ -2,9 +2,10 @@
  * Synchronisation Gmail (GMAIL_DOCTOLIB.md §2 – 3): IMAP on the Doctolib label only, read-only
  * (no message is changed, moved or marked as read), incremental by UIDVALIDITY and last UID, the
  * last 90 days on the first run. Network errors retry with a growing delay, silently: only the
- * status shows it. Logs hold counts, Message-IDs and subjects of unrecognised e-mails, nothing
- * else.
+ * status shows it. Logs hold counts and a short digest of unrecognised e-mails, never a subject
+ * nor an address.
  */
+import { createHash } from 'node:crypto'
 import { ImapFlow } from 'imapflow'
 import { simpleParser } from 'mailparser'
 import { z } from 'zod'
@@ -39,7 +40,9 @@ export async function processRawMail(raw: Buffer, pipeline: RdvPipeline): Promis
   }
   const outcome = parseDoctolibMail(mail)
   if (!outcome.ok) {
-    log.warn(`Doctolib e-mail ${outcome.reason}: ${mail.messageId} · ${mail.subject}`)
+    // Never the subject (a patient's name) nor a raw id that may embed it: a short digest only.
+    const ref = createHash('sha256').update(mail.messageId).digest('hex').slice(0, 12)
+    log.warn(`Doctolib e-mail ${outcome.reason}: ${ref}`)
     return outcome.reason
   }
   const result = pipeline.ingest(outcome.rdv, {

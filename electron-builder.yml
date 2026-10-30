@@ -25,6 +25,14 @@ asarUnpack:
   - '**/*.node'
 # The SQLite module ships N-API prebuilds that work with Electron as is.
 npmRebuild: false
+# Electron fuses, flipped in the packaged binary: the installed exe cannot be turned into a
+# plain Node.js runtime nor debugged from the command line, and loads its code from app.asar only.
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  onlyLoadAppFromAsar: true
+  enableCookieEncryption: true
 win:
   target:
     - target: nsis

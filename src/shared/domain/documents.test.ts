@@ -4,6 +4,7 @@ import {
   checkDocumentFile,
   formatBytesFr,
   guessCategory,
+  isExecutableFile,
   mimeOf,
   previewKindOf,
   safeFileName,
@@ -26,10 +27,31 @@ describe('documents du patient', () => {
   })
 
   it('R-26 refuse un fichier vide ou de plus de 25 Mo', () => {
-    expect(checkDocumentFile(0)).toBe('empty')
-    expect(checkDocumentFile(1)).toBeNull()
-    expect(checkDocumentFile(MAX_DOCUMENT_BYTES)).toBeNull()
-    expect(checkDocumentFile(MAX_DOCUMENT_BYTES + 1)).toBe('too_large')
+    expect(checkDocumentFile('a.pdf', 0)).toBe('empty')
+    expect(checkDocumentFile('a.pdf', 1)).toBeNull()
+    expect(checkDocumentFile('a.pdf', MAX_DOCUMENT_BYTES)).toBeNull()
+    expect(checkDocumentFile('a.pdf', MAX_DOCUMENT_BYTES + 1)).toBe('too_large')
+  })
+
+  it('R-26 refuse les programmes, scripts et raccourcis, même déguisés', () => {
+    for (const name of [
+      'setup.exe',
+      'Facture.PDF.exe',
+      'run.bat',
+      'x.ps1',
+      'lien.lnk',
+      'a.hta',
+      'b.js',
+      'c.iso',
+      'd.exe. ',
+      'e.scr',
+    ]) {
+      expect(isExecutableFile(name), name).toBe(true)
+      expect(checkDocumentFile(name, 10)).toBe('executable')
+    }
+    for (const name of ['Radio.pdf', 'courrier.docx', 'mail.eml', 'exe', 'notes.json']) {
+      expect(isExecutableFile(name), name).toBe(false)
+    }
   })
 
   it('R-26 affiche dans l’application les images, PDF, e-mails et textes seulement', () => {
