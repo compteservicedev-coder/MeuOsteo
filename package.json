@@ -57,7 +57,7 @@
     "autoprefixer": "^10.6.1",
     "drizzle-kit": "^0.31.11",
     "drizzle-orm": "^0.45.4",
-    "electron": "^44.9.3",
+    "electron": "^45.1.0",
     "electron-builder": "^26.18.0",
     "electron-vite": "^5.0.0",
     "eslint": "^9.39.5",
@@ -76,14 +76,19 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.91.0",
-    "react-router-dom": "^6.30.6",
+    "react-router-dom": "^7.18.5",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.23.15",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.72.0",
     "ulid": "^3.0.2",
     "vite": "^7.3.7",
-    "vitest": "^3.2.7",
+    "vitest": "^5.0.5",
     "zod": "^4.6.7"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
   }
 }

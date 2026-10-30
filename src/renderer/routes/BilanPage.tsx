@@ -75,8 +75,17 @@ export function BilanPage() {
   const load = useCallback(() => void window.api.bilan.view(month).then(setView), [month])
   useEffect(load, [load])
 
-  const setLine = async (seanceId: string, change: LineOverride) =>
+  const setLine = async (seanceId: string, change: LineOverride) => {
+    // Shown at once (a controlled checkbox would bounce back until the answer), then confirmed.
+    setView(
+      (v) =>
+        v && {
+          ...v,
+          lines: v.lines.map((l) => (l.seanceId === seanceId ? { ...l, ...change } : l)),
+        },
+    )
     setView(await window.api.bilan.setLine(month, seanceId, change))
+  }
 
   const addExpense = async () => {
     const cents = parseAmountCents(amount)
