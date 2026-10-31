@@ -4,6 +4,9 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Icon } from '../../components/ui/Icon'
 
+/** AGPL-3.0 §13: where users of the application find its source code. */
+const SOURCE_URL = 'https://github.com/compteservicedev-coder/Repo1'
+
 /** Paramètres > Données & import: « Export & application » (SPEC §8.7). */
 export function ExportCard() {
   const toast = useToast()
@@ -37,6 +40,10 @@ export function ExportCard() {
       <p className="text-[13px] text-ink-500">
         MeuOsteo {version} · données sur cet ordinateur uniquement. L’export complet contient les
         notes cliniques : gardez le fichier en lieu sûr.
+      </p>
+      <p className="text-[13px] text-ink-500">
+        Logiciel libre sous licence GNU AGPL-3.0, fourni sans garantie. Code source :{' '}
+        <span className="select-all font-semibold text-ink-600">{SOURCE_URL}</span>
       </p>
     </Card>
   )
