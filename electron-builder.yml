@@ -1,6 +1,6 @@
 appId: fr.meuosteo.app
 productName: MeuOsteo
-copyright: Copyright © 2026 MeuOsteo
+copyright: Copyright © 2026 les contributeurs de MeuOsteo · GNU AGPL-3.0-or-later
 directories:
   output: dist
   buildResources: build
@@ -17,6 +17,9 @@ files:
   # C++ headers used only to compile the module.
   - '!**/node_modules/node-addon-api/**'
 extraResources:
+  # AGPL-3.0: the licence travels with every installed copy.
+  - from: LICENSE
+    to: LICENSE.txt
   - from: resources/communes.csv
     to: communes.csv
   - from: src/main/db/migrations

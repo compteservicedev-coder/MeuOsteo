@@ -1,0 +1,23 @@
+name: Idée
+description: Proposer une évolution ou une nouvelle fonction.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Le besoin
+      description: Quelle situation du cabinet cette idée améliore-t-elle ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: La proposition
+      description: Ce que l'application pourrait faire. Une capture de maquette est bienvenue (sans données réelles).
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Principes du projet
+      options:
+        - label: L'idée reste compatible avec un fonctionnement 100 % local, sans télémétrie ni service distant (hors Gmail).
+          required: true

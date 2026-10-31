@@ -1,6 +1,8 @@
 # MeuOsteo 2
 
-Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopathie, qui remplace l'outil Excel VBA « MeuOsteo v1.04 ».
+> **English summary** — MeuOsteo is a free, offline Windows desktop application for solo osteopaths: patient records, sessions, invoices (PDF, sent by Gmail), a planning fed by Doctolib e-mails, documents, a monthly statement and encrypted backups. All data stays on the computer in an encrypted SQLite database (SQLCipher). Built with Electron, React and TypeScript. The user interface and the documentation are in French. Licensed under the GNU AGPL-3.0.
+
+Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopathie, qui remplace l'outil Excel VBA « MeuOsteo v1.04 ». Logiciel libre sous licence [GNU AGPL-3.0](LICENSE).
 
 - **100 % local** : les données restent sur le PC, dans une base SQLite chiffrée.
 - **Logiciels gratuits et open source uniquement.**
@@ -82,7 +84,7 @@ resources/communes.csv
 
 | Fichier                       | Rôle                                                                                   |
 | ----------------------------- | -------------------------------------------------------------------------------------- |
-| `CLAUDE.md`                   | Consignes permanentes pour Claude Code (stack, conventions, interdits)                 |
+| `CLAUDE.md`                   | Consignes permanentes pour les contributeurs et les assistants IA (stack, interdits)   |
 | `docs/SPEC.md`                | Spécification fonctionnelle : écrans, règles métier numérotées, critères d'acceptation |
 | `docs/DATA_MODEL.md`          | Schéma SQLite et règles d'intégrité                                                    |
 | `docs/MIGRATION.md`           | Reprise de l'historique depuis le fichier Excel `.xlsm`                                |
@@ -95,4 +97,20 @@ resources/communes.csv
 
 ## Maquette
 
-La maquette interactive (8 écrans) se consulte sur claude.ai : https://claude.ai/artifact/JGyPUB5csPpxNqpd5fTYNm (privée, à partager depuis le menu Partager). Les fichiers `docs/maquette/*.dc.html` en sont les sources : on y retrouve les textes, les styles exacts et la logique d'interaction.
+Les fichiers `docs/maquette/*.dc.html` sont les sources de la maquette interactive validée (8 écrans) : on y retrouve les textes, les styles exacts et la logique d'interaction.
+
+## Contribuer
+
+Les contributions sont les bienvenues : voir [CONTRIBUTING.md](CONTRIBUTING.md) et le [code de conduite](CODE_OF_CONDUCT.md). Une faille de sécurité se signale **en privé**, jamais dans une issue publique : voir [SECURITY.md](SECURITY.md).
+
+## Avertissement
+
+MeuOsteo est fourni **tel quel, sans aucune garantie** (voir la licence). Ce n'est ni un dispositif médical, ni un logiciel certifié, et il n'est pas hébergé : chaque praticien qui l'utilise reste responsable de ses données au sens du RGPD (sécurité du poste, sauvegardes, durée de conservation, droits des patients) et de ses obligations de facturation. Le calcul « Épargne & salaire » est une aide, pas un conseil comptable ou fiscal.
+
+## Licence
+
+Copyright © 2026 les contributeurs de MeuOsteo.
+
+Ce programme est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes de la **GNU Affero General Public License** telle que publiée par la Free Software Foundation, version 3 de la licence ou (à votre choix) toute version ultérieure. Il est distribué dans l'espoir qu'il sera utile, mais **sans aucune garantie**. Le texte complet est dans [LICENSE](LICENSE).
+
+En résumé : toute version modifiée que vous distribuez, ou que vous mettez à disposition d'autres personnes par un réseau (version en ligne), doit être publiée sous la même licence avec son code source.

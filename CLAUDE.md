@@ -1,5 +1,7 @@
 # CLAUDE.md — consignes pour Claude Code
 
+Ces consignes valent pour toute personne qui contribue au projet, humaine ou assistant IA (le projet est développé avec Claude Code). Voir aussi `CONTRIBUTING.md`.
+
 ## Le projet
 MeuOsteo 2 est une application de bureau **Windows**, **hors ligne**, pour une ostéopathe qui travaille seule. Elle gère les patients, les séances, la facturation, le planning (alimenté par les e-mails Doctolib reçus dans Gmail), un tableau de bord et une sauvegarde.
 

@@ -3,8 +3,8 @@
   "productName": "MeuOsteo",
   "version": "0.1.0",
   "description": "Suivi de patientèle pour un cabinet d'ostéopathie, 100 % local.",
-  "author": "MeuOsteo",
-  "license": "UNLICENSED",
+  "author": "Les contributeurs de MeuOsteo",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "main": "./out/main/index.js",
   "engines": {
@@ -90,5 +90,13 @@
     "exceljs": {
       "uuid": "^11.1.1"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/compteservicedev-coder/Repo1.git"
+  },
+  "homepage": "https://github.com/compteservicedev-coder/Repo1",
+  "bugs": {
+    "url": "https://github.com/compteservicedev-coder/Repo1/issues"
   }
 }
