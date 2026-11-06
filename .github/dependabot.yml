@@ -10,6 +10,19 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+      # ESLint and its JS rules move together.
+      eslint:
+        patterns: ['eslint', '@eslint/*']
+        update-types: [major]
+    ignore:
+      # Waiting for the ecosystem (checked 2026-11-06): typescript-eslint supports
+      # TypeScript < 6.1, eslint-plugin-jsx-a11y supports ESLint ≤ 9. Remove once they do.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      - dependency-name: eslint
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
