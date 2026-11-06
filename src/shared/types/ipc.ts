@@ -118,6 +118,7 @@ export interface IpcInvokeContract {
   'security:skip-setup': { args: []; result: SecurityStatus }
   'patients:search': { args: [query: string]; result: PatientSearchResult }
   'patients:recent': { args: []; result: PatientListItem[] }
+  'patients:all': { args: []; result: PatientListItem[] }
   'patients:today': { args: []; result: TodayAppointment[] }
   'patients:count': { args: []; result: number }
   'patients:get': { args: [id: string]; result: PatientDetail | null }
@@ -288,6 +289,7 @@ export interface MeuOsteoApi {
   patients: {
     search(query: string): Promise<PatientSearchResult>
     recent(): Promise<PatientListItem[]>
+    all(): Promise<PatientListItem[]>
     today(): Promise<TodayAppointment[]>
     count(): Promise<number>
     get(id: string): Promise<PatientDetail | null>

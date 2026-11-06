@@ -38,14 +38,17 @@ jobs:
       - name: Build installer
         run: npm run dist -- --win --x64 --publish never
 
+      # Pull requests only prove that the installer builds: storing ~100 MB per PR (Dependabot
+      # included) filled the artifact quota. The installer to download comes from main.
       - name: Upload installer artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: MeuOsteo-Setup
           path: |
             dist/*.exe
             dist/latest.yml
-          retention-days: 14
+          retention-days: 7
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')

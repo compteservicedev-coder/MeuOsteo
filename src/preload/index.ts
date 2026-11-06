@@ -43,6 +43,7 @@ const api: MeuOsteoApi = {
   patients: {
     search: (query) => invoke('patients:search', query),
     recent: () => invoke('patients:recent'),
+    all: () => invoke('patients:all'),
     today: () => invoke('patients:today'),
     count: () => invoke('patients:count'),
     get: (id) => invoke('patients:get', id),

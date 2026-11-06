@@ -27,7 +27,7 @@ Le détail des lots est dans `docs/ROADMAP.md`.
 
 ## Installer l'application (utilisatrice)
 
-1. Sur GitHub, onglet **Actions**, ouvrir la dernière exécution verte de « Build Windows installer » et télécharger l'artefact **MeuOsteo-Setup** (fichier `MeuOsteo-Setup-x.y.z.exe`).
+1. Sur GitHub, onglet **Actions**, ouvrir la dernière exécution verte de « Build Windows installer » sur la branche `main` et télécharger l'artefact **MeuOsteo-Setup** (fichier `MeuOsteo-Setup-x.y.z.exe`, conservé 7 jours ; les pull requests n'en produisent pas).
 2. Lancer l'installateur. L'installateur n'est pas signé : Windows SmartScreen affiche un avertissement, cliquer sur « Informations complémentaires » puis « Exécuter quand même ».
 3. Au premier lancement, MeuOsteo propose de choisir un **code d'accès** (4 à 6 chiffres), puis affiche une **clé de secours** à imprimer. Elle sert à réinitialiser le code en cas d'oubli et n'est affichée qu'une fois.
 

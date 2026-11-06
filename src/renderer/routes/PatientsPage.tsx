@@ -10,6 +10,7 @@ import { useToast } from '../components/toast/toastContext'
 import { Avatar } from '../components/ui/Avatar'
 import { Button } from '../components/ui/Button'
 import { Icon } from '../components/ui/Icon'
+import { Segmented } from '../components/ui/Segmented'
 import { PatientEditDrawer } from '../features/patients/PatientEditDrawer'
 import { cn } from '../lib/cn'
 import { staggerItem } from '../lib/motion'
@@ -37,7 +38,9 @@ export function PatientsPage() {
   const [results, setResults] = useState<{ items: PatientListItem[]; truncated: boolean } | null>(
     null,
   )
-  const [recent, setRecent] = useState<PatientListItem[]>([])
+  const [recent, setRecent] = useState<PatientListItem[] | null>(null)
+  const [all, setAll] = useState<PatientListItem[] | null>(null)
+  const [view, setView] = useState<'recent' | 'all'>('recent')
   const [today, setToday] = useState<TodayAppointment[]>([])
   const [count, setCount] = useState<number | null>(null)
   const [creating, setCreating] = useState(false)
@@ -45,7 +48,11 @@ export function PatientsPage() {
   const todayDate = todayIso()
 
   useEffect(() => {
-    void window.api.patients.recent().then(setRecent)
+    void window.api.patients.recent().then((r) => {
+      setRecent(r)
+      // Right after the history import nothing has been opened yet: show every record.
+      if (r.length === 0) setView('all')
+    })
     void window.api.patients.today().then(setToday)
     void window.api.patients.count().then(setCount)
   }, [])
@@ -68,10 +75,18 @@ export function PatientsPage() {
     })
   }, [query])
 
+  useEffect(() => {
+    if (view === 'all' && all === null) void window.api.patients.all().then(setAll)
+  }, [view, all])
+
   const parsed = parseSearchQuery(query)
-  const rows = results ? results.items : recent
   const searching = results !== null
-  const listTitle = searching ? 'Résultats' : 'Consultés récemment'
+  const rows = results ? results.items : ((view === 'all' ? all : recent) ?? [])
+  const listTitle = searching
+    ? 'Résultats'
+    : view === 'all'
+      ? 'Tous les patients'
+      : 'Consultés récemment'
 
   return (
     <Page>
@@ -142,16 +157,31 @@ export function PatientsPage() {
           className="min-w-0 flex-[999_1_480px] overflow-hidden rounded-card border border-line-faint bg-white shadow-card"
         >
           <div className="flex items-center justify-between border-b border-[#EDF0F6] px-[22px] py-[18px]">
-            <h2 id="h-res" className="text-[16px] font-bold">
-              {listTitle}
-            </h2>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 id="h-res" className="text-[16px] font-bold">
+                {listTitle}
+              </h2>
+              {!searching && (
+                <Segmented
+                  label="Liste affichée"
+                  options={[
+                    { value: 'recent', label: 'Récents' },
+                    { value: 'all', label: 'Tous' },
+                  ]}
+                  value={view}
+                  onChange={setView}
+                />
+              )}
+            </div>
             <span
               className="rounded-pill bg-royal-50 px-2.5 py-1 text-[13px] font-semibold text-royal-700"
               aria-live="polite"
             >
               {searching && results?.truncated
                 ? `${rows.length}+ résultats`
-                : `${rows.length} résultat(s)`}
+                : searching
+                  ? `${rows.length} résultat(s)`
+                  : `${rows.length} patient${rows.length > 1 ? 's' : ''}`}
             </span>
           </div>
           <div className="overflow-x-auto">
@@ -226,9 +256,15 @@ export function PatientsPage() {
                   </button>
                 </p>
               )}
-              {!searching && rows.length === 0 && (
+              {!searching && view === 'recent' && recent?.length === 0 && (
                 <p className="px-3.5 py-7 text-[15px] text-ink-500">
                   Les fiches que vous ouvrez apparaîtront ici. Recherchez un patient pour commencer.
+                </p>
+              )}
+              {!searching && view === 'all' && all?.length === 0 && (
+                <p className="px-3.5 py-7 text-[15px] text-ink-500">
+                  Aucun patient pour l’instant. Créez une fiche ou importez l’historique (Paramètres
+                  &gt; Données &amp; import).
                 </p>
               )}
             </div>

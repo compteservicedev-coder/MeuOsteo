@@ -168,6 +168,16 @@ export class PatientService {
     return ids.map((id) => byId.get(id)).filter((r): r is PatientListItem => Boolean(r))
   }
 
+  /** « Tous les patients »: every active record, by name. */
+  all(): PatientListItem[] {
+    return this.db.$client
+      .prepare(
+        `SELECT ${LIST_COLUMNS} FROM patients p
+         WHERE p.deleted_at IS NULL ORDER BY p.search_key`,
+      )
+      .all() as PatientListItem[]
+  }
+
   markOpened(id: string): void {
     const ids = getSetting(this.db, RECENT_KEY, recentSchema, [])
     setSetting(this.db, RECENT_KEY, pushRecent(ids, id))

@@ -98,8 +98,6 @@ export class PlanningService {
     const push = (date: string, card: PlanningCard) =>
       map.set(date, [...(map.get(date) ?? []), card])
     for (const r of rows) {
-      // Imported history (no time, done long ago) stays out of the planning.
-      if (r.source === 'import') continue
       const cancelledByDoctolib = r.status === 'cancelled'
       push(r.date, {
         id: r.id,
@@ -110,7 +108,9 @@ export class PlanningService {
         nom: `${r.prenom} ${r.nom}`,
         motif:
           (cancelledByDoctolib ? 'Annulé' : r.motif || 'RDV') +
-          (r.source === 'manual' && !cancelledByDoctolib ? ' · hors Doctolib' : ''),
+          (r.source === 'manual' && !cancelledByDoctolib ? ' · hors Doctolib' : '') +
+          // Imported history has no time: shown at the top of its day, marked as such.
+          (r.source === 'import' ? ' · historique' : ''),
         kind: cardKind({ status: r.status, source: r.source, date: r.date, today }),
       })
     }
