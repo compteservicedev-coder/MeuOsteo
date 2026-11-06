@@ -44,7 +44,10 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.browser } },
     plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh, 'jsx-a11y': jsxA11y },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      // The two classic hook rules. Version 7 also ships the React Compiler rules
+      // (set-state-in-effect, refs…): to adopt one by one, outside a dependency update.
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       ...jsxA11y.flatConfigs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
