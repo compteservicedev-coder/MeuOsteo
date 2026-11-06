@@ -48,3 +48,9 @@ npm run dev
 En proposant une contribution, vous acceptez qu'elle soit publiée sous la licence du projet (GNU AGPL-3.0 ou toute version ultérieure), et vous déclarez en avoir le droit (code écrit par vous ou compatible avec cette licence).
 
 Le mainteneur se réserve la possibilité de proposer aussi MeuOsteo sous une licence commerciale (double licence) : en contribuant, vous l'autorisez à distribuer votre contribution sous une telle licence également. Si cela vous pose problème, dites-le dans la pull request avant qu'elle soit fusionnée.
+
+## Publier une version (mainteneurs)
+
+1. Dans une pull request, passer `version` de `package.json` au nouveau numéro (`npm version 1.2.3 --no-git-tag-version`), puis la fusionner.
+2. Sur `main`, créer et pousser l'étiquette correspondante : `git tag v1.2.3 && git push origin v1.2.3`.
+3. La CI construit l'installateur et publie la version sur la page **Releases**, avec l'exe et les notes générées : c'est le lien « Télécharger » du README.
