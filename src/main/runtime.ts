@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { BrowserWindow, app, safeStorage } from 'electron'
+import { BrowserWindow, app, net, safeStorage } from 'electron'
 import type { StartupError } from '@shared/types/app'
 import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
 import { ensureCommunesLoaded } from './db/communes'
@@ -24,6 +24,7 @@ import { createElectronPdfRenderer } from './services/pdfRenderer'
 import { PlanningService } from './services/planning'
 import { SeanceService } from './services/seances'
 import { createSecurityStore } from './services/securityStore'
+import { UpdateChecker } from './services/updateCheck'
 
 export interface Runtime {
   db: AppDatabase
@@ -40,6 +41,7 @@ export interface Runtime {
   backup: BackupService
   dashboard: DashboardService
   bilan: BilanService
+  updates: UpdateChecker
   /** Database key (hex), to check backups made with it. Never sent to the renderer unasked. */
   databaseKey: string
   allowUnprotectedKey: boolean
@@ -160,6 +162,11 @@ export function startRuntime({
     sync,
     backup,
     bilan: new BilanService(db),
+    updates: new UpdateChecker({
+      db,
+      currentVersion: app.getVersion(),
+      fetch: (url, init) => net.fetch(url, init),
+    }),
     dashboard: new DashboardService(db, invoices, () => backup.setting().lastAt),
     databaseKey: hexKey,
     allowUnprotectedKey,

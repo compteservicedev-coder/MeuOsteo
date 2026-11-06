@@ -309,11 +309,16 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
   - **Calcul** : montants en centimes, pourcentages au centième, montants annuels ramenés au mois (÷ 12, arrondi au centime). Le salaire possible n'est jamais négatif : le manque est affiché à la place.
   - **Journal** : aucun événement (R-20).
 
+- **R-28 · Nouvelle version** :
+  - **Vérification** : au plus une fois par jour, l'application installée demande à l'API GitHub la dernière version publiée du projet (une requête anonyme, sans aucune donnée du cabinet). Hors ligne ou en erreur, rien ne s'affiche et l'application fonctionne normalement.
+  - **Affichage** : si la version publiée est strictement plus récente (numérotation `X.Y.Z`, préversions ignorées), un encart « Nouvelle version X.Y.Z · Télécharger » apparaît dans le menu latéral. Il ouvre dans le navigateur la page de cette version, et uniquement une page de version du projet.
+  - **Réglage** : Paramètres > Données & import, « Signaler les nouvelles versions » (activé par défaut) et « Vérifier maintenant ». Désactivé, aucune requête n'est faite.
+
 ---
 
 ## 10. Exigences non fonctionnelles
 - **Démarrage** : moins de 3 s jusqu'à l'écran de code, sur un PC portable ordinaire.
 - **Données** : tout est enregistré dans la base au moment de l'action. Aucune perte en cas de fermeture brutale (SQLite en mode WAL).
 - **Hors ligne** : l'application fonctionne entièrement sans internet. Seules la synchronisation Gmail et l'envoi d'e-mails ont besoin du réseau, et elles réessaient en silence.
-- **Mises à jour** : `electron-updater` vers GitHub Releases, seulement si le dépôt est public. Sinon, réinstallation manuelle par-dessus, sans perte de données.
+- **Mises à jour** : chaque version est publiée sur GitHub Releases (étiquette `vX.Y.Z`, installateur et résumé tiré de `CHANGELOG.md`). L'application signale une version plus récente (R-28) ; la mise à jour se fait en réinstallant par-dessus, sans perte de données.
 - **RGPD et santé** : données uniquement locales, base chiffrée, aucune télémétrie, export complet possible, purge des fiches supprimées, journal sans contenu médical.

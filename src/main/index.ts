@@ -56,6 +56,13 @@ function startApp(): void {
       resolveStartup(started)
       // Gmail: at start-up, then at the chosen frequency (GMAIL_DOCTOLIB.md §2).
       if (started.ok) started.runtime.sync.start()
+      // R-28: is a newer version published? At start-up, then each day (installed app only:
+      // development and end-to-end runs stay offline).
+      if (started.ok && app.isPackaged) {
+        const { updates } = started.runtime
+        void updates.check()
+        setInterval(() => void updates.check(), 6 * 60 * 60 * 1000)
+      }
     }, 0)
 
     // R-21: the code is asked again after a system sleep or a session lock.

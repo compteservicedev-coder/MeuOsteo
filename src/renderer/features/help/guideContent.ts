@@ -35,7 +35,8 @@ export const GUIDE: GuideSection[] = [
       {
         q: 'Comment installer une nouvelle version ?',
         a: [
-          'Téléchargez le nouveau fichier d’installation et lancez-le, tout simplement, par-dessus la version actuelle. Il n’y a pas de mise à jour automatique pour l’instant.',
+          'Quand une nouvelle version est publiée, un encart « Nouvelle version · Télécharger » apparaît en bas du menu de gauche. Il ouvre la page de la version, avec le résumé des nouveautés et le fichier d’installation (MeuOsteo vérifie une fois par jour ; réglage dans Paramètres > Données & import).',
+          'Fermez MeuOsteo, puis lancez le fichier téléchargé, tout simplement, par-dessus la version actuelle.',
           'Vos données ne sont pas touchées : elles sont rangées à part, dans votre dossier Windows personnel, et non dans le dossier du programme. Même une désinstallation ne les efface pas.',
           'Par prudence, faites tout de même une sauvegarde avant (Paramètres > Sauvegarde > « Sauvegarder maintenant »).',
         ],

@@ -52,7 +52,7 @@ Chaque lot est livrable : une PR, la CI au vert, un `.exe` téléchargeable, pui
 - **Tableau de bord** (SPEC §7).
 - **Sauvegarde et restauration** R-22, avec l'alerte des 7 jours.
 - **Paramètres** : onglets Journal, Données & import (export complet).
-- **Mises à jour** : `electron-updater` si le dépôt est public.
+- **Mises à jour** : publication sur GitHub Releases et signalement des nouvelles versions dans l'application (R-28).
 - **Contrôles finaux** : passe d'accessibilité et de performance (5 000 patients fictifs), et tests Playwright des parcours critiques : ouverture → séance → facture → envoi.
 
 ## Questions en attente (à demander à l'utilisatrice)
