@@ -92,7 +92,7 @@ Il liste les cas que le système n'a pas pu résoudre seul. Chaque cas réglé d
 - **Recherche** : une seule barre qui cherche dans le nom, le prénom, le téléphone (chiffres seuls), la commune et le **métier** (profession).
   - **Accents et casse** : la recherche n'en tient pas compte, « infirmiere » trouve « Infirmière ».
   - **Rapidité** : filtrage en direct, en moins de 100 ms pour 5 000 patients.
-- **Liste** : « Consultés récemment » par défaut, puis les résultats de la recherche.
+- **Liste** : « Consultés récemment » par défaut, ou « Tous les patients » (par nom, bouton « Tous », affichée d’office tant qu’aucune fiche n’a été ouverte, par exemple juste après la reprise de l’historique), puis les résultats de la recherche.
   - **Colonnes** : patient (avec le métier en petit sous le nom), âge, commune, portable, dernière séance.
   - **Mise en évidence** : quand la recherche porte sur le métier, il apparaît surligné en bleu.
 - **Panneau « Aujourd'hui »** : les RDV du jour.

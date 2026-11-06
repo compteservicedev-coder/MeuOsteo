@@ -10,6 +10,7 @@ import { seedDatabase } from '../db/seed'
 import { runMaintenance } from '../maintenance'
 import { createTestDatabase } from '../test/db'
 import { PatientService } from './patients'
+import { PlanningService } from './planning'
 
 let db: AppDatabase
 let clock: Date
@@ -347,5 +348,34 @@ describe('commentaire inter-séances', () => {
       antecedentsTags: ['Asthme', 'Lunettes'],
     })
     expect(actions(id)).toEqual(['Camille Roux · Patient créé'])
+  })
+})
+
+describe('après la reprise de l’historique', () => {
+  it('« Tous les patients » liste chaque fiche active par nom, sans attendre qu’elle soit ouverte', () => {
+    const roux = create()
+    const abel = create({ nom: 'Abel', prenom: 'Zoé' })
+    const gone = create({ nom: 'Martin', prenom: 'Léa' })
+    service.softDelete(gone)
+    expect(service.recent()).toEqual([])
+    expect(service.all().map((p) => p.id)).toEqual([abel, roux])
+  })
+
+  it('le planning montre les séances importées, sans heure, marquées « historique »', () => {
+    const id = create()
+    db.insert(seances)
+      .values({
+        patientId: id,
+        date: '2026-10-13',
+        status: 'done',
+        source: 'import',
+        paiement: 'cheque',
+      })
+      .run()
+    const view = new PlanningService(db, () => clock).weeks('2026-10-12')
+    const cards = view.weeks.flatMap((w) => w.days).flatMap((d) => d.cards)
+    expect(cards).toMatchObject([
+      { patientId: id, heure: null, kind: 'past', motif: 'RDV · historique' },
+    ])
   })
 })

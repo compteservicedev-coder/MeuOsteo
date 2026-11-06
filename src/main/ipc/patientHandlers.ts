@@ -20,6 +20,7 @@ export function registerPatientHandlers(register: ReturnType<typeof createRegist
 
   register('patients:search', z.tuple([searchQuerySchema]), ({ patients }, q) => patients.search(q))
   register('patients:recent', none, ({ patients }) => patients.recent())
+  register('patients:all', none, ({ patients }) => patients.all())
   register('patients:today', none, ({ patients }) => patients.todayAppointments())
   register('patients:count', none, ({ patients }) => patients.activeCount())
   register('patients:get', byId, ({ patients }, id) => patients.get(id))
