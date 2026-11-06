@@ -4,6 +4,8 @@
 
 Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopathie, qui remplace l'outil Excel VBA « MeuOsteo v1.04 ». Logiciel libre sous licence [GNU AGPL-3.0](LICENSE).
 
+**Pour découvrir le projet côté métier** (besoin, fonctions, principes, limites) : [docs/PRESENTATION.md](docs/PRESENTATION.md).
+
 - **100 % local** : les données restent sur le PC, dans une base SQLite chiffrée.
 - **Logiciels gratuits et open source uniquement.**
 - **Développement dans GitHub avec Claude Code** : une GitHub Action produit l'installateur `.exe`.
@@ -82,18 +84,19 @@ resources/communes.csv
 
 ## Contenu de la documentation
 
-| Fichier                       | Rôle                                                                                   |
-| ----------------------------- | -------------------------------------------------------------------------------------- |
-| `CLAUDE.md`                   | Consignes permanentes pour les contributeurs et les assistants IA (stack, interdits)   |
-| `docs/SPEC.md`                | Spécification fonctionnelle : écrans, règles métier numérotées, critères d'acceptation |
-| `docs/DATA_MODEL.md`          | Schéma SQLite et règles d'intégrité                                                    |
-| `docs/MIGRATION.md`           | Reprise de l'historique depuis le fichier Excel `.xlsm`                                |
-| `docs/GMAIL_DOCTOLIB.md`      | Synchronisation des RDV Doctolib par Gmail, envoi des factures, rapprochement          |
-| `docs/DESIGN.md`              | Charte : couleurs, typographie, relief, animations, accessibilité                      |
-| `docs/ROADMAP.md`             | Découpage en lots, avec ordre et critères de fin                                       |
-| `docs/maquette/`              | Sources de la maquette interactive validée (référence visuelle)                        |
-| `resources/communes.csv`      | 35 576 couples commune / code postal, issus de l'outil actuel                          |
-| `.github/workflows/build.yml` | Compilation de l'installateur Windows                                                  |
+| Fichier                       | Rôle                                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `CLAUDE.md`                   | Consignes permanentes pour les contributeurs et les assistants IA (stack, interdits)     |
+| `docs/PRESENTATION.md`        | Présentation métier : le besoin, ce que fait l'application, ses principes et ses limites |
+| `docs/SPEC.md`                | Spécification fonctionnelle : écrans, règles métier numérotées, critères d'acceptation   |
+| `docs/DATA_MODEL.md`          | Schéma SQLite et règles d'intégrité                                                      |
+| `docs/MIGRATION.md`           | Reprise de l'historique depuis le fichier Excel `.xlsm`                                  |
+| `docs/GMAIL_DOCTOLIB.md`      | Synchronisation des RDV Doctolib par Gmail, envoi des factures, rapprochement            |
+| `docs/DESIGN.md`              | Charte : couleurs, typographie, relief, animations, accessibilité                        |
+| `docs/ROADMAP.md`             | Découpage en lots, avec ordre et critères de fin                                         |
+| `docs/maquette/`              | Sources de la maquette interactive validée (référence visuelle)                          |
+| `resources/communes.csv`      | 35 576 couples commune / code postal, issus de l'outil actuel                            |
+| `.github/workflows/build.yml` | Compilation de l'installateur Windows                                                    |
 
 ## Maquette
 
