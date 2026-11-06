@@ -57,6 +57,32 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The section of CHANGELOG.md for this version becomes the text of the release page.
+      - name: Release notes from CHANGELOG.md
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          awk -v v="${VERSION#v}" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on && /^\[[0-9]/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for ${VERSION#v}"
+            exit 1
+          fi
+          {
+            echo
+            echo '---'
+            echo
+            echo "**Installer** : \`MeuOsteo-Setup-${VERSION#v}.exe\` ci-dessous, dans *Assets*. Première installation, avertissements de Windows et mise à jour : [guide d'installation](https://github.com/${{ github.repository }}/blob/main/docs/INSTALLATION.md). Pour mettre à jour, fermez MeuOsteo puis lancez le nouvel installateur par-dessus l'ancien : vos données sont conservées."
+          } >> notes.md
+
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: MeuOsteo-Setup
@@ -68,10 +94,6 @@ jobs:
         with:
           name: MeuOsteo ${{ github.ref_name }}
           make_latest: true
-          generate_release_notes: true
           fail_on_unmatched_files: true
-          body: |
-            **Télécharger** : `MeuOsteo-Setup-….exe` ci-dessous, dans *Assets*.
-
-            Première installation, avertissements de Windows, réglages et mise à jour : voir le [guide d'installation](https://github.com/${{ github.repository }}/blob/main/docs/INSTALLATION.md). Pour mettre à jour, fermez MeuOsteo puis lancez le nouvel installateur par-dessus l'ancien : vos données sont conservées.
+          body_path: notes.md
           files: dist/*.exe

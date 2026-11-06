@@ -73,6 +73,7 @@ import type {
   EmailPreview,
 } from './documents'
 import type { BilanView } from './bilan'
+import type { UpdateStatus } from './updates'
 import type { BudgetSettings, ExceptionalExpense, LineOverride } from '../domain/bilan'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
 import type {
@@ -223,6 +224,10 @@ export interface IpcInvokeContract {
   }
   'bilan:save-budget': { args: [settings: BudgetSettings]; result: BudgetSettings }
   'bilan:export': { args: [month: string]; result: SaveFileResult }
+  'updates:get-status': { args: []; result: UpdateStatus }
+  'updates:check': { args: []; result: UpdateStatus }
+  'updates:set-enabled': { args: [enabled: boolean]; result: UpdateStatus }
+  'updates:open': { args: []; result: void }
   'dashboard:get': { args: []; result: DashboardView }
   'dashboard:mark-received': { args: [seanceId: string]; result: boolean }
   'backup:get-status': { args: []; result: BackupStatus }
@@ -386,6 +391,14 @@ export interface MeuOsteoApi {
     setExceptional(month: string, list: ExceptionalExpense[]): Promise<BilanView>
     saveBudget(settings: BudgetSettings): Promise<BudgetSettings>
     export(month: string): Promise<SaveFileResult>
+  }
+  /** R-28 · Nouvelle version. */
+  updates: {
+    getStatus(): Promise<UpdateStatus>
+    check(): Promise<UpdateStatus>
+    setEnabled(enabled: boolean): Promise<UpdateStatus>
+    /** Opens the release page in the browser. */
+    open(): Promise<void>
   }
   dashboard: {
     get(): Promise<DashboardView>

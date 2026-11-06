@@ -51,6 +51,6 @@ Le mainteneur se réserve la possibilité de proposer aussi MeuOsteo sous une li
 
 ## Publier une version (mainteneurs)
 
-1. Dans une pull request, passer `version` de `package.json` au nouveau numéro (`npm version 1.2.3 --no-git-tag-version`), puis la fusionner.
+1. Dans une pull request, passer `version` de `package.json` au nouveau numéro (`npm version 1.2.3 --no-git-tag-version`) et ajouter sa section `## [1.2.3] - AAAA-MM-JJ` en tête de `CHANGELOG.md` (résumé lisible par les utilisateurs), puis la fusionner.
 2. Sur `main`, créer et pousser l'étiquette correspondante : `git tag v1.2.3 && git push origin v1.2.3`.
-3. La CI construit l'installateur et publie la version sur la page **Releases**, avec l'exe et les notes générées : c'est le lien « Télécharger » du README.
+3. La CI construit l'installateur et publie la version sur la page **Releases**, avec l'exe et la section du `CHANGELOG.md` : c'est le lien « Télécharger » du README.

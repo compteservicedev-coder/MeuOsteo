@@ -9,6 +9,7 @@ import { registerLegacyImportHandlers } from './legacyImportHandlers'
 import { registerReconcileHandlers } from './reconcileHandlers'
 import { createRegistrar, type IpcContext } from './register'
 import { registerSecurityHandlers } from './securityHandlers'
+import { registerUpdateHandlers } from './updateHandlers'
 
 export function registerIpcHandlers(ctx: IpcContext, version: string): void {
   const register = createRegistrar(ctx)
@@ -22,4 +23,5 @@ export function registerIpcHandlers(ctx: IpcContext, version: string): void {
   registerPlanningHandlers(register)
   registerPilotageHandlers(register)
   registerBilanHandlers(register)
+  registerUpdateHandlers(register)
 }

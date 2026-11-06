@@ -90,6 +90,7 @@ resources/communes.csv
 | Fichier                       | Rôle                                                                                                  |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------- |
 | `CLAUDE.md`                   | Consignes permanentes pour les contributeurs et les assistants IA (stack, interdits)                  |
+| `CHANGELOG.md`                | Journal des versions : les nouveautés de chaque version publiée, reprises sur la page Releases        |
 | `docs/INSTALLATION.md`        | Mode opératoire pour une nouvelle utilisatrice : téléchargement, installation, réglages, mises à jour |
 | `docs/PRESENTATION.md`        | Présentation métier : le besoin, ce que fait l'application, ses principes et ses limites              |
 | `docs/SPEC.md`                | Spécification fonctionnelle : écrans, règles métier numérotées, critères d'acceptation                |

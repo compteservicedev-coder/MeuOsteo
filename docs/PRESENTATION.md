@@ -71,7 +71,7 @@ MeuOsteo est né d'un classeur Excel avec macros (« MeuOsteo v1.04 ») utilisé
 ## Pistes pour la suite
 
 - Lecture des vrais e-mails Doctolib, puis d'autres plateformes de rendez-vous.
-- Mise à jour automatique de l'application.
+- Mise à jour en un clic (l'application signale déjà les nouvelles versions).
 - Modèles de courriers (au médecin traitant, attestation) générés depuis la fiche.
 - Signature de l'installateur.
 

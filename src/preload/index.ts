@@ -141,6 +141,12 @@ const api: MeuOsteoApi = {
     saveBudget: (settings) => invoke('bilan:save-budget', settings),
     export: (month) => invoke('bilan:export', month),
   },
+  updates: {
+    getStatus: () => invoke('updates:get-status'),
+    check: () => invoke('updates:check'),
+    setEnabled: (enabled) => invoke('updates:set-enabled', enabled),
+    open: () => invoke('updates:open'),
+  },
   dashboard: {
     get: () => invoke('dashboard:get'),
     markReceived: (id) => invoke('dashboard:mark-received', id),

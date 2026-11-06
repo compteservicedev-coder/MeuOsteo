@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { isBackupRecent } from '@shared/domain/backup'
 import { formatElapsedFr } from '@shared/domain/dates'
 import type { TodaySummary } from '@shared/types/app'
+import type { UpdateStatus } from '@shared/types/updates'
 import { cn } from '../../lib/cn'
 import { useDataChanged } from '../../lib/dataEvents'
 import { Icon, type IconName } from '../ui/Icon'
@@ -45,6 +46,22 @@ function useShellSummary(): TodaySummary | null {
   return summary
 }
 
+/** R-28: a newer version found by the main process (it asks GitHub at most once a day). */
+function useUpdateStatus(): UpdateStatus | null {
+  const [status, setStatus] = useState<UpdateStatus | null>(null)
+  useEffect(() => {
+    const load = () =>
+      void window.api.updates
+        .getStatus()
+        .then(setStatus)
+        .catch(() => undefined) // refused while locked
+    load()
+    const timer = window.setInterval(load, 30 * 60_000)
+    return () => window.clearInterval(timer)
+  }, [])
+  return status
+}
+
 function NavEntry({ item, badge }: { item: NavItem; badge?: number }) {
   return (
     <NavLink
@@ -76,6 +93,7 @@ function NavEntry({ item, badge }: { item: NavItem; badge?: number }) {
 /** Dark sidebar; icons only under 1100 px (SPEC §1). */
 export function Sidebar() {
   const summary = useShellSummary()
+  const update = useUpdateStatus()
   const backupOk = summary ? isBackupRecent(summary.lastBackupAt, new Date()) : true
   const backupLabel = summary?.lastBackupAt
     ? `Sauvegarde auto · ${formatElapsedFr(new Date(summary.lastBackupAt), new Date())}`
@@ -106,6 +124,22 @@ export function Sidebar() {
         />
       ))}
       <div className="min-h-6 grow" />
+      {update?.available && (
+        <button
+          type="button"
+          onClick={() => void window.api.updates.open()}
+          title={`MeuOsteo ${update.available.version} est disponible : ouvrir la page de téléchargement`}
+          className="mb-1.5 flex min-h-[46px] items-center justify-center gap-2.5 rounded-control bg-[rgba(94,234,212,0.16)] px-3 py-2 text-left text-aqua-50 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-[rgba(94,234,212,0.26)] min-[1100px]:justify-start"
+        >
+          <Icon name="download" size={18} className="shrink-0 text-aqua-300" />
+          <span className="sr-only flex-col min-[1100px]:not-sr-only min-[1100px]:flex">
+            <span className="text-[13px] font-bold">
+              Nouvelle version {update.available.version}
+            </span>
+            <span className="text-[12px] text-nav-soft">Télécharger</span>
+          </span>
+        </button>
+      )}
       <NavEntry item={HELP_ITEM} />
       <NavEntry item={SETTINGS_ITEM} />
       <Link

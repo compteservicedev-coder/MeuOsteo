@@ -82,7 +82,7 @@ Le menu **Aide & FAQ** répond aux questions courantes, écran par écran.
 
 ## 10. Mettre à jour
 
-Quand une nouvelle version paraît sur la [page des versions](https://github.com/compteservicedev-coder/Repo1/releases) :
+Quand une nouvelle version paraît, MeuOsteo l'annonce par l'encart **« Nouvelle version · Télécharger »** en bas du menu latéral (réglable dans Paramètres > Données & import). Les nouveautés sont résumées sur la [page des versions](https://github.com/compteservicedev-coder/Repo1/releases). Pour l'installer :
 1. **Fermez MeuOsteo** (une sauvegarde est faite à la fermeture).
 2. Téléchargez et lancez le nouvel installateur, **par-dessus** l'ancienne version. Inutile de désinstaller.
 
