@@ -14,6 +14,10 @@ updates:
       eslint:
         patterns: ['eslint', '@eslint/*']
         update-types: [major]
+      # electron-vite pins the Vite major it supports: they move together.
+      build-tooling:
+        patterns: ['vite', 'electron-vite', '@vitejs/*']
+        update-types: [major]
     ignore:
       # Waiting for the ecosystem (checked 2026-11-06): typescript-eslint supports
       # TypeScript < 6.1, eslint-plugin-jsx-a11y supports ESLint ≤ 9. Remove once they do.
@@ -22,6 +26,18 @@ updates:
       - dependency-name: eslint
         update-types: ['version-update:semver-major']
       - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
+      # React 18 is the stack set in CLAUDE.md: moving to 19 is a project of its own.
+      - dependency-name: react
+        update-types: ['version-update:semver-major']
+      - dependency-name: react-dom
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/react-dom'
+        update-types: ['version-update:semver-major']
+      # The types follow the Node.js line the project runs on (22, see engines).
+      - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
