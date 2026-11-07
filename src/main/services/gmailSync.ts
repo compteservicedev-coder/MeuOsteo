@@ -53,6 +53,27 @@ export async function processRawMail(raw: Buffer, pipeline: RdvPipeline): Promis
   return result.outcome === 'unchanged' ? 'unchanged' : 'ingested'
 }
 
+/** Node's socket and DNS codes, and imapflow's own for timeouts and dropped connections. */
+const NETWORK_CODES = new Set([
+  'ECONNREFUSED',
+  'ENOTFOUND',
+  'ETIMEDOUT',
+  'ECONNRESET',
+  'ECONNABORTED',
+  'EHOSTUNREACH',
+  'ENETUNREACH',
+  'EAI_AGAIN',
+  'EPIPE',
+  'NoConnection',
+  'EConnectionClosed',
+  'ClosedAfterConnectText',
+  'ClosedAfterConnectTLS',
+  'CONNECT_TIMEOUT',
+  'GREETING_TIMEOUT',
+  'UPGRADE_TIMEOUT',
+  'ETIMEOUT',
+])
+
 export function imapErrorOf(error: unknown): NonNullable<SyncStatus['error']> {
   const e = error as {
     authenticationFailed?: boolean
@@ -62,12 +83,7 @@ export function imapErrorOf(error: unknown): NonNullable<SyncStatus['error']> {
   }
   if (e?.authenticationFailed) return 'auth'
   if (e?.serverResponseCode === 'NONEXISTENT' || e?.mailboxMissing) return 'label'
-  if (
-    ['ECONNREFUSED', 'ENOTFOUND', 'ETIMEDOUT', 'ECONNRESET', 'EAI_AGAIN', 'NoConnection'].includes(
-      e?.code ?? '',
-    )
-  )
-    return 'network'
+  if (NETWORK_CODES.has(e?.code ?? '')) return 'network'
   return 'other'
 }
 
