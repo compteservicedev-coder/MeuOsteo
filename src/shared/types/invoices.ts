@@ -36,7 +36,13 @@ export interface InvoiceDocumentData {
 
 export type SendError = 'not_configured' | 'no_email' | 'auth' | 'network' | 'pdf' | 'other'
 
-export type SendOutcome = { ok: true; to: string } | { ok: false; error: SendError }
+export type SendOutcome =
+  | { ok: true; to: string }
+  | {
+      ok: false
+      error: SendError
+      /** Technical code, for « Tester la connexion ». */ code?: string
+    }
 
 export type InvoicePreview =
   | {

@@ -13,6 +13,7 @@ import type { SyncStatus } from '@shared/types/planning'
 import type { AppDatabase } from '../db/client'
 import { getSetting, setSetting } from '../db/repositories/settingsRepository'
 import { log } from '../logger'
+import { connectionCodeOf } from '../systemCertificates'
 import type { RdvPipeline } from './doctolib/pipeline'
 import { parseDoctolibMail, type MailInput } from './doctolibParser'
 import type { GmailSettingsService } from './gmail'
@@ -131,16 +132,19 @@ export class GmailSync {
 
   /** « Tester la connexion », step 2: messages under the label. */
   async countLabel(): Promise<
-    { ok: true; count: number } | { ok: false; error: NonNullable<SyncStatus['error']> }
+    | { ok: true; count: number }
+    | { ok: false; error: NonNullable<SyncStatus['error']>; code: string }
   > {
     const client = this.client()
-    if (!client) return { ok: false, error: 'auth' }
+    if (!client) return { ok: false, error: 'auth', code: '' }
     try {
       await client.connect()
       const status = await client.status(this.deps.gmail.setting().label, { messages: true })
       return { ok: true, count: status ? (status.messages ?? 0) : 0 }
     } catch (error) {
-      return { ok: false, error: imapErrorOf(error) }
+      const code = connectionCodeOf(error)
+      log.warn(`Gmail test: IMAP connection failed (${code || 'no code'})`)
+      return { ok: false, error: imapErrorOf(error), code }
     } finally {
       await client.logout().catch(() => undefined)
     }

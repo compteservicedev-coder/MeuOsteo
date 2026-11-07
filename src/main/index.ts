@@ -5,9 +5,12 @@ import { initLogger, log } from './logger'
 import { configureUserDataPath } from './paths'
 import { startRuntime, stopRuntime, type RuntimeResult } from './runtime'
 import { hardenApp, hardenSession } from './security'
+import { trustSystemCertificates } from './systemCertificates'
 import { createMainWindow, isTrustedSender } from './window'
 
 configureUserDataPath()
+// Before any Gmail connection: antivirus e-mail scanning uses an authority installed in Windows.
+trustSystemCertificates()
 // French UI everywhere, including native date fields (JJ/MM/AAAA).
 app.commandLine.appendSwitch('lang', 'fr-FR')
 

@@ -25,6 +25,10 @@ Première version publiée : l'application couvre le quotidien du cabinet.
 - Programmes et scripts refusés dans les documents ; exports CSV protégés contre les formules Excel ; aucun nom de patient dans le journal technique.
 - Installateur durci (verrous Electron), Electron 45.
 
+### Corrections
+
+- Connexion Gmail : les certificats installés dans Windows sont acceptés, comme dans le navigateur (antivirus qui analysent les e-mails). « Tester la connexion » affiche le code technique d'une erreur et essaie l'envoi même si la lecture échoue.
+
 ### Limites connues
 
 - Installateur non signé : le navigateur et Windows affichent un avertissement (voir le [guide d'installation](docs/INSTALLATION.md)).

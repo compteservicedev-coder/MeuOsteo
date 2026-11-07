@@ -16,6 +16,7 @@ import {
   unlockReasonSchema,
 } from '@shared/types/schemas'
 import { log } from '../logger'
+import { isCertificateCode } from '../systemCertificates'
 import type { createRegistrar } from './register'
 
 async function askSavePath(options: SaveDialogOptions): Promise<string | null> {
@@ -47,6 +48,28 @@ const SEND_DETAILS: Record<string, string> = {
   network: 'Gmail injoignable : vérifiez la connexion internet',
   other: 'Gmail a refusé l’envoi',
 }
+const withCode = (text: string, code: string | undefined) =>
+  code ? `${text} (code ${code})` : text
+
+const certificateDetail = (code: string) =>
+  withCode(
+    'Connexion sécurisée refusée : un antivirus ou un pare-feu filtre la connexion à Gmail. Désactivez l’analyse des e-mails de l’antivirus, ou essayez sur un autre réseau',
+    code,
+  )
+
+const LOGIN_ERRORS: Record<string, string> = {
+  auth: 'Adresse ou mot de passe d’application refusé par Gmail',
+  network:
+    'Gmail injoignable : vérifiez la connexion internet (un pare-feu peut bloquer le port 993)',
+  label: 'Connexion réussie, mais le libellé est introuvable dans Gmail',
+  other: 'Connexion à Gmail impossible',
+}
+
+function failureDetail(f: { error: string; code: string }): string {
+  if (isCertificateCode(f.code)) return certificateDetail(f.code)
+  return withCode(LOGIN_ERRORS[f.error] ?? LOGIN_ERRORS['other']!, f.code)
+}
+
 const detailOf = (o: SendOutcome, okText: string) =>
   o.ok ? okText : (SEND_DETAILS[o.error] ?? SEND_DETAILS['other']!)
 
@@ -142,19 +165,11 @@ export function registerInvoiceHandlers(register: ReturnType<typeof createRegist
     // GMAIL_DOCTOLIB.md §2: IMAP login and label, then a test e-mail to the address itself.
     const steps: GmailTestResult['steps'] = []
     const label = await sync.countLabel()
-    const LABEL_ERRORS: Record<string, string> = {
-      auth: 'Adresse ou mot de passe d’application refusé par Gmail',
-      network: 'Gmail injoignable : vérifiez la connexion internet',
-      label: 'Connexion réussie, mais le libellé est introuvable dans Gmail',
-      other: 'Connexion à Gmail impossible',
-    }
     const loginOk = label.ok || label.error === 'label'
     steps.push({
       step: 'login',
       ok: loginOk,
-      detail: loginOk
-        ? 'Connexion à Gmail réussie'
-        : LABEL_ERRORS[label.ok ? 'other' : label.error]!,
+      detail: loginOk ? 'Connexion à Gmail réussie' : label.ok ? '' : failureDetail(label),
     })
     if (loginOk) {
       steps.push({
@@ -162,13 +177,20 @@ export function registerInvoiceHandlers(register: ReturnType<typeof createRegist
         ok: label.ok,
         detail: label.ok
           ? `${label.count} e-mail${label.count > 1 ? 's' : ''} trouvé${label.count > 1 ? 's' : ''} sous le libellé`
-          : LABEL_ERRORS['label']!,
+          : LOGIN_ERRORS['label']!,
       })
+    }
+    // Tried even when reading failed: tells a blocked IMAP port from a refused account.
+    {
       const sent = await mailer.sendTest()
       steps.push({
         step: 'send',
         ok: sent.ok,
-        detail: detailOf(sent, sent.ok ? `E-mail de test envoyé à ${sent.to}` : ''),
+        detail: sent.ok
+          ? `E-mail de test envoyé à ${sent.to}`
+          : sent.code && isCertificateCode(sent.code)
+            ? certificateDetail(sent.code)
+            : withCode(detailOf(sent, ''), sent.code),
       })
     }
     if (steps.every((s) => s.ok)) void sync.run()
