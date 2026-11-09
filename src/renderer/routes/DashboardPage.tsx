@@ -5,6 +5,7 @@ import { isBackupRecent } from '@shared/domain/backup'
 import { formatIsoDateFr } from '@shared/domain/dates'
 import { INVOICE_STATUS_LABELS, formatEuros, formatEurosShort } from '@shared/domain/invoice'
 import { MONTHS_LONG } from '@shared/domain/planning'
+import { evolutionLabel, type YearComparison } from '@shared/domain/revenue'
 import type { DashboardView } from '@shared/types/pilotage'
 import { Page } from '../components/layout/Page'
 import { PageHeader } from '../components/layout/PageHeader'
@@ -73,8 +74,17 @@ export function DashboardPage() {
   const [view, setView] = useState<DashboardView | null>(null)
   const [paid, setPaid] = useState<Set<string>>(new Set())
   const [hover, setHover] = useState<number | null>(null)
-  const load = useCallback(() => void window.api.dashboard.get().then(setView), [])
+  const [years, setYears] = useState<YearComparison | null>(null)
+  const load = useCallback(
+    () =>
+      void window.api.dashboard.get().then((v) => {
+        setView(v)
+        setYears(v.years)
+      }),
+    [],
+  )
   useEffect(load, [load])
+  const showYear = (year: number) => void window.api.dashboard.year(year).then(setYears)
 
   const m = view?.month
   const seances = useCountUp(m?.seances ?? 0)
@@ -86,7 +96,8 @@ export function DashboardPage() {
   const month0 = Number(today.slice(5, 7)) - 1
   const prevName = MONTHS_LONG[(month0 + 11) % 12]!.toLowerCase()
   const diff = m ? m.seances - m.previousSeances : 0
-  const max = Math.max(1, ...(view?.revenueByMonth.map((r) => r.cents) ?? [1]))
+  const max = Math.max(1, ...(years?.months.flatMap((r) => [r.cents, r.previousCents]) ?? [1]))
+  const thisYear = Number(today.slice(0, 4))
 
   return (
     <Page>
@@ -132,9 +143,15 @@ export function DashboardPage() {
           sub={m ? `${diff >= 0 ? '+' : '−'}${Math.abs(diff)} vs ${prevName}` : ''}
         />
         <Kpi
-          label="Chiffre d’affaires"
+          label="Chiffre d’affaires réalisé"
           value={formatEurosShort(Math.round(revenue) * 100)}
-          sub={view ? `Année : ${formatEurosShort(view.yearRevenueCents)}` : ''}
+          sub={
+            view
+              ? view.monthPendingCents > 0
+                ? `dont ${formatEurosShort(view.monthPendingCents)} en attente de virement`
+                : 'Séances réalisées du mois'
+              : ''
+          }
         />
         <Kpi
           label="Nouveaux patients"
@@ -149,56 +166,99 @@ export function DashboardPage() {
         />
       </div>
 
-      <div className="flex flex-wrap items-start gap-[18px]">
+      <div className="flex flex-wrap items-stretch gap-[18px]">
         <motion.section
           variants={staggerItem}
           aria-labelledby="h-ca"
           className="min-w-0 flex-[999_1_520px] rounded-card-lg border border-line-faint bg-white px-6 py-5 shadow-card"
         >
-          <h2 id="h-ca" className="text-section">
-            Chiffre d’affaires mensuel
-          </h2>
-          <p className="text-[13px] text-ink-500">12 derniers mois · survolez une barre</p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 id="h-ca" className="text-section">
+              Chiffre d’affaires {years ? `${years.year} vs ${years.year - 1}` : ''}
+            </h2>
+            {years && view && (
+              <div className="flex items-center gap-1">
+                <Button
+                  size="sm"
+                  aria-label="Année précédente"
+                  disabled={years.year <= view.firstYear}
+                  onClick={() => showYear(years.year - 1)}
+                >
+                  <Icon name="chevronLeft" size={16} />
+                </Button>
+                <Button
+                  size="sm"
+                  aria-label="Année suivante"
+                  disabled={years.year >= thisYear}
+                  onClick={() => showYear(years.year + 1)}
+                >
+                  <Icon name="chevronRight" size={16} />
+                </Button>
+              </div>
+            )}
+          </div>
+          {years && <YearSummary years={years} />}
+          <div className="mt-2 flex items-center gap-4 text-[12px] text-ink-500">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[linear-gradient(180deg,#22C3D6,#1F4FD8)]" />
+              {years?.year}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#CBD3E1]" />
+              {years ? years.year - 1 : ''}
+            </span>
+            <span>· survolez un mois</span>
+          </div>
           <div
             role="list"
             aria-label="Chiffre d’affaires par mois"
-            className="mt-5 flex h-[230px] items-end gap-2"
+            className="mt-3 flex h-[210px] items-end gap-1.5"
           >
-            {view?.revenueByMonth.map((r, i) => {
-              const last = i === view.revenueByMonth.length - 1
-              const label = SHORT_MONTHS[Number(r.month.slice(5, 7)) - 1]!
+            {years?.months.map((r, i) => {
+              const label = SHORT_MONTHS[r.month - 1]!
+              const current = years.year === thisYear && i === month0
+              const shown = hover === i || current
               return (
                 <div
-                  key={r.month}
+                  key={`${years.year}-${r.month}`}
                   role="listitem"
-                  aria-label={`${label} ${r.month.slice(0, 4)} : ${formatEurosShort(r.cents)}`}
-                  className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1.5"
+                  aria-label={`${label} ${years.year} : ${formatEurosShort(r.cents)} ; ${years.year - 1} : ${formatEurosShort(r.previousCents)}`}
+                  className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1"
                   onMouseEnter={() => setHover(i)}
                   onMouseLeave={() => setHover(null)}
                 >
                   <span
                     className={cn(
-                      'text-[11px] font-bold tabular-nums transition-opacity',
-                      last || hover === i ? 'text-ink-900 opacity-100' : 'opacity-0',
+                      'flex flex-col items-center text-[10px] font-bold tabular-nums leading-tight transition-opacity',
+                      shown ? 'opacity-100' : 'opacity-0',
                     )}
                   >
-                    {formatEurosShort(r.cents)}
+                    <span className="text-ink-900">{formatEurosShort(r.cents)}</span>
+                    <span className="text-ink-500">{formatEurosShort(r.previousCents)}</span>
                   </span>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: Math.max(3, Math.round((r.cents / max) * 180)) }}
-                    transition={{ duration: 0.7, delay: 0.25 + i * 0.05, ease: EASE_SOFT }}
-                    className={cn(
-                      'w-full max-w-[40px] rounded-[8px_8px_3px_3px]',
-                      last
-                        ? 'bg-[linear-gradient(180deg,#22C3D6,#1F4FD8)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_10px_18px_-8px_rgba(31,79,216,0.8)]'
-                        : 'bg-[linear-gradient(180deg,#B5EDE4,#6FD6C6)] shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]',
-                    )}
-                  />
+                  <div className="flex w-full max-w-[44px] items-end justify-center gap-[3px]">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: Math.max(2, Math.round((r.previousCents / max) * 150)) }}
+                      transition={{ duration: 0.6, delay: 0.2 + i * 0.04, ease: EASE_SOFT }}
+                      className="w-1/2 rounded-[6px_6px_2px_2px] bg-[#CBD3E1]"
+                    />
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{
+                        height:
+                          years.year === thisYear && i > month0
+                            ? 0
+                            : Math.max(2, Math.round((r.cents / max) * 150)),
+                      }}
+                      transition={{ duration: 0.6, delay: 0.25 + i * 0.04, ease: EASE_SOFT }}
+                      className="w-1/2 rounded-[6px_6px_2px_2px] bg-[linear-gradient(180deg,#22C3D6,#1F4FD8)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"
+                    />
+                  </div>
                   <span
                     className={cn(
                       'text-[11px]',
-                      last ? 'font-extrabold text-royal-700' : 'text-ink-500',
+                      current ? 'font-extrabold text-royal-700' : 'text-ink-500',
                     )}
                   >
                     {label}
@@ -212,51 +272,69 @@ export function DashboardPage() {
         <motion.section
           variants={staggerItem}
           aria-labelledby="h-wait"
-          className="min-w-0 flex-[1_1_320px] rounded-card-lg border border-line-faint bg-white px-5 py-5 shadow-card"
+          className="flex min-w-0 flex-[1_1_320px] flex-col rounded-card-lg border border-line-faint bg-white px-5 py-5 shadow-card"
         >
           <h2 id="h-wait" className="text-section">
             Paiements en attente
+            {pendingLeft.length > 0 && (
+              <span className="ml-2 text-[13px] font-semibold text-ink-500">
+                {pendingLeft.length}
+              </span>
+            )}
           </h2>
-          <ul className="mt-2">
-            <AnimatePresence initial={false}>
-              {pendingLeft.map((p) => (
-                <motion.li
-                  key={p.seanceId}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4, ease: EASE_SOFT }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex items-center justify-between gap-3 border-b border-[#EDF0F6] py-3">
-                    <Link to={`/patients/${p.patientId}?seance=${p.seanceId}`} className="min-w-0">
-                      <span className="block truncate font-bold">{p.nom}</span>
-                      <span className="block text-[13px] text-ink-500">
-                        Séance du {formatIsoDateFr(p.date).slice(0, 5)} ·{' '}
-                        {formatEurosShort(p.montantCents)} · virement
-                        {p.numero ? ` · facture ${p.numero}` : ''}
-                      </span>
-                    </Link>
-                    <Button
-                      size="sm"
-                      onClick={async () => {
-                        if (await window.api.dashboard.markReceived(p.seanceId)) {
-                          setPaid((s) => new Set(s).add(p.seanceId))
-                          toast.show(`Virement de ${p.nom} reçu`)
-                        }
-                      }}
-                    >
-                      Marquer reçu
-                    </Button>
-                  </div>
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
-          {view && pendingLeft.length === 0 && (
-            <p className="flex items-center gap-2 py-4 text-[14px] font-bold text-aqua-ink">
-              <Icon name="check" size={17} strokeWidth={3} />
-              Tout est réglé.
-            </p>
-          )}
+          {/* The list scrolls inside the card: the card keeps the height of the chart. */}
+          <div className="relative mt-2 min-h-[240px] flex-1">
+            <ul
+              tabIndex={pendingLeft.length > 4 ? 0 : undefined}
+              aria-label="Liste des paiements en attente"
+              className="absolute inset-0 overflow-y-auto overscroll-contain rounded-control pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              <AnimatePresence initial={false}>
+                {pendingLeft.map((p) => (
+                  <motion.li
+                    key={p.seanceId}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.4, ease: EASE_SOFT }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between gap-3 border-b border-[#EDF0F6] py-3">
+                      <Link
+                        to={`/patients/${p.patientId}?seance=${p.seanceId}`}
+                        className="min-w-0"
+                      >
+                        <span className="block truncate font-bold">{p.nom}</span>
+                        <span className="block text-[13px] text-ink-500">
+                          Séance du{' '}
+                          {p.date.startsWith(today.slice(0, 4))
+                            ? formatIsoDateFr(p.date).slice(0, 5)
+                            : formatIsoDateFr(p.date)}{' '}
+                          · {formatEurosShort(p.montantCents)} · virement
+                          {p.numero ? ` · facture ${p.numero}` : ''}
+                        </span>
+                      </Link>
+                      <Button
+                        size="sm"
+                        onClick={async () => {
+                          if (await window.api.dashboard.markReceived(p.seanceId)) {
+                            setPaid((s) => new Set(s).add(p.seanceId))
+                            toast.show(`Virement de ${p.nom} reçu`)
+                          }
+                        }}
+                      >
+                        Marquer reçu
+                      </Button>
+                    </div>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+              {view && pendingLeft.length === 0 && (
+                <li className="flex items-center gap-2 py-4 text-[14px] font-bold text-aqua-ink">
+                  <Icon name="check" size={17} strokeWidth={3} />
+                  Tout est réglé.
+                </li>
+              )}
+            </ul>
+          </div>
         </motion.section>
       </div>
 
@@ -308,5 +386,40 @@ export function DashboardPage() {
         </ul>
       </motion.section>
     </Page>
+  )
+}
+
+/** « 2026 au 24/10 : 28 400 € · 2025 à la même date : 25 100 € (+13 %) ». */
+function YearSummary({ years: y }: { years: YearComparison }) {
+  const now = y.toDate
+  const cents = now ? now.cents : y.totalCents
+  const previous = now ? now.previousCents : y.previousTotalCents
+  const evolution = evolutionLabel(cents, previous)
+  const until = now ? `${now.until.slice(3, 5)}/${now.until.slice(0, 2)}` : ''
+  return (
+    <p className="mt-1 text-[13px] text-ink-600">
+      <b className="text-ink-900">
+        {y.year}
+        {now ? ` au ${until}` : ''} : {formatEurosShort(cents)}
+      </b>{' '}
+      · {y.year - 1}
+      {now ? ' à la même date' : ''} : {formatEurosShort(previous)}
+      {evolution && (
+        <span
+          className={cn(
+            'ml-1.5 rounded-pill px-2 py-0.5 text-[12px] font-bold',
+            cents >= previous ? 'bg-aqua-50 text-aqua-ink' : 'bg-amber-50 text-amber-ink',
+          )}
+        >
+          {evolution}
+        </span>
+      )}
+      {now && (
+        <span className="text-ink-500">
+          {' '}
+          · {y.year - 1} sur l’année : {formatEurosShort(y.previousTotalCents)}
+        </span>
+      )}
+    </p>
   )
 }

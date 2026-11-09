@@ -4,6 +4,7 @@ import type {
   BudgetSettings,
   ExceptionalExpense,
   ModeRecap,
+  RealisedBridge,
 } from '../domain/bilan'
 
 /** R-27 · Bilan mensuel. Amounts in cents. */
@@ -20,6 +21,8 @@ export interface BilanView {
   recap: ModeRecap[]
   includedCount: number
   revenueCents: number
+  /** From the dashboard figure (achieved) to this statement (cashed). */
+  realised: RealisedBridge
   budget: BudgetSettings
   exceptional: ExceptionalExpense[]
   result: BudgetResult

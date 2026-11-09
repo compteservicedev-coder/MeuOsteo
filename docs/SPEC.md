@@ -183,15 +183,16 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 ---
 
 ## 7. Tableau de bord (`Dashboard.dc.html`)
-- **Indicateurs**, animés au chargement (compteurs) : séances du mois (comparées au mois précédent), chiffre d'affaires du mois et de l'année, nouveaux patients, montant en attente de paiement.
-- **Graphique** : chiffre d'affaires des 12 derniers mois en barres qui montent à l'affichage. Le mois en cours est mis en avant, et la valeur s'affiche au survol.
-- **Paiements en attente** : liste avec un bouton « Marquer reçu » ; la ligne se replie une fois traitée.
+- **Indicateurs**, animés au chargement (compteurs) : séances du mois (comparées au mois précédent), chiffre d'affaires **réalisé** du mois (séances réalisées, par date de séance, payées ou non ; « dont X € en attente de virement »), nouveaux patients, montant en attente de paiement.
+- **Graphique « Chiffre d'affaires AAAA vs AAAA−1 »** : les 12 mois de l'année civile, deux barres par mois (l'année et la précédente), valeurs au survol, mois en cours mis en avant. Navigation ‹ année › (de la première année d'activité à l'année en cours). Résumé : pour l'année en cours, total à date comparé à l'année précédente **à la même date** (évolution en %), et total de l'année précédente ; pour une année passée, les deux totaux.
+- **Paiements en attente** : liste avec un bouton « Marquer reçu » ; la ligne se replie une fois traitée. La carte garde la hauteur du graphique et la liste défile à l'intérieur (ascenseur), pour que la page ne s'allonge pas.
 - **Dernières factures.**
 
 ### 7.1 Bilan mensuel (R-27)
 - **Mois** : navigation ‹ mois › ; « Réglages du calcul » ; « Exporter (Excel) » (feuilles Encaissements, Récapitulatif, Épargne et salaire).
 - **Encaissements du mois** : une ligne par séance réalisée et encaissée dans le mois, avec une case « retenue » (cochée par défaut), la date d'encaissement, le patient (lien vers la fiche), le moyen de paiement (liste modifiable), le montant et le n° de facture. Les virements attendus pour des séances du mois apparaissent « En attente », décochés. « Tout cocher / Tout décocher ».
 - **Par moyen de paiement** : nombre et total des lignes retenues pour espèces, chèque, virement, autre ; total retenu.
+- **Réalisé et encaissé** : passage du chiffre du tableau de bord (séances réalisées dans le mois) au total retenu du bilan : − virements encore attendus, − virements reçus un autre mois, + virements reçus ce mois pour des séances antérieures, ± lignes cochées ou décochées à la main. Seules les lignes non nulles s'affichent.
 - **Épargne & salaire** : CA retenu − cotisations (% du CA) − réserve de sécurité (% du CA) − 1/12 des frais fixes annuels − provisions = **à garder sur le compte pro** ; puis − frais fixes mensuels − dépenses exceptionnelles du mois = **salaire possible**, ou « Mois non couvert : il manque X ».
 - **Dépenses exceptionnelles du mois** : libellé et montant, ajout et retrait.
 - **Réglages du calcul** (communs à tous les mois) : taux de cotisations, taux de réserve, frais fixes et provisions (libellé, montant, par mois ou par an).
@@ -291,6 +292,7 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 - **R-27 · Bilan mensuel** :
   - **Mois d'une séance** : le mois de son encaissement. Espèces, chèque ou paiement non renseigné : le jour de la séance. Virement reçu : le jour où il est marqué reçu (`seances.paiement_recu_le`, sinon la date d'acquittement de la facture, sinon le jour de la séance). Virement en attente : pas encaissé, la ligne apparaît décochée dans le mois de la séance. Les séances annulées et gratuites ne comptent pas.
   - **Choix du bilan** : cocher ou décocher une ligne et corriger son moyen de paiement ne modifient **que le bilan** (table `monthly_statements`), jamais la séance ni la facture.
+  - **Réalisé et encaissé** : réalisé − attendus − reçus un autre mois + reçus pour des séances antérieures + choix manuels = total retenu, au centime près (les choix manuels sont le reste).
   - **Calcul** : montants en centimes, pourcentages au centième, montants annuels ramenés au mois (÷ 12, arrondi au centime). Le salaire possible n'est jamais négatif : le manque est affiché à la place.
   - **Journal** : aucun événement (R-20).
 

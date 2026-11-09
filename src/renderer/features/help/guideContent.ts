@@ -432,6 +432,20 @@ export const GUIDE: GuideSection[] = [
         ],
       },
       {
+        q: 'Pourquoi le chiffre du tableau de bord diffère-t-il de celui du bilan ?',
+        a: [
+          'Ils ne mesurent pas la même chose. Le tableau de bord compte le chiffre d’affaires réalisé : les séances faites dans le mois, payées ou non. Le bilan compte l’argent encaissé dans le mois.',
+          'L’écart vient des virements encore attendus, des virements reçus un autre mois, et des séances que vous avez cochées ou décochées dans le bilan. L’encart « Réalisé et encaissé » du bilan détaille ce passage, montant par montant.',
+        ],
+      },
+      {
+        q: 'Comment comparer mon année avec la précédente ?',
+        a: [
+          'Sur le Tableau de bord, le graphique montre chaque mois deux barres : l’année affichée (en bleu) et la précédente (en gris). Survolez un mois pour lire les deux montants.',
+          'Pour l’année en cours, le résumé compare le total à ce jour avec l’année précédente à la même date, puis rappelle le total de l’année précédente. Les flèches ‹ › changent d’année.',
+        ],
+      },
+      {
         q: 'Comment est calculé « À garder sur le compte pro » et le salaire possible ?',
         a: [
           'Renseignez une fois pour toutes « Réglages du calcul » : votre taux de cotisations (donné par l’URSSAF ou votre comptable), une réserve de sécurité facultative, vos frais fixes et vos provisions, chacun par mois ou par an.',

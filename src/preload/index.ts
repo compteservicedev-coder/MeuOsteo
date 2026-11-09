@@ -134,6 +134,7 @@ const api: MeuOsteoApi = {
   dashboard: {
     get: () => invoke('dashboard:get'),
     markReceived: (id) => invoke('dashboard:mark-received', id),
+    year: (year) => invoke('dashboard:year', year),
   },
   backup: {
     getStatus: () => invoke('backup:get-status'),

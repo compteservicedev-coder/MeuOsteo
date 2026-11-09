@@ -60,6 +60,9 @@ export function registerPilotageHandlers(register: ReturnType<typeof createRegis
   let pendingRestore: { fileId: string; path: string } | null = null
 
   register('dashboard:get', none, ({ dashboard }) => dashboard.view())
+  register('dashboard:year', z.tuple([z.number().int().min(1900).max(2200)]), ({ dashboard }, y) =>
+    dashboard.year(y),
+  )
   register('dashboard:mark-received', z.tuple([idSchema]), ({ dashboard }, id) =>
     dashboard.markReceived(id),
   )

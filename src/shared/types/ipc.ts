@@ -68,6 +68,7 @@ import type {
   EmailPreview,
 } from './documents'
 import type { BilanView } from './bilan'
+import type { YearComparison } from '../domain/revenue'
 import type { UpdateStatus } from './updates'
 import type { BudgetSettings, ExceptionalExpense, LineOverride } from '../domain/bilan'
 import type { MergeComparison, MergeRequest, MergeResult, ReconcileTasks } from './reconcile'
@@ -212,6 +213,7 @@ export interface IpcInvokeContract {
   'updates:open': { args: []; result: void }
   'dashboard:get': { args: []; result: DashboardView }
   'dashboard:mark-received': { args: [seanceId: string]; result: boolean }
+  'dashboard:year': { args: [year: number]; result: YearComparison }
   'backup:get-status': { args: []; result: BackupStatus }
   'backup:run': { args: []; result: BackupRunResult }
   'backup:choose-folder': { args: []; result: BackupStatus }
@@ -370,6 +372,7 @@ export interface MeuOsteoApi {
   dashboard: {
     get(): Promise<DashboardView>
     markReceived(seanceId: string): Promise<boolean>
+    year(year: number): Promise<YearComparison>
   }
   backup: {
     getStatus(): Promise<BackupStatus>

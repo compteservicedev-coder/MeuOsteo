@@ -5,6 +5,7 @@
 import { and, desc, eq, isNull, lte, sql } from 'drizzle-orm'
 import { isoDateInParis } from '@shared/domain/dates'
 import { invoiceStatusKey } from '@shared/domain/invoice'
+import { compareYears, type YearComparison } from '@shared/domain/revenue'
 import type { DashboardView, PendingPayment } from '@shared/types/pilotage'
 import type { AppDatabase } from '../db/client'
 import { factures, patients, seances } from '../db/schema'
@@ -51,6 +52,24 @@ export class DashboardService {
       .all()
   }
 
+  /** Revenue of `year` next to `year - 1`, month by month (done sessions, by session date). */
+  year(year: number): YearComparison {
+    const today = isoDateInParis(this.now())
+    const rows = this.db.all<{ month: string; cents: number }>(
+      sql`SELECT substr(date, 1, 7) AS month, coalesce(sum(tarif_cents), 0) AS cents
+          FROM seances WHERE status = 'done' AND date >= ${`${year - 1}-01-01`}
+          AND date <= ${`${year}-12-31`} AND date <= ${today}
+          GROUP BY month`,
+    )
+    const sameDayLastYear = `${year - 1}-${today.slice(5)}`
+    const previousToDate =
+      this.db.get<{ cents: number }>(
+        sql`SELECT coalesce(sum(tarif_cents), 0) AS cents FROM seances
+            WHERE status = 'done' AND date >= ${`${year - 1}-01-01`} AND date <= ${sameDayLastYear}`,
+      )?.cents ?? 0
+    return compareYears(year, rows, today, previousToDate)
+  }
+
   view(): DashboardView {
     const today = isoDateInParis(this.now())
     const month = monthOf(today)
@@ -73,6 +92,9 @@ export class DashboardService {
           AND created_at >= ${`${month}-01`}`,
     )
     const pending = this.pendingPayments()
+    const firstYear = this.db.get<{ d: string | null }>(
+      sql`SELECT min(date) AS d FROM seances WHERE status = 'done'`,
+    )?.d
     const last = this.db
       .select()
       .from(factures)
@@ -91,6 +113,11 @@ export class DashboardService {
           )?.n ?? 0,
       },
       yearRevenueCents: yearRevenue?.cents ?? 0,
+      monthPendingCents: pending
+        .filter((p) => monthOf(p.date) === month)
+        .reduce((n, p) => n + p.montantCents, 0),
+      years: this.year(Number(year)),
+      firstYear: firstYear ? Number(firstYear.slice(0, 4)) : Number(year),
       pendingCents: pending.reduce((n, p) => n + p.montantCents, 0),
       revenueByMonth: months.map((m) => ({ month: m, cents: byMonth.get(m)?.cents ?? 0 })),
       pending,
