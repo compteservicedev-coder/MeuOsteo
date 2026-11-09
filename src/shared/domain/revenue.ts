@@ -56,3 +56,20 @@ export function evolutionLabel(cents: number, previousCents: number): string | n
   const pct = Math.round(((cents - previousCents) / previousCents) * 100)
   return `${pct >= 0 ? '+' : '−'}${Math.abs(pct)} %`
 }
+
+/**
+ * Round thresholds for the revenue axis (dashed guide lines): steps of 1, 2, 2.5 or 5 × 10ⁿ euros,
+ * about four lines above zero, the last one at or above `maxCents`.
+ */
+export function revenueTicks(maxCents: number, target = 4): number[] {
+  if (maxCents <= 0) return [0, 100_00]
+  const raw = maxCents / target
+  const pow = 10 ** Math.floor(Math.log10(raw))
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * pow).find((s) => s >= raw)!
+  const ticks: number[] = []
+  for (let v = 0; v < maxCents + step; v += step) {
+    ticks.push(Math.round(v))
+    if (v >= maxCents) break
+  }
+  return ticks
+}

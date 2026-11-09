@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compareYears, evolutionLabel } from './revenue'
+import { compareYears, evolutionLabel, revenueTicks } from './revenue'
 
 describe('Tableau de bord · année comparée à la précédente', () => {
   const monthly = [
@@ -28,5 +28,11 @@ describe('Tableau de bord · année comparée à la précédente', () => {
     expect(evolutionLabel(113_00, 100_00)).toBe('+13 %')
     expect(evolutionLabel(96_00, 100_00)).toBe('−4 %')
     expect(evolutionLabel(10_00, 0)).toBeNull()
+  })
+
+  it('seuils ronds pour les pointillés de l’axe', () => {
+    expect(revenueTicks(3030_00)).toEqual([0, 1000_00, 2000_00, 3000_00, 4000_00])
+    expect(revenueTicks(1800_00)).toEqual([0, 500_00, 1000_00, 1500_00, 2000_00])
+    expect(revenueTicks(0)).toEqual([0, 100_00])
   })
 })

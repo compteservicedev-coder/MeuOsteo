@@ -441,7 +441,7 @@ export const GUIDE: GuideSection[] = [
       {
         q: 'Comment comparer mon année avec la précédente ?',
         a: [
-          'Sur le Tableau de bord, le graphique montre chaque mois deux barres : l’année affichée (en bleu) et la précédente (en gris). Survolez un mois pour lire les deux montants.',
+          'Sur le Tableau de bord, le graphique relie les points de chaque mois : l’année affichée en bleu, avec son montant au-dessus de chaque point, et la précédente en gris. Les pointillés horizontaux marquent les seuils (1 000 €, 2 000 €…). Survolez un mois pour lire les deux montants et l’évolution.',
           'Pour l’année en cours, le résumé compare le total à ce jour avec l’année précédente à la même date, puis rappelle le total de l’année précédente. Les flèches ‹ › changent d’année.',
         ],
       },

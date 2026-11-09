@@ -16,7 +16,7 @@ Première version publiée : l'application couvre le quotidien du cabinet.
 - **Documents du patient** : radios, comptes-rendus, courriers et e-mails rangés dans la fiche, chiffrés avec la base.
 - **Bilan mensuel** : encaissements du mois, récapitulatif par moyen de paiement, encart « Réalisé et encaissé » qui explique l'écart avec le tableau de bord, calcul « Épargne & salaire », export Excel.
 - **Reprise de l'historique** du classeur Excel MeuOsteo v1.04, avec rapport des anomalies ; séances importées visibles dans le planning.
-- **Tableau de bord** : chiffre d'affaires réalisé du mois (dont virements attendus), année comparée à la précédente mois par mois et à date, paiements en attente dans une liste qui défile.
+- **Tableau de bord** : chiffre d'affaires réalisé du mois (dont virements attendus), courbes de l'année et de la précédente avec valeurs et seuils en pointillés, comparaison à date, paiements en attente dans une liste qui défile.
 - **Sauvegardes chiffrées** à chaque fermeture et restauration, **journal**, **Aide & FAQ** intégrée.
 - **Nouvelle version** : l'application signale quand une version plus récente est disponible (désactivable dans Paramètres > Données & import).
 

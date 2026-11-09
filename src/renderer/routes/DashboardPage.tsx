@@ -12,26 +12,13 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { notifyDataChanged } from '../lib/dataEvents'
 import { useToast } from '../components/toast/toastContext'
 import { Button } from '../components/ui/Button'
+import { RevenueLineChart } from '../features/dashboard/RevenueLineChart'
 import { Icon } from '../components/ui/Icon'
 import { useCountUp } from '../hooks/useCountUp'
 import { cn } from '../lib/cn'
 import { EASE_SOFT, staggerItem } from '../lib/motion'
 import { todayIso } from '../lib/today'
 
-const SHORT_MONTHS = [
-  'Janv.',
-  'Févr.',
-  'Mars',
-  'Avr.',
-  'Mai',
-  'Juin',
-  'Juil.',
-  'Août',
-  'Sept.',
-  'Oct.',
-  'Nov.',
-  'Déc.',
-]
 const BADGE = {
   ok: 'bg-aqua-50 text-aqua-ink',
   wait: 'bg-amber-50 text-amber-ink',
@@ -73,7 +60,6 @@ export function DashboardPage() {
   const toast = useToast()
   const [view, setView] = useState<DashboardView | null>(null)
   const [paid, setPaid] = useState<Set<string>>(new Set())
-  const [hover, setHover] = useState<number | null>(null)
   const [years, setYears] = useState<YearComparison | null>(null)
   const load = useCallback(
     () =>
@@ -96,7 +82,6 @@ export function DashboardPage() {
   const month0 = Number(today.slice(5, 7)) - 1
   const prevName = MONTHS_LONG[(month0 + 11) % 12]!.toLowerCase()
   const diff = m ? m.seances - m.previousSeances : 0
-  const max = Math.max(1, ...(years?.months.flatMap((r) => [r.cents, r.previousCents]) ?? [1]))
   const thisYear = Number(today.slice(0, 4))
 
   return (
@@ -200,73 +185,21 @@ export function DashboardPage() {
           {years && <YearSummary years={years} />}
           <div className="mt-2 flex items-center gap-4 text-[12px] text-ink-500">
             <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-[3px] bg-[linear-gradient(180deg,#22C3D6,#1F4FD8)]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#1F4FD8]" />
               {years?.year}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#CBD3E1]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#94A3B8]" />
               {years ? years.year - 1 : ''}
             </span>
-            <span>· survolez un mois</span>
+            <span>· survolez un mois pour comparer</span>
           </div>
-          <div
-            role="list"
-            aria-label="Chiffre d’affaires par mois"
-            className="mt-3 flex h-[210px] items-end gap-1.5"
-          >
-            {years?.months.map((r, i) => {
-              const label = SHORT_MONTHS[r.month - 1]!
-              const current = years.year === thisYear && i === month0
-              const shown = hover === i || current
-              return (
-                <div
-                  key={`${years.year}-${r.month}`}
-                  role="listitem"
-                  aria-label={`${label} ${years.year} : ${formatEurosShort(r.cents)} ; ${years.year - 1} : ${formatEurosShort(r.previousCents)}`}
-                  className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1"
-                  onMouseEnter={() => setHover(i)}
-                  onMouseLeave={() => setHover(null)}
-                >
-                  <span
-                    className={cn(
-                      'flex flex-col items-center text-[10px] font-bold tabular-nums leading-tight transition-opacity',
-                      shown ? 'opacity-100' : 'opacity-0',
-                    )}
-                  >
-                    <span className="text-ink-900">{formatEurosShort(r.cents)}</span>
-                    <span className="text-ink-500">{formatEurosShort(r.previousCents)}</span>
-                  </span>
-                  <div className="flex w-full max-w-[44px] items-end justify-center gap-[3px]">
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: Math.max(2, Math.round((r.previousCents / max) * 150)) }}
-                      transition={{ duration: 0.6, delay: 0.2 + i * 0.04, ease: EASE_SOFT }}
-                      className="w-1/2 rounded-[6px_6px_2px_2px] bg-[#CBD3E1]"
-                    />
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{
-                        height:
-                          years.year === thisYear && i > month0
-                            ? 0
-                            : Math.max(2, Math.round((r.cents / max) * 150)),
-                      }}
-                      transition={{ duration: 0.6, delay: 0.25 + i * 0.04, ease: EASE_SOFT }}
-                      className="w-1/2 rounded-[6px_6px_2px_2px] bg-[linear-gradient(180deg,#22C3D6,#1F4FD8)] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"
-                    />
-                  </div>
-                  <span
-                    className={cn(
-                      'text-[11px]',
-                      current ? 'font-extrabold text-royal-700' : 'text-ink-500',
-                    )}
-                  >
-                    {label}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
+          {years && (
+            <RevenueLineChart
+              years={years}
+              currentMonth={years.year === thisYear ? month0 : null}
+            />
+          )}
         </motion.section>
 
         <motion.section
