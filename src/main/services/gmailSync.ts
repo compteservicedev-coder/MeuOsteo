@@ -82,7 +82,9 @@ export function imapErrorOf(error: unknown): NonNullable<SyncStatus['error']> {
     mailboxMissing?: boolean
   }
   if (e?.authenticationFailed) return 'auth'
-  if (e?.serverResponseCode === 'NONEXISTENT' || e?.mailboxMissing) return 'label'
+  // imapflow raises NotFound when STATUS targets a label that does not exist.
+  if (e?.serverResponseCode === 'NONEXISTENT' || e?.mailboxMissing || e?.code === 'NotFound')
+    return 'label'
   if (NETWORK_CODES.has(e?.code ?? '')) return 'network'
   return 'other'
 }

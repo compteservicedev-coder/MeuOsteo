@@ -61,7 +61,8 @@ const LOGIN_ERRORS: Record<string, string> = {
   auth: 'Adresse ou mot de passe d’application refusé par Gmail',
   network:
     'Gmail injoignable : vérifiez la connexion internet (un pare-feu peut bloquer le port 993)',
-  label: 'Connexion réussie, mais le libellé est introuvable dans Gmail',
+  label:
+    'Connexion réussie, mais ce libellé n’existe pas dans Gmail : indiquez le nom exact d’un libellé (par exemple « Doctolib »), pas l’objet des e-mails',
   other: 'Connexion à Gmail impossible',
 }
 

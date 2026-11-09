@@ -43,6 +43,7 @@ describe('connexion Gmail : classement des erreurs IMAP', () => {
     }
     expect(imapErrorOf({ authenticationFailed: true })).toBe('auth')
     expect(imapErrorOf({ serverResponseCode: 'NONEXISTENT' })).toBe('label')
+    expect(imapErrorOf({ code: 'NotFound' })).toBe('label')
     expect(imapErrorOf({ code: 'ParserError' })).toBe('other')
   })
 })
