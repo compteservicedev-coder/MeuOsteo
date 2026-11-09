@@ -57,8 +57,6 @@ function startApp(): void {
       started = startRuntime({ allowUnprotectedKey: !app.isPackaged })
       clearOpenedDocuments()
       resolveStartup(started)
-      // Gmail: at start-up, then at the chosen frequency (GMAIL_DOCTOLIB.md §2).
-      if (started.ok) started.runtime.sync.start()
       // R-28: is a newer version published? At start-up, then each day (installed app only:
       // development and end-to-end runs stay offline).
       if (started.ok && app.isPackaged) {

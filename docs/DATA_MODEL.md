@@ -82,6 +82,7 @@ Index unique partiel : un seul `seance_id` avec `statut = 'emise'`.
 `id`, `facture_id`, `canal` (`email` \| `print`), `destinataire`, `at`, `ok` (bool), `error`.
 
 ## doctolib_rdv
+> **Inutilisée depuis la 0.2.0** (lecture Doctolib retirée), comme `contact_memory` et `seances.doctolib_key` : conservées pour ne pas imposer de migration.
 | colonne | type | notes |
 |---|---|---|
 | key | TEXT PK | hash stable : (date, heure, nom affiché, téléphone) |

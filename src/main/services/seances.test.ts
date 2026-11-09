@@ -70,7 +70,7 @@ beforeEach(() => {
 })
 
 describe('séances de la fiche', () => {
-  it('R-08 « Nouvelle » crée une séance hors Doctolib du jour, au tarif par défaut', () => {
+  it('R-08 « Nouvelle » crée une séance du jour, au tarif par défaut', () => {
     const result = service.createToday(patientId)
     expect(result).toMatchObject({
       ok: true,

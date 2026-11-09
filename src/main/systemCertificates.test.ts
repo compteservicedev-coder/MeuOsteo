@@ -28,22 +28,3 @@ describe('connexion Gmail : diagnostic', () => {
     expect(isCertificateCode('')).toBe(false)
   })
 })
-
-describe('connexion Gmail : classement des erreurs IMAP', () => {
-  it('classe les délais dépassés et connexions coupées d’imapflow en problème de réseau', async () => {
-    const { imapErrorOf } = await import('./services/gmailSync')
-    for (const code of [
-      'CONNECT_TIMEOUT',
-      'GREETING_TIMEOUT',
-      'ETIMEOUT',
-      'ClosedAfterConnectTLS',
-      'EHOSTUNREACH',
-    ]) {
-      expect(imapErrorOf({ code }), code).toBe('network')
-    }
-    expect(imapErrorOf({ authenticationFailed: true })).toBe('auth')
-    expect(imapErrorOf({ serverResponseCode: 'NONEXISTENT' })).toBe('label')
-    expect(imapErrorOf({ code: 'NotFound' })).toBe('label')
-    expect(imapErrorOf({ code: 'ParserError' })).toBe('other')
-  })
-})

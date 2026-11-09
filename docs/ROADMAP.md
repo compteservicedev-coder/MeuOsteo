@@ -39,14 +39,10 @@ Chaque lot est livrable : une PR, la CI au vert, un `.exe` téléchargeable, pui
 
 **Fin** : on émet, on envoie, on supprime et on refacture. La numérotation est continue sous test : concurrence et transaction, aucun numéro perdu.
 
-## Lot 4 · Planning et Doctolib
+## Lot 4 · Planning
 - **Planning sur deux semaines** (SPEC §3) : navigation, calendrier, blocages R-23, fenêtre « Nouveau RDV » R-24 (grille de créneaux libres).
-- **Synchronisation Gmail en IMAP** (GMAIL_DOCTOLIB.md §2 – 3), avec le cadre des parseurs. **Les vrais parseurs nécessitent les `.eml` d'exemple.**
-- **Rapprochement** R-09 et R-18 : tâches « Nouveau patient » et « Plusieurs fiches possibles », mémorisation des choix.
-- **Import de l'export Doctolib** en secours (§4).
-- **Paramètres** : onglet Messagerie Gmail complet (test en 3 étapes), onglet Agenda.
-
-**Fin** : avec les fixtures, chaque type d'e-mail produit la bonne séance. Le retraitement est idempotent, et les tâches se résolvent toutes.
+- **Paramètres** : onglet Messagerie Gmail (envoi, test en 2 étapes), onglet Agenda.
+- *Retiré en 0.2.0* : synchronisation des RDV Doctolib par Gmail (IMAP), import de l'export Doctolib et rapprochement R-09 / R-18.
 
 ## Lot 5 · Pilotage et finitions
 - **Tableau de bord** (SPEC §7).
@@ -56,8 +52,6 @@ Chaque lot est livrable : une PR, la CI au vert, un `.exe` téléchargeable, pui
 - **Contrôles finaux** : passe d'accessibilité et de performance (5 000 patients fictifs), et tests Playwright des parcours critiques : ouverture → séance → facture → envoi.
 
 ## Questions en attente (à demander à l'utilisatrice)
-1. **E-mails Doctolib** : des exemples `.eml` anonymisés de chaque type (nouveau RDV, modification, annulation). C'est **bloquant pour le lot 4**.
-2. **Informations du cabinet** pour la facture : nom, adresse, ADELI, SIRET, signature.
-3. **Facturation de l'historique** : faut-il permettre de facturer des séances anciennes importées ? Choix par défaut : oui, la date d'émission étant celle du jour.
-4. **Absences dans l'export Doctolib** : un export réel permettra de vérifier s'il contient les absences.
-5. **Dépôt GitHub** : public ou privé ? Cela décide des mises à jour automatiques.
+1. **Informations du cabinet** pour la facture : nom, adresse, ADELI, SIRET, signature.
+2. **Facturation de l'historique** : faut-il permettre de facturer des séances anciennes importées ? Choix par défaut : oui, la date d'émission étant celle du jour.
+3. **Dépôt GitHub** : public ou privé ? Cela décide des mises à jour automatiques.

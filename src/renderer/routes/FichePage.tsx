@@ -301,9 +301,7 @@ function FicheScreen({ id }: { id: string }) {
     }
     applySeance(result.seance)
     setBin(null)
-    toast.show(
-      `Séance du ${dateFr} annulée${selected.source === 'doctolib' ? ' · pensez à Doctolib' : ''}`,
-    )
+    toast.show(`Séance du ${dateFr} annulée`)
   }
 
   const restore = async () => {
@@ -514,8 +512,7 @@ function FicheScreen({ id }: { id: string }) {
           >
             <h2 className="text-section">Aucune séance</h2>
             <p className="text-[15px] text-ink-600">
-              Les RDV Doctolib apparaîtront ici. « Nouvelle » crée une séance du jour, hors
-              Doctolib.
+              « Nouvelle » crée une séance du jour. Les RDV posés dans le Planning apparaîtront ici.
             </p>
           </motion.section>
         )}

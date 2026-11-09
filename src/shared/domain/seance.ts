@@ -75,12 +75,9 @@ export interface ListTagInput {
   invoiced: boolean
 }
 
-/** Tag of a list item: « Doctolib · 11:30 », « Hors Doctolib » or « Facturée ». */
+/** Tag of a list item: « RDV · 11:30 », « Planifiée » or « Facturée ». */
 export function listTag(s: ListTagInput): string | null {
-  if (s.status === 'planned') {
-    if (s.source === 'doctolib') return s.heure ? `Doctolib · ${s.heure}` : 'Doctolib'
-    return 'Hors Doctolib'
-  }
+  if (s.status === 'planned') return s.heure ? `RDV · ${s.heure}` : 'Planifiée'
   return s.invoiced ? 'Facturée' : null
 }
 
@@ -152,7 +149,7 @@ export function existingSessionMessage(s: {
   source: SeanceSource
   heure: string | null
 }): string {
-  const rdv = s.source === 'doctolib' ? ` (RDV Doctolib${s.heure ? ` ${s.heure}` : ''})` : ''
+  const rdv = s.heure ? ` (RDV ${s.heure})` : ''
   return `Une séance existe déjà le ${formatIsoDateFr(s.date)}${rdv} : ouverte au lieu d’en créer une seconde`
 }
 

@@ -49,23 +49,17 @@ export const emailTemplateSchema = z.object({ subject: z.string(), body: z.strin
 export const invoiceStartSchema = z.record(z.string(), z.number().int().positive())
 
 /** `gmail` setting. The application password is encrypted by safeStorage (base64). */
+/** Older versions also stored a label, a frequency and IMAP positions: ignored (stripped). */
 export const gmailSettingSchema = z.object({
   address: z.string(),
   passwordEnc: z.string().nullable(),
-  label: z.string(),
-  frequency: z.union([z.literal(5), z.literal(15), z.literal(0)]),
   connected: z.boolean(),
-  /** Last IMAP UID read, per mailbox UIDVALIDITY (lot 4). */
-  lastUid: z.record(z.string(), z.number().int()),
 })
 export type GmailSetting = z.infer<typeof gmailSettingSchema>
 export const DEFAULT_GMAIL: GmailSetting = {
   address: '',
   passwordEnc: null,
-  label: 'Doctolib',
-  frequency: 15,
   connected: false,
-  lastUid: {},
 }
 
 /** `agenda` setting (Paramètres > Agenda, SPEC §8.4). */
@@ -75,8 +69,4 @@ export const agendaSettingSchema = z.object({
   closing: z.string().regex(/^\d{2}:\d{2}$/),
   durationMinutes: z.union([z.literal(45), z.literal(60), z.literal(75)]),
   weeks: z.union([z.literal(1), z.literal(2)]),
-  autoAttach: z.boolean(),
 })
-
-/** `dismissed_alerts`: « À rapprocher » alerts the practitioner has acknowledged. */
-export const dismissedAlertsSchema = z.array(z.string())

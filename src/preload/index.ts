@@ -117,22 +117,6 @@ const api: MeuOsteoApi = {
     get: () => invoke('agenda:get'),
     save: (settings) => invoke('agenda:save', settings),
   },
-  doctolib: {
-    candidates: (key) => invoke('doctolib:candidates', key),
-    attach: (key, patientId, remember) => invoke('doctolib:attach', key, patientId, remember),
-    createAndAttach: (key, draft) => invoke('doctolib:create-and-attach', key, draft),
-    dismissAlert: (id) => invoke('doctolib:dismiss-alert', id),
-    importExport: () => invoke('doctolib:import-export'),
-  },
-  sync: {
-    getStatus: () => invoke('sync:get-status'),
-    run: () => invoke('sync:run'),
-    onStatus: (listener) => {
-      const handler = (_event: unknown, status: Parameters<typeof listener>[0]) => listener(status)
-      ipcRenderer.on('sync:status', handler)
-      return () => ipcRenderer.removeListener('sync:status', handler)
-    },
-  },
   bilan: {
     view: (month) => invoke('bilan:view', month),
     setLine: (month, seanceId, change) => invoke('bilan:set-line', month, seanceId, change),

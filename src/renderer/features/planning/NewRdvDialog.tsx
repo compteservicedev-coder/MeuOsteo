@@ -29,7 +29,7 @@ interface NewRdvDialogProps {
   onCreated: (r: { seanceId: string; date: string; heure: string; nom: string }) => void
 }
 
-/** « Nouveau rendez-vous » (SPEC §3, R-24): a manual session, never written to Doctolib. */
+/** « Nouveau rendez-vous » (SPEC §3, R-24): a manual session. */
 export function NewRdvDialog({ date, onClose, onCreated }: NewRdvDialogProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<PatientListItem[]>([])
@@ -116,7 +116,7 @@ export function NewRdvDialog({ date, onClose, onCreated }: NewRdvDialogProps) {
       open={date !== null}
       onOpenChange={(o) => !o && onClose()}
       title="Nouveau rendez-vous"
-      description="Planning · hors Doctolib"
+      description="Planning"
       className="max-w-[640px]"
     >
       <div className="flex flex-col gap-4">
@@ -298,9 +298,8 @@ export function NewRdvDialog({ date, onClose, onCreated }: NewRdvDialogProps) {
         </div>
 
         <p className="rounded-2xl border border-[#E9C9A0] bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] px-4 py-3 text-[13px] leading-normal text-[#5A3205]">
-          <b>Pensez à Doctolib :</b> réservez aussi ce créneau dans Doctolib pour qu’un patient ne
-          puisse pas le prendre en ligne. La séance « Hors Doctolib » est créée tout de suite dans
-          la fiche patient.
+          <b>Agenda en ligne :</b> si vous en utilisez un, réservez-y aussi ce créneau pour qu’un
+          patient ne puisse pas le prendre. La séance est créée tout de suite dans la fiche patient.
         </p>
 
         <div className="flex justify-end gap-2">

@@ -14,10 +14,8 @@ import { EASE_SOFT } from '../../lib/motion'
 
 const CARD_STYLES: Record<CardKind, string> = {
   off: 'border border-dashed border-[#8E99B3] bg-white text-ink-500 line-through',
-  neu: 'border border-[#E9C9A0] bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] text-[#5A3205] shadow-[inset_0_1px_0_#FFFFFF,0_6px_14px_-8px_rgba(138,75,8,0.5)]',
   past: 'border border-line bg-[linear-gradient(180deg,#F7F9FC,#EDF1F7)] text-ink-600 shadow-[inset_0_1px_0_#FFFFFF,0_3px_8px_-6px_rgba(15,30,70,0.3)]',
   ok: 'border border-[#9FE6D9] bg-[linear-gradient(180deg,#E3FAF5,#C9F2EA)] text-aqua-ink shadow-[inset_0_1px_0_#FFFFFF,0_6px_14px_-8px_rgba(23,51,143,0.4)]',
-  man: 'border border-dashed border-[#8FA9F5] bg-[linear-gradient(180deg,#FFFFFF,#EEF4FF)] text-royal-700 shadow-[inset_0_1px_0_#FFFFFF,0_6px_14px_-8px_rgba(31,79,216,0.45)]',
 }
 
 const BLOCK_STYLE =
@@ -29,18 +27,9 @@ interface WeekGridProps {
   freshId: string | null
   onAdd: (date: string) => void
   onUnblock: (id: string, label: string) => void
-  onReconcile: (key: string) => void
 }
 
-function Card({
-  card,
-  fresh,
-  onReconcile,
-}: {
-  card: PlanningCard
-  fresh: boolean
-  onReconcile: (key: string) => void
-}) {
+function Card({ card, fresh }: { card: PlanningCard; fresh: boolean }) {
   const body = (
     <>
       <span className="text-[12px] font-extrabold tabular-nums">{card.heure ?? '—'}</span>
@@ -53,13 +42,6 @@ function Card({
     CARD_STYLES[card.kind],
     fresh && 'pop',
   )
-  if (card.kind === 'neu' && card.rdvKey) {
-    return (
-      <button type="button" className={cls} onClick={() => onReconcile(card.rdvKey!)}>
-        {body}
-      </button>
-    )
-  }
   return (
     <Link to={`/patients/${card.patientId}?seance=${card.seanceId}`} className={cls}>
       {body}
@@ -68,7 +50,7 @@ function Card({
 }
 
 /** Two rows of days (SPEC §3): « Cette semaine », « Semaine prochaine ». */
-export function WeekGrid({ weeks, today, freshId, onAdd, onUnblock, onReconcile }: WeekGridProps) {
+export function WeekGrid({ weeks, today, freshId, onAdd, onUnblock }: WeekGridProps) {
   return (
     <div className="flex flex-col gap-5">
       {weeks.map((w) => {
@@ -156,21 +138,11 @@ export function WeekGrid({ weeks, today, freshId, onAdd, onUnblock, onReconcile 
                     {full && blockItem(full)}
                     {am && blockItem(am)}
                     {morning.map((c) => (
-                      <Card
-                        key={c.id}
-                        card={c}
-                        fresh={c.id === freshId}
-                        onReconcile={onReconcile}
-                      />
+                      <Card key={c.id} card={c} fresh={c.id === freshId} />
                     ))}
                     {pm && blockItem(pm)}
                     {afternoon.map((c) => (
-                      <Card
-                        key={c.id}
-                        card={c}
-                        fresh={c.id === freshId}
-                        onReconcile={onReconcile}
-                      />
+                      <Card key={c.id} card={c} fresh={c.id === freshId} />
                     ))}
                     {d.cards.length === 0 && d.blocks.length === 0 && (
                       <span className="px-1 text-[12px] text-ink-500">Aucun RDV</span>

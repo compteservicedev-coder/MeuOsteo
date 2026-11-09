@@ -1,45 +1,18 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { describeDuplicateReasons } from '@shared/domain/duplicates'
-import type { DuplicateTask, PendingRdvTask, ReconcileTasks } from '@shared/types/reconcile'
+import type { DuplicateTask, ReconcileTasks } from '@shared/types/reconcile'
 import { Button } from '../../components/ui/Button'
 import { Icon } from '../../components/ui/Icon'
 import { cn } from '../../lib/cn'
 import { notifyDataChanged, useDataChanged } from '../../lib/dataEvents'
 import { EASE_SOFT } from '../../lib/motion'
 import { MergeDialog } from './MergeDialog'
-import { RdvTaskDialog } from './RdvTaskDialog'
-import { Link } from 'react-router-dom'
 
-const KIND_STYLES = {
-  duplicate: 'bg-red-50 text-red-ink',
-  pending_new: 'bg-royal-50 text-royal-700',
-  pending_multi: 'bg-amber-50 text-amber-ink',
-}
-
-const rdvWhen = (r: PendingRdvTask) => {
-  const date = new Date(`${r.date}T12:00:00Z`)
-  const day = new Intl.DateTimeFormat('fr-FR', {
-    weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
-    timeZone: 'UTC',
-  }).format(date)
-  return `RDV ${day}${r.heure ? ` à ${r.heure.replace(/^0/, '')}` : ''}`
-}
-
-/** Panel « À rapprocher » (SPEC §3): each settled case folds away. */
-export function ReconcilePanel({
-  requestedKey = null,
-  onRequestHandled,
-}: {
-  /** A planning card « À rapprocher » was clicked: open its task. */
-  requestedKey?: string | null
-  onRequestHandled?: () => void
-} = {}) {
+/** Panel « À rapprocher » (SPEC §3): possible duplicates (R-19); each settled case folds away. */
+export function ReconcilePanel() {
   const [tasks, setTasks] = useState<ReconcileTasks | null>(null)
   const [open, setOpen] = useState<DuplicateTask | null>(null)
-  const [rdvTask, setRdvTask] = useState<PendingRdvTask | null>(null)
 
   const load = useCallback(
     () =>
@@ -54,21 +27,13 @@ export function ReconcilePanel({
   }, [load])
   useDataChanged(load)
 
-  useEffect(() => {
-    if (!requestedKey || !tasks) return
-    const task = tasks.doctolib.find((t) => t.key === requestedKey)
-    if (task) setRdvTask(task)
-    onRequestHandled?.()
-  }, [requestedKey, tasks, onRequestHandled])
-
   const resolved = useCallback(() => {
     setOpen(null)
-    setRdvTask(null)
     notifyDataChanged()
     void load()
   }, [load])
 
-  const count = tasks ? tasks.duplicates.length + tasks.doctolib.length + tasks.alerts.length : 0
+  const count = tasks ? tasks.duplicates.length : 0
 
   return (
     <aside
@@ -88,56 +53,11 @@ export function ReconcilePanel({
       </h2>
       <ul>
         <AnimatePresence initial={false}>
-          {tasks?.doctolib.map((r) => (
-            <TaskItem
-              key={r.key}
-              kind={r.match === 'pending_new' ? 'Nouveau patient' : 'Plusieurs fiches possibles'}
-              kindStyle={KIND_STYLES[r.match]}
-              title={r.nomAffiche}
-              sub={`${rdvWhen(r)}${r.motif ? ` · ${r.motif}` : ''}`}
-              action={
-                <Button size="sm" onClick={() => setRdvTask(r)}>
-                  {r.match === 'pending_new' ? 'Créer la fiche…' : 'Choisir la fiche…'}
-                </Button>
-              }
-            />
-          ))}
-          {tasks?.alerts.map((a) => (
-            <TaskItem
-              key={a.id}
-              kind="Alerte"
-              kindStyle={KIND_STYLES.pending_multi}
-              title={a.title}
-              sub={a.sub}
-              action={
-                <span className="flex flex-wrap gap-2">
-                  {a.patientId && (
-                    <Link
-                      to={`/patients/${a.patientId}${a.seanceId ? `?seance=${a.seanceId}` : ''}`}
-                      className="btn btn-secondary btn-ink min-h-[44px] rounded-[11px] px-3 text-[14px]"
-                    >
-                      Ouvrir la fiche
-                    </Link>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={async () => {
-                      await window.api.doctolib.dismissAlert(a.id)
-                      resolved()
-                    }}
-                  >
-                    C’est noté
-                  </Button>
-                </span>
-              }
-            />
-          ))}
           {tasks?.duplicates.map((t) => (
             <TaskItem
               key={`${t.a.id}|${t.b.id}`}
               kind="Doublon possible"
-              kindStyle={KIND_STYLES.duplicate}
+              kindStyle="bg-red-50 text-red-ink"
               title={`${t.a.name} · ${t.b.name}`}
               sub={describeDuplicateReasons(t.reasons)}
               action={
@@ -152,15 +72,14 @@ export function ReconcilePanel({
       {tasks && count === 0 && (
         <p className="flex items-center gap-2.5 px-5 py-[22px] text-[14px] font-bold text-aqua-ink">
           <Icon name="check" size={18} strokeWidth={3} />
-          Tout est rattaché, aucun doublon.
+          Aucun doublon possible.
         </p>
       )}
       <p className="px-5 pb-4 pt-3 text-[12px] leading-normal text-ink-500">
-        Les rendez-vous sont rattachés automatiquement quand nom, téléphone et e-mail concordent.
-        Seuls les cas ambigus arrivent ici.
+        Deux fiches qui se ressemblent (même date de naissance, nom proche) arrivent ici pour être
+        comparées et, si besoin, fusionnées.
       </p>
       <MergeDialog task={open} onClose={() => setOpen(null)} onResolved={resolved} />
-      <RdvTaskDialog task={rdvTask} onClose={() => setRdvTask(null)} onResolved={resolved} />
     </aside>
   )
 }

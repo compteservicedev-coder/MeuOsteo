@@ -33,7 +33,7 @@ function transport(credentials: GmailCredentials) {
   })
 }
 
-/** SMTP Gmail (GMAIL_DOCTOLIB.md §2), with the application password kept by safeStorage. */
+/** SMTP Gmail (GMAIL.md), with the application password kept by safeStorage. */
 export function createGmailMailer(credentials: () => GmailCredentials | null): InvoiceMailer & {
   verify(): Promise<SendOutcome>
   sendTest(): Promise<SendOutcome>

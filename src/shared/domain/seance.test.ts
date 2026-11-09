@@ -36,7 +36,7 @@ describe('séances (règles R-01 à R-08)', () => {
     expect(statusLabel({ date: TODAY, status: 'cancelled', paiement: null }, TODAY)).toBe('Annulée')
   })
 
-  it('R-01 étiquette « Facturée » s’il existe une facture active, sinon l’origine du RDV', () => {
+  it('R-01 étiquette « Facturée » s’il existe une facture active, sinon l’heure du RDV', () => {
     expect(listTag({ status: 'done', source: 'doctolib', heure: '11:30', invoiced: true })).toBe(
       'Facturée',
     )
@@ -45,9 +45,9 @@ describe('séances (règles R-01 à R-08)', () => {
     ).toBeNull()
     expect(
       listTag({ status: 'planned', source: 'doctolib', heure: '11:30', invoiced: false }),
-    ).toBe('Doctolib · 11:30')
+    ).toBe('RDV · 11:30')
     expect(listTag({ status: 'planned', source: 'manual', heure: null, invoiced: false })).toBe(
-      'Hors Doctolib',
+      'Planifiée',
     )
   })
 
@@ -117,7 +117,7 @@ describe('séances (règles R-01 à R-08)', () => {
     expect(sameDaySeance(withToday, TODAY)?.id).toBe('c')
     expect(sameDaySeance(withToday, TODAY, 'c')).toBeUndefined()
     expect(existingSessionMessage({ date: TODAY, source: 'doctolib', heure: '11:30' })).toBe(
-      'Une séance existe déjà le 24/10/2026 (RDV Doctolib 11:30) : ouverte au lieu d’en créer une seconde',
+      'Une séance existe déjà le 24/10/2026 (RDV 11:30) : ouverte au lieu d’en créer une seconde',
     )
   })
 })

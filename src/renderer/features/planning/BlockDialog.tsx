@@ -98,12 +98,12 @@ export function BlockDialog({ from, onClose, onBlocked }: BlockDialogProps) {
           className="rounded-control bg-red-50 px-3 py-2.5 text-[14px] font-semibold text-red-ink"
         >
           {preview.conflicts} RDV déjà prévu{preview.conflicts > 1 ? 's' : ''} sur cette période :
-          ils ne sont pas annulés. Prévenez les patients et annulez-les dans Doctolib.
+          ils ne sont pas annulés. Prévenez les patients concernés.
         </p>
       )}
       <p className="rounded-2xl border border-[#E9C9A0] bg-[linear-gradient(180deg,#FFF6EA,#FBE8CF)] px-4 py-3 text-[13px] leading-normal text-[#5A3205]">
-        Pensez à bloquer aussi ces créneaux dans Doctolib pour que les patients ne puissent pas
-        réserver : l’application ne peut pas le faire à votre place.
+        Si vous utilisez un agenda en ligne, bloquez-y aussi ces créneaux pour que les patients ne
+        puissent pas réserver : l’application ne peut pas le faire à votre place.
       </p>
       <div className="flex justify-end gap-2">
         <Button onClick={onClose}>Annuler</Button>

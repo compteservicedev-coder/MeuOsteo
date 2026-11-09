@@ -12,7 +12,7 @@ Première version publiée : l'application couvre le quotidien du cabinet.
 
 - **Patients et séances** : recherche rapide, liste de tous les patients, fiche avec proches liés, commentaire inter-séances, séances verrouillées une fois réalisées.
 - **Facturation** : notes d'honoraires PDF numérotées sans trou, envoi par Gmail, impression, registre filtrable, avoirs, export comptable.
-- **Planning** : rendez-vous Doctolib lus dans Gmail ou importés depuis l'export Doctolib, blocages, rendez-vous hors Doctolib, cas « À rapprocher ».
+- **Planning** : rendez-vous posés sur un créneau libre, blocages de journées ou demi-journées, doublons de fiches « À rapprocher ».
 - **Documents du patient** : radios, comptes-rendus, courriers et e-mails rangés dans la fiche, chiffrés avec la base.
 - **Bilan mensuel** : encaissements du mois, récapitulatif par moyen de paiement, calcul « Épargne & salaire », export Excel.
 - **Reprise de l'historique** du classeur Excel MeuOsteo v1.04, avec rapport des anomalies ; séances importées visibles dans le planning.
@@ -27,11 +27,14 @@ Première version publiée : l'application couvre le quotidien du cabinet.
 
 ### Corrections
 
-- Connexion Gmail : les certificats installés dans Windows sont acceptés, comme dans le navigateur (antivirus qui analysent les e-mails). « Tester la connexion » affiche le code technique d'une erreur et essaie l'envoi même si la lecture échoue.
+- Connexion Gmail : les certificats installés dans Windows sont acceptés, comme dans le navigateur (antivirus qui analysent les e-mails). « Tester la connexion » affiche le code technique d'une erreur.
+
+### Retiré
+
+- Lecture des rendez-vous Doctolib (e-mails Gmail et export `.xlsx`), bouton « Synchroniser » et rapprochement des RDV : Gmail sert uniquement à envoyer les factures et les e-mails aux patients.
 
 ### Limites connues
 
 - Installateur non signé : le navigateur et Windows affichent un avertissement (voir le [guide d'installation](docs/INSTALLATION.md)).
-- Les e-mails Doctolib réels ne sont pas encore reconnus : le planning se remplit par l'import de l'export Doctolib en attendant.
 
 [0.2.0]: https://github.com/compteservicedev-coder/Repo1/releases/tag/v0.2.0

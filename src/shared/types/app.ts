@@ -8,7 +8,7 @@ export type StartupState =
 /** « Résumé du jour » of the opening screen, also used by the sidebar. */
 export interface TodaySummary {
   appointmentsToday: number
-  /** Cases waiting in « À rapprocher »: Doctolib appointments and possible duplicates (R-19). */
+  /** Cases waiting in « À rapprocher »: possible duplicates (R-19). */
   toReconcile: number
   lastBackupAt: string | null
 }

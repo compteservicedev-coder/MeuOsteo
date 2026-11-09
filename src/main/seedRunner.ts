@@ -45,7 +45,7 @@ export function runSeed(argv: string[]): number {
     const invoices = seedInvoices(db, isoDateInParis(new Date()), appPaths.userData)
     write(`Base fictive créée dans ${appPaths.userData}`)
     write(
-      `${report.patients} patients, ${report.seances} séances, ${report.links} liens de proches, ${report.doctolibRdv} RDV Doctolib, ${duplicates} doublons possibles, ${invoices} factures`,
+      `${report.patients} patients, ${report.seances} séances, ${report.links} liens de proches, ${duplicates} doublons possibles, ${invoices} factures`,
     )
     return 0
   } finally {

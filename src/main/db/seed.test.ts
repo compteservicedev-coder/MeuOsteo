@@ -4,7 +4,6 @@ import { sql } from 'drizzle-orm'
 import { describe, expect, it } from 'vitest'
 import { createTestDatabase } from '../test/db'
 import { parseCommunesCsv } from './communes'
-import { countToReconcile } from './repositories/summaryRepository'
 import { patientLinks, patients, seances } from './schema'
 import { clearBusinessData, seedDatabase } from './seed'
 import { seedDuplicates } from './seedDuplicates'
@@ -31,7 +30,6 @@ describe('npm run seed (données fictives)', () => {
         .from(seances)
         .get()?.n,
     ).toBe(600)
-    expect(countToReconcile(db)).toBe(2)
 
     const all = db.select().from(patients).all()
     expect(new Set(all.map((p) => p.shortNo)).size).toBe(200)

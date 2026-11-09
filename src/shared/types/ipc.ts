@@ -42,17 +42,12 @@ import type {
   UnlockReason,
 } from './invoices'
 import type {
-  AttachResult,
   BlockInput,
   BlockPreview,
-  CreateAndAttachResult,
   DaySlots,
-  ExportImportResult,
   NewRdvInput,
   NewRdvResult,
   PlanningView,
-  RdvCandidates,
-  SyncStatus,
 } from './planning'
 import type { AgendaSettings } from '../domain/planning'
 import type { JournalType } from '../domain/journal'
@@ -199,19 +194,6 @@ export interface IpcInvokeContract {
   'planning:remove-block': { args: [id: string]; result: boolean }
   'agenda:get': { args: []; result: AgendaSettings }
   'agenda:save': { args: [settings: AgendaSettings]; result: AgendaSettings }
-  'doctolib:candidates': { args: [key: string]; result: RdvCandidates | null }
-  'doctolib:attach': {
-    args: [key: string, patientId: string, remember: boolean]
-    result: AttachResult
-  }
-  'doctolib:create-and-attach': {
-    args: [key: string, draft: PatientDraft]
-    result: CreateAndAttachResult
-  }
-  'doctolib:dismiss-alert': { args: [id: string]; result: void }
-  'doctolib:import-export': { args: []; result: ExportImportResult }
-  'sync:get-status': { args: []; result: SyncStatus }
-  'sync:run': { args: []; result: SyncStatus }
   'bilan:view': { args: [month: string]; result: BilanView }
   'bilan:set-line': {
     args: [month: string, seanceId: string, change: LineOverride]
@@ -252,8 +234,6 @@ export type IpcResult<C extends IpcChannel> = IpcInvokeContract[C]['result']
 export interface IpcEventContract {
   /** The interface was locked by main (system sleep, session lock). */
   'security:locked': []
-  /** The Gmail synchronisation changed state (running, done, error). */
-  'sync:status': [status: SyncStatus]
 }
 
 export type IpcEvent = keyof IpcEventContract
@@ -369,19 +349,6 @@ export interface MeuOsteoApi {
   agenda: {
     get(): Promise<AgendaSettings>
     save(settings: AgendaSettings): Promise<AgendaSettings>
-  }
-  doctolib: {
-    candidates(key: string): Promise<RdvCandidates | null>
-    attach(key: string, patientId: string, remember: boolean): Promise<AttachResult>
-    createAndAttach(key: string, draft: PatientDraft): Promise<CreateAndAttachResult>
-    dismissAlert(id: string): Promise<void>
-    importExport(): Promise<ExportImportResult>
-  }
-  sync: {
-    getStatus(): Promise<SyncStatus>
-    run(): Promise<SyncStatus>
-    /** Returns an unsubscribe function. */
-    onStatus(listener: (status: SyncStatus) => void): () => void
   }
   /** R-27 · Bilan mensuel. */
   bilan: {

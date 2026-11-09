@@ -9,7 +9,7 @@ import { orderLink, type Relation } from '@shared/domain/relatives'
 import { foldForSearch, patientSearchKey } from '@shared/domain/text'
 import type { AppDatabase } from './client'
 import type { CommuneRow } from './communes'
-import { PAIEMENTS, SITUATIONS, doctolibRdv, patientLinks, patients, seances } from './schema'
+import { PAIEMENTS, SITUATIONS, patientLinks, patients, seances } from './schema'
 
 export interface SeedOptions {
   patients: number
@@ -24,12 +24,10 @@ export interface SeedReport {
   patients: number
   seances: number
   links: number
-  doctolibRdv: number
 }
 
 type PatientRow = typeof patients.$inferInsert
 type SeanceRow = typeof seances.$inferInsert
-type RdvRow = typeof doctolibRdv.$inferInsert
 
 const PROFESSIONS = [
   'Infirmière',
@@ -97,12 +95,7 @@ const COMMENTAIRES = [
   'Vient sur recommandation de son médecin traitant.',
 ]
 const ANTECEDENTS = ['Asthme', 'Chirurgie du genou', 'Migraines', 'Fracture du poignet', 'Scoliose']
-const CANCEL_REASONS = [
-  'Annulée par le patient',
-  'Patient absent',
-  'Reportée',
-  'Annulée sur Doctolib',
-]
+const CANCEL_REASONS = ['Annulée par le patient', 'Patient absent', 'Reportée']
 /** Reserved example domains: no real mailbox. */
 const MAIL_DOMAINS = ['exemple.fr', 'example.com', 'example.org']
 
@@ -224,7 +217,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
   )
 
   const seanceRows: SeanceRow[] = []
-  const rdvRows: RdvRow[] = []
   const takenDays = new Set<string>()
 
   while (seanceRows.length < options.seances) {
@@ -241,13 +233,7 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
     takenDays.add(dayKey)
 
     const past = offset < 0
-    const source =
-      offset < -365
-        ? 'import'
-        : faker.helpers.weightedArrayElement([
-            { value: 'doctolib' as const, weight: 80 },
-            { value: 'manual' as const, weight: 20 },
-          ])
+    const source = offset < -365 ? ('import' as const) : ('manual' as const)
     const status = past
       ? faker.helpers.weightedArrayElement([
           { value: 'done' as const, weight: 94 },
@@ -261,7 +247,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
     const heure = source === 'import' ? null : fakeHeure()
     const isChild = ageOn(patient.ddn, date) < 6
     const id = ulid()
-    const doctolibKey = source === 'doctolib' ? `fake-${id.toLowerCase()}` : null
 
     seanceRows.push({
       id,
@@ -270,7 +255,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
       heure,
       status,
       source,
-      doctolibKey,
       motif: faker.helpers.arrayElement(isChild ? MOTIFS_ENFANT : MOTIFS),
       anamnese: status === 'done' ? faker.helpers.arrayElement(ANAMNESES) : null,
       pratique: status === 'done' ? faker.helpers.arrayElement(PRATIQUES) : null,
@@ -286,44 +270,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
       cancelReason: status === 'cancelled' ? faker.helpers.arrayElement(CANCEL_REASONS) : null,
       cancelledAt: status === 'cancelled' ? `${date}T08:00:00.000Z` : null,
       prevStatus: status === 'cancelled' ? 'planned' : null,
-    })
-
-    if (doctolibKey) {
-      rdvRows.push({
-        key: doctolibKey,
-        date,
-        heure,
-        nomAffiche: `${patient.prenom} ${patient.nom}`,
-        telephone: patient.portable ?? null,
-        email: patient.email ?? null,
-        motif: seanceRows.at(-1)!.motif ?? null,
-        etat: status === 'cancelled' ? 'annule' : 'confirme',
-        match: 'auto',
-        patientId: patient.id!,
-        seanceId: id,
-        messageIds: [`<${id.toLowerCase()}@exemple.fr>`],
-        receivedAt: `${addDays(date, -7)}T09:00:00.000Z`,
-      })
-    }
-  }
-
-  // Two appointments nobody could match yet, for the « À rapprocher » badge.
-  for (const offset of [0, 1]) {
-    const prenom = faker.person.firstName()
-    const nom = faker.person.lastName()
-    const date = addDays(options.today, offset)
-    rdvRows.push({
-      key: `fake-pending-${offset}-${ulid().toLowerCase()}`,
-      date,
-      heure: fakeHeure(),
-      nomAffiche: `${prenom} ${nom}`,
-      telephone: `06${digits(8)}`,
-      email: null,
-      motif: 'Première consultation',
-      etat: 'confirme',
-      match: 'pending_new',
-      messageIds: [`<pending-${offset}@exemple.fr>`],
-      receivedAt: `${options.today}T08:00:00.000Z`,
     })
   }
 
@@ -345,7 +291,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
   db.transaction((tx) => {
     for (const row of patientRows) tx.insert(patients).values(row).run()
     for (const row of seanceRows) tx.insert(seances).values(row).run()
-    for (const row of rdvRows) tx.insert(doctolibRdv).values(row).run()
     for (const row of links.values()) tx.insert(patientLinks).values(row).run()
   })
 
@@ -353,7 +298,6 @@ export function seedDatabase(db: AppDatabase, options: SeedOptions): SeedReport 
     patients: patientRows.length,
     seances: seanceRows.length,
     links: links.size,
-    doctolibRdv: rdvRows.length,
   }
 }
 

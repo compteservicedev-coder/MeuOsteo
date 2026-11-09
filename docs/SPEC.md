@@ -2,7 +2,7 @@
 
 **Utilisatrice** : une ostéopathe libérale qui travaille seule, sur un PC portable Windows (petit écran, 1366×768 minimum). L'application est utilisée tous les jours, entre deux séances.
 
-**Principe** : rapide, sûre, sans saisie en double. Le planning vient de Doctolib, la fiche patient est au centre, et une facture part d'une séance.
+**Principe** : rapide, sûre, sans saisie en double. La fiche patient est au centre, et une facture part d'une séance.
 
 **Référence visuelle** : `docs/maquette/` (le nom du fichier est indiqué pour chaque écran).
 
@@ -46,7 +46,7 @@ Le menu Planning affiche un badge avec le nombre de cas « À rapprocher ».
 **Affichage** : deux lignes de 6 jours (lundi à samedi, selon les jours d'ouverture). La ligne 1 est « Cette semaine », la ligne 2 « Semaine prochaine ». Chaque ligne affiche ses dates et son nombre de RDV.
 - **Jour courant** : encadré en cyan.
 - **Jours passés** : estompés.
-- **Cartes de RDV** : heure, nom, motif. Leur couleur dépend de l'état : rapproché, à rapprocher (orange), annulé (barré, pointillés), passé. Un clic ouvre la fiche patient sur la séance correspondante.
+- **Cartes de RDV** : heure, nom, motif. Leur couleur dépend de l'état : à venir, annulé (barré, pointillés), passé. Un clic ouvre la fiche patient sur la séance correspondante.
 
 **Navigation** :
 - **Boutons** : précédent / Aujourd'hui / suivant, d'une semaine à la fois.
@@ -55,32 +55,24 @@ Le menu Planning affiche un badge avec le nombre de cas « À rapprocher ».
 **Jours bloqués (R-23)** :
 - **Affichage** : carte hachurée orange « Journée bloquée / Matin bloqué / Après-midi bloqué » avec son motif, et un bouton « Débloquer ».
 - **Bouton « Bloquer une période »** : choix des dates de début et de fin, du créneau (journée, matin ou après-midi) et du motif (Congés, Formation, Absente, Rendez-vous perso).
-- **Avertissements** : la fenêtre indique s'il existe déjà des RDV sur la période, et rappelle de bloquer aussi dans Doctolib.
+- **Avertissements** : la fenêtre indique s'il existe déjà des RDV sur la période, et rappelle de bloquer aussi les créneaux dans un éventuel agenda en ligne.
 
-**Positionner un RDV (hors Doctolib, R-24)** :
+**Positionner un RDV (R-24)** :
 - **Points d'entrée** : bouton « Nouveau RDV » dans l'en-tête (date du jour proposée) ou petit bouton « + RDV » en bas de chaque jour non passé et non bloqué toute la journée (date de ce jour pré-remplie).
 - **Fenêtre « Nouveau rendez-vous »** :
   - **Patient** : recherche en direct (accents et casse ignorés) parmi les fiches existantes ; si rien ne correspond, « + Nouveau patient « saisie » » crée une fiche minimale à compléter (date de naissance demandée ensuite, R-15).
   - **Date** et **motif** (facultatif).
   - **Heure** : grille de créneaux de 30 min selon les horaires d'ouverture (Paramètres > Agenda). Les créneaux déjà pris (± 1 h autour d'un RDV) ou bloqués sont hachurés, barrés et non cliquables ; leur infobulle dit pourquoi (« Pris · Nom », « Bloqué · motif »). Un résumé indique « n RDV ce jour-là · matin bloqué ».
   - **Contrôles** : patient, date et heure obligatoires ; pas de date passée ni de dimanche ; R-08 (« X a déjà un RDV ce jour-là »). En cas d'erreur, le bouton tremble et les messages apparaissent.
-  - **Rappel permanent** (bandeau ambre) : « Pensez à Doctolib : réservez aussi ce créneau dans Doctolib… ».
-- **Résultat** : la carte apparaît dans le jour avec une animation, en style « hors Doctolib » (fond clair, bordure bleue en pointillés, motif suivi de « · hors Doctolib »). Le planning se déplace sur la semaine concernée si besoin. Notification « RDV ajouté : … · pensez à le réserver dans Doctolib ».
+  - **Rappel permanent** (bandeau ambre) : « Agenda en ligne : si vous en utilisez un, réservez-y aussi ce créneau… ».
+- **Résultat** : la carte apparaît dans le jour avec une animation, Le planning se déplace sur la semaine concernée si besoin. Notification « RDV ajouté : … ».
 
-**Synchronisation** : bouton « Synchroniser » (l'icône tourne pendant l'opération), avec l'heure de la dernière synchronisation. Un bouton « Importer un export Doctolib » sert de solution de secours (voir GMAIL_DOCTOLIB.md §4).
+**Pas de lien avec Doctolib** (retiré en 0.2.0) : le planning ne lit ni e-mails ni export Doctolib. Les RDV sont posés dans l'application (R-24, R-08).
 
 ### Panneau « À rapprocher »
-Il liste les cas que le système n'a pas pu résoudre seul. Chaque cas réglé disparaît en se repliant. Quand il n'y en a plus : « Tout est rattaché, aucun doublon. »
+Il liste les doublons possibles (R-19). Chaque cas réglé disparaît en se repliant. Quand il n'y en a plus : « Aucun doublon possible. »
 
-1. **Nouveau patient** : aucune fiche ne correspond à un RDV. La fenêtre affiche à gauche les données Doctolib reçues, à droite un formulaire pré-rempli.
-   - **Pré-remplissage** : nom, prénom, portable et e-mail, avec un repère « DOCTOLIB ».
-   - **Date de naissance** : obligatoire, avec l'indication « Doctolib ne la transmet pas ».
-   - **Vérification de doublon** : en direct pendant la saisie (R-17), avec un bouton « C'est cette personne : rattacher ».
-   - **Validation** : « Créer la fiche et rattacher le RDV ».
-2. **Plusieurs fiches possibles** : une carte par candidat, avec les critères qui concordent ✓ ou non ✗ (nom, initiale, téléphone, e-mail) et un score.
-   - **Alerte contextuelle** : par exemple, un motif « enfant » alors que l'e-mail est celui de la mère.
-   - **Choix** : un interrupteur « Mémoriser ce choix » (R-18), puis « Rattacher à X » ou « Aucune ne correspond : créer une fiche ».
-3. **Doublon possible** : comparaison des deux fiches côte à côte, champ par champ (R-19).
+**Doublon possible** : comparaison des deux fiches côte à côte, champ par champ (R-19).
    - **Champs** : les champs identiques sont en vert. Pour les autres, un clic choisit la valeur à garder.
    - **Résultat** : un résumé (séances réunies, commentaires mis bout à bout, factures inchangées).
    - **Actions** : « Ce ne sont pas les mêmes personnes » ou « Fusionner les fiches… ». La confirmation de fusion **remplace** les boutons, sans s'empiler au-dessus.
@@ -140,16 +132,15 @@ Il liste les cas que le système n'a pas pu résoudre seul. Chaque cas réglé d
 
 ### 5.2 Liste des séances (colonne gauche)
 - **Ordre** : de la plus récente à la plus ancienne. Les séances futures sont en haut, encadrées en pointillés.
-- **Chaque élément** : date, badge de statut (R-01), motif, étiquette « Doctolib · 11:30 », « Hors Doctolib » ou « Facturée ».
-- **Bouton « Nouvelle »** : séance hors Doctolib (R-08). Une aide sous le titre indique : « Les RDV Doctolib apparaissent ici tout seuls. »
+- **Chaque élément** : date, badge de statut (R-01), motif, étiquette « RDV · 11:30 », « Planifiée » ou « Facturée ».
+- **Bouton « Nouvelle »** : séance du jour (R-08). Une aide sous le titre le rappelle ; les RDV posés dans le Planning apparaissent aussi dans la liste.
 - **Changer de séance avec des modifications non enregistrées** : fenêtre « Rester / Ne pas enregistrer / Enregistrer » (R-05).
 
 ### 5.3 Détail de la séance (centre)
 **En-tête** : « Séance n sur N », « Séance du 9 octobre 2026 », le badge de statut, le temps relatif (« Il y a 15 jours », « Aujourd'hui · 11:30 »), une pastille « Non enregistré » s'il y a des modifications, et une icône corbeille (R-06 / R-07).
 
 **Bandeaux selon l'état** :
-- **À venir / aujourd'hui (Doctolib)** : « RDV Doctolib… créé automatiquement… préparez vos notes ».
-- **Hors Doctolib** : explication du rattachement automatique.
+- **À venir / aujourd'hui** : « RDV du … à … Vous pouvez déjà y noter ce que vous voulez préparer » / « Préparez vos notes ».
 - **Réalisée** : « verrouillée pour éviter toute modification involontaire » et bouton « Modifier ».
 - **En modification** (orange) : si la séance est facturée, bouton « Déverrouiller date et tarif… » (R-04).
 - **Annulée** : motif, date, et bouton « Rétablir la séance ».
@@ -160,7 +151,7 @@ Il liste les cas que le système n'a pas pu résoudre seul. Chaque cas réglé d
 - **À venir / aujourd'hui / à compléter** : « Enregistrer » (actif seulement s'il y a des modifications) et « ✓ Séance réalisée » (R-02).
 - **Réalisée, en consultation** : actions de facture (R-10) : « Générer la facture », « Compléter l'adresse », « Voir la facture », ou une mention (séance gratuite, déjà facturée…).
 - **En modification** : « Annuler » et « Enregistrer ».
-- **Confirmation d'annulation ou de suppression** : un encart rouge **remplace** le pied de séance. Il contient le motif (pastilles) et, si le RDV vient de Doctolib, le rappel d'annuler aussi dans Doctolib.
+- **Confirmation d'annulation ou de suppression** : un encart rouge **remplace** le pied de séance. Il contient le motif (pastilles).
 
 ### 5.4 Commentaire inter-séances (colonne droite)
 - **Zone de texte** : grande zone libre, enregistrée automatiquement (sauvegarde 800 ms après la dernière frappe), avec « Modifié le … ».
@@ -209,9 +200,9 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 
 ## 8. Paramètres (`Parametres.dc.html`), en onglets
 1. **Sécurité** : activer ou désactiver le code d'accès ; « Modifier le code… » (code actuel, nouveau code et confirmation, 4 à 6 chiffres) ; délai de verrouillage (5 / 15 / 30 min / jamais) ; clé de secours (R-21).
-2. **Messagerie Gmail** : adresse, mot de passe d'application (masqué, chiffré), libellé lu (« Doctolib » par défaut), fréquence de vérification (5 min / 15 min / au démarrage), « Tester la connexion » (3 vérifications), « Déconnecter / Reconnecter », guide en 3 étapes.
+2. **Messagerie Gmail** (envoi uniquement) : adresse, mot de passe d'application (masqué, chiffré), « Tester la connexion » (2 vérifications : connexion SMTP, e-mail de test), « Déconnecter / Reconnecter », guide en 3 étapes.
 3. **Cabinet & factures** : prénom et nom, titre, adresse, téléphone, ADELI, SIRET, image de signature ; prochain numéro (lecture seule) ; tarif par défaut et liste des tarifs ; mention TVA ; modèle de l'e-mail d'envoi (variables `{prénom}`, `{date}`).
-4. **Agenda** : jours de consultation, horaires d'ouverture et de fermeture, durée d'une séance, affichage sur une ou deux semaines, interrupteur « rattacher automatiquement ».
+4. **Agenda** : jours de consultation, horaires d'ouverture et de fermeture, durée d'une séance, affichage sur une ou deux semaines.
 5. **Sauvegarde** : dossier, nombre de copies conservées (30), « Sauvegarder maintenant » (barre de progression), « Restaurer une sauvegarde… » (R-22).
 6. **Journal** : filtres Tout / Patients / Factures / Déverrouillages / Réglages, durée de conservation (12 / 24 / 36 mois), export CSV.
 7. **Données & import** : reprise de l'historique Excel avec rapport avant import (MIGRATION.md), export complet (Excel), export comptable, version de l'application.
@@ -233,14 +224,11 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
   - **Changement à l'enregistrement** : si la date ou le tarif a changé, la facture est marquée « modifiée le … », son PDF est régénéré, et la ligne « Facture N modifiée : tarif 60 € → 55 € » est ajoutée au journal. Une notification propose de renvoyer la facture.
   - **Pas de changement** : journal « reverrouillée, facture inchangée ».
 - **R-05 · Modifications non enregistrées** : changer de séance, créer une séance ou quitter la fiche avec des modifications ouvre une fenêtre « Rester / Ne pas enregistrer / Enregistrer ».
-- **R-06 · Annuler une séance** (à venir, aujourd'hui ou à compléter) : un motif est obligatoire (Annulée par le patient / Patient absent / Reportée / Erreur de saisie). La séance passe en `cancelled`, reste visible barrée avec ses notes, et peut être rétablie. Si elle vient de Doctolib, un rappel invite à l'annuler aussi dans Doctolib.
+- **R-06 · Annuler une séance** (à venir, aujourd'hui ou à compléter) : un motif est obligatoire (Annulée par le patient / Patient absent / Reportée / Erreur de saisie). La séance passe en `cancelled`, reste visible barrée avec ses notes, et peut être rétablie.
 - **R-07 · Supprimer une séance réalisée non facturée** : suppression définitive après confirmation, avec une ligne de journal. **Une séance facturée ne peut pas être supprimée**, il faut d'abord supprimer la facture (R-13).
 - **R-08 · Unicité** : au plus une séance non annulée par patient et par jour.
-  - **« Nouvelle »** : si une séance existe déjà ce jour-là, elle s'ouvre avec une notification au lieu d'en créer une seconde. Sinon, une séance `planned` est créée avec la source `manual` et l'étiquette « Hors Doctolib ».
-- **R-09 · RDV Doctolib** : un RDV rapproché à un patient crée ou met à jour automatiquement **sa** séance (`source = doctolib`, `doctolib_key`). Il n'y a jamais de création manuelle depuis un RDV.
-  - **Séance manuelle existante** : si une séance manuelle existe le même jour pour ce patient, le RDV s'y rattache. Il ne crée pas de doublon.
-  - **Modification** : met à jour la date et l'heure, si la séance n'est pas encore réalisée.
-  - **Annulation** : la séance passe en `cancelled` (motif « Annulée sur Doctolib »), sauf si elle est déjà réalisée (une alerte s'affiche alors dans « À rapprocher »).
+  - **« Nouvelle »** : si une séance existe déjà ce jour-là, elle s'ouvre avec une notification au lieu d'en créer une seconde. Sinon, une séance `planned` est créée avec la source `manual`.
+- **R-09 · RDV Doctolib** : *retirée en 0.2.0* (la lecture des e-mails et de l'export Doctolib a été supprimée).
 
 **Facturation**
 - **R-10 · Conditions d'émission** : la facture est créée **uniquement depuis une séance**, et seulement si la séance est `done` et pas en édition, si son tarif est supérieur à 0, s'il n'existe pas déjà une facture active pour elle, et si l'adresse du patient est complète (adresse, code postal, commune). Sinon, le bouton est remplacé par l'action ou la mention qui convient.
@@ -264,10 +252,7 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
 - **R-17 · Doublon à la création** : on cherche des patients qui ont le même nom (sans tenir compte des accents ni de la casse), le même téléphone, le même e-mail ou la même date de naissance. Chaque patient trouvé est affiché avec ses points communs et un bouton pour le rattacher.
 
 **Rapprochement**
-- **R-18 · Rattachement d'un RDV à une fiche** :
-  - **Automatique** : s'il existe une association mémorisée (contact Doctolib = téléphone et e-mail) vers ce patient, ou si une seule fiche a le même nom ET (le même téléphone OU le même e-mail). Cette option est désactivable dans Paramètres > Agenda.
-  - **Plusieurs candidats** : la tâche « Plusieurs fiches possibles » apparaît. Le score est le nombre de critères concordants sur 4 (nom, initiale du prénom, téléphone, e-mail). « Mémoriser ce choix » enregistre l'association.
-  - **Aucun candidat** : la tâche « Nouveau patient » apparaît.
+- **R-18 · Rattachement d'un RDV à une fiche** : *retirée en 0.2.0*, avec la lecture des RDV Doctolib.
 - **R-19 · Doublons de fiches** : une analyse tourne à l'import et chaque nuit.
   - **Critère** : même date de naissance ET (même téléphone OU même e-mail OU noms proches, avec une distance de Levenshtein ≤ 2 ou un nom inclus dans l'autre, comme « Lambert » et « Lambert-Durand »).
   - **Fusion** : on choisit la valeur à garder pour chaque champ différent. Les séances et factures sont rattachées à la fiche conservée, les commentaires sont mis bout à bout avec un séparateur daté, et l'autre fiche est supprimée. Le tout dans une transaction, avec une ligne de journal.
@@ -291,8 +276,8 @@ Registre de **consultation uniquement** : on n'y crée aucune facture. Un bandea
   - **Méthode** : copie chiffrée cohérente (`VACUUM INTO` puis chiffrement) vers le dossier choisi, avec un fichier daté `MeuOsteo_AAAA-MM-JJ_HHmm.mosave`. Les 30 dernières copies sont conservées.
   - **Restauration** : on choisit le fichier, l'application vérifie son intégrité, fait une copie de l'état actuel par sécurité, puis remplace la base et redémarre.
   - **Alerte** : si aucune sauvegarde n'a été faite depuis 7 jours, une alerte s'affiche dans le tableau de bord.
-- **R-23 · Blocages** : stockés par jour et par créneau (journée, matin avant 13 h, après-midi). Ils n'empêchent pas un RDV Doctolib d'arriver (une alerte s'affiche alors en cas de conflit) ; en revanche, dans la fenêtre « Nouveau RDV » (R-24), les créneaux bloqués ne sont pas sélectionnables. Aucun lien avec Doctolib n'existe dans ce sens (voir GMAIL_DOCTOLIB.md §5).
-- **R-24 · RDV positionné depuis le planning** : crée directement une séance `planned`, `source = manual`, avec `date` et `heure` (même objet que « Nouvelle » dans la fiche, R-08). Pas de chevauchement : un créneau est libre s'il n'y a aucun RDV non annulé à moins de 60 min (durée par défaut, réglable dans Paramètres > Agenda) et aucun blocage. Si un RDV Doctolib arrive ensuite pour le même patient et le même jour, il se rattache à cette séance (R-09). L'application **n'écrit jamais dans Doctolib** : le rappel de réserver le créneau dans Doctolib est systématique. Journal : rien de spécial (une séance n'est pas un événement journalisé, R-20), sauf la création de patient si « Nouveau patient » a été utilisé.
+- **R-23 · Blocages** : stockés par jour et par créneau (journée, matin avant 13 h, après-midi). Dans la fenêtre « Nouveau RDV » (R-24), les créneaux bloqués ne sont pas sélectionnables ; les RDV déjà posés sur la période ne sont pas annulés (la fenêtre de blocage les signale).
+- **R-24 · RDV positionné depuis le planning** : crée directement une séance `planned`, `source = manual`, avec `date` et `heure` (même objet que « Nouvelle » dans la fiche, R-08). Pas de chevauchement : un créneau est libre s'il n'y a aucun RDV non annulé à moins de 60 min (durée par défaut, réglable dans Paramètres > Agenda) et aucun blocage. L'application ne communique avec aucun agenda en ligne : un rappel invite à y réserver aussi le créneau. Journal : rien de spécial (une séance n'est pas un événement journalisé, R-20), sauf la création de patient si « Nouveau patient » a été utilisé.
 - **R-25 · Proches** : lien **symétrique** entre deux fiches existantes, stocké une seule fois (`patient_links`) et affiché sur les deux fiches avec la relation inverse (Enfant ↔ Parent, Grand-parent ↔ Petit-enfant ; Conjoint, Frère / sœur et Autre sont symétriques). Un patient ne peut pas être lié à lui-même ni deux fois au même proche. Retirer le lien le supprime des deux fiches. La suppression d'un patient (R-14) masque ses liens, puis les supprime à la purge ; la fusion (R-19) reporte les liens sur la fiche conservée en éliminant les doublons. Journal (type Patient) : « Proche lié : Nom (lien) » et « Lien de proche retiré : Nom ».
 
 - **R-26 · Documents du patient** : fichiers rattachés à une fiche (imagerie, compte-rendu, courrier ou e-mail, ordonnance, administratif, photo, autre), ajoutés par glisser-déposer ou « Ajouter des fichiers… », plusieurs à la fois.
