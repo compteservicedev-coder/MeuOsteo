@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { BrowserWindow, app, net, safeStorage } from 'electron'
+import { app, net, safeStorage } from 'electron'
 import type { StartupError } from '@shared/types/app'
 import { closeDatabase, openDatabase, type AppDatabase } from './db/client'
 import { ensureCommunesLoaded } from './db/communes'
@@ -14,9 +14,7 @@ import { log } from './logger'
 import { runMaintenance } from './maintenance'
 import { appPaths } from './paths'
 import { AccessCodeService } from './services/accessCode'
-import { RdvPipeline } from './services/doctolib/pipeline'
 import { GmailSettingsService, type SecretBox } from './services/gmail'
-import { GmailSync } from './services/gmailSync'
 import { InvoiceService } from './services/invoices'
 import { createGmailMailer } from './services/mailer'
 import { PatientService } from './services/patients'
@@ -36,8 +34,6 @@ export interface Runtime {
   gmail: GmailSettingsService
   mailer: ReturnType<typeof createGmailMailer>
   planning: PlanningService
-  pipeline: RdvPipeline
-  sync: GmailSync
   backup: BackupService
   dashboard: DashboardService
   bilan: BilanService
@@ -132,15 +128,6 @@ export function startRuntime({
     mailer,
   })
   const patients = new PatientService(db)
-  const pipeline = new RdvPipeline(db, patients)
-  const sync = new GmailSync({
-    db,
-    gmail,
-    pipeline,
-    onStatus: (status) => {
-      for (const w of BrowserWindow.getAllWindows()) w.webContents.send('sync:status', status)
-    },
-  })
   const backup = new BackupService({
     db,
     databaseFile: appPaths.databaseFile,
@@ -158,8 +145,6 @@ export function startRuntime({
     gmail,
     mailer,
     planning: new PlanningService(db),
-    pipeline,
-    sync,
     backup,
     bilan: new BilanService(db),
     updates: new UpdateChecker({
@@ -176,6 +161,5 @@ export function startRuntime({
 }
 
 export function stopRuntime(runtime: Runtime): void {
-  runtime.sync.stop()
   closeDatabase(runtime.db)
 }

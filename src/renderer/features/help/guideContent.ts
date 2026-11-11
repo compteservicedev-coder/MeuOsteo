@@ -143,7 +143,7 @@ export const GUIDE: GuideSection[] = [
       'Les séances se trouvent dans la fiche : la liste à gauche, le détail au centre. Une séance réalisée est verrouillée pour éviter les modifications involontaires.',
     questions: [
       {
-        q: 'Comment ajouter une séance prise hors Doctolib ?',
+        q: 'Comment ajouter une séance ?',
         a: [
           'Dans la fiche, cliquez sur « Nouvelle » au-dessus de la liste des séances. Vous pouvez aussi passer par « Nouveau RDV » dans le Planning.',
           'Il ne peut y avoir qu’une séance par patient et par jour : si une séance existe déjà ce jour-là, elle s’ouvre au lieu d’en créer une seconde.',
@@ -175,7 +175,7 @@ export const GUIDE: GuideSection[] = [
         q: 'Comment annuler ou supprimer une séance ?',
         a: [
           'Utilisez l’icône corbeille en haut du détail de la séance.',
-          '• Séance à venir ou pas encore validée : elle est annulée avec un motif. Elle reste visible, barrée, avec ses notes, et « Rétablir la séance » la fait revenir. Si elle vient de Doctolib, pensez à l’annuler aussi dans Doctolib.',
+          '• Séance à venir ou pas encore validée : elle est annulée avec un motif. Elle reste visible, barrée, avec ses notes, et « Rétablir la séance » la fait revenir.',
           '• Séance réalisée et non facturée : elle est supprimée définitivement, avec ses notes.',
           '• Séance facturée : elle ne peut pas être supprimée. Supprimez d’abord sa facture.',
         ],
@@ -243,9 +243,9 @@ export const GUIDE: GuideSection[] = [
   },
   {
     id: 'planning',
-    title: 'Planning et Doctolib',
+    title: 'Planning',
     intro:
-      'Le planning affiche vos rendez-vous à la semaine. MeuOsteo n’écrit jamais dans Doctolib : ce que vous changez ici, pensez à le faire aussi là-bas.',
+      'Le planning affiche vos rendez-vous à la semaine. Il ne communique avec aucun agenda en ligne : si vous en utilisez un, reportez-y vos changements.',
     questions: [
       {
         q: 'Comment naviguer dans le planning ?',
@@ -259,8 +259,8 @@ export const GUIDE: GuideSection[] = [
         q: 'Comment ajouter un rendez-vous ?',
         a: [
           'Cliquez sur « Nouveau RDV » en haut, ou sur le petit bouton « + RDV » en bas d’un jour. Cherchez le patient (ou créez-le avec « Nouveau patient »), puis choisissez un créneau libre : les créneaux pris ou bloqués sont barrés.',
-          'Important : ce rendez-vous n’existe que dans MeuOsteo. Réservez aussi le créneau dans Doctolib, pour qu’un patient ne le prenne pas en ligne.',
-          'Si un RDV Doctolib arrive plus tard pour ce patient le même jour, il se rattache à cette séance sans créer de doublon.',
+          'Ce rendez-vous n’existe que dans MeuOsteo : si vous utilisez un agenda en ligne, réservez-y aussi le créneau.',
+          'Il ne peut y avoir qu’une séance par patient et par jour.',
         ],
       },
       {
@@ -268,34 +268,14 @@ export const GUIDE: GuideSection[] = [
         a: [
           'Cliquez sur « Bloquer une période », choisissez les dates, le créneau (journée, matin ou après-midi) et le motif (Congés, Formation, Absente, Rendez-vous perso).',
           'La fenêtre vous prévient s’il y a déjà des rendez-vous sur la période. Le bouton « Débloquer » sur la carte du jour annule le blocage.',
-          'Bloquez aussi ces dates dans Doctolib : MeuOsteo ne peut pas le faire à votre place.',
+          'Bloquez aussi ces dates dans votre agenda en ligne si vous en utilisez un : MeuOsteo ne peut pas le faire à votre place.',
         ],
       },
       {
         q: 'Qu’est-ce que le panneau « À rapprocher » ?',
         a: [
-          'Il regroupe les cas que MeuOsteo ne peut pas régler seul. Le nombre de cas apparaît aussi en badge sur le menu Planning.',
-          '• Nouveau patient : un RDV Doctolib ne correspond à aucune fiche. « Créer la fiche… » la crée et y rattache le RDV.',
-          '• Plusieurs fiches possibles : « Choisir la fiche… » vous laisse indiquer la bonne. Vous pouvez mémoriser ce choix pour les prochains RDV.',
-          '• Doublon possible : deux fiches semblent être la même personne. Comparez-les, puis fusionnez-les ou indiquez que ce sont deux personnes différentes.',
-          '• Alerte : par exemple un RDV annulé sur Doctolib alors que la séance est déjà réalisée. « C’est noté » la fait disparaître.',
-        ],
-      },
-      {
-        q: 'Comment importer mes rendez-vous depuis Doctolib ?',
-        a: [
-          'Dans Doctolib, téléchargez l’export de l’historique des rendez-vous (fichier .xlsx). Dans le Planning, cliquez sur « Importer un export Doctolib » et choisissez ce fichier.',
-          'Les colonnes sont repérées par leur titre. Chaque RDV est rattaché à la bonne fiche quand c’est sûr, sinon il part dans « À rapprocher ». Un message résume le nombre de RDV lus, rattachés, à rapprocher et annulés. Importer deux fois le même fichier ne crée pas de doublon.',
-          'Cette lecture a été écrite d’après la description de l’export : si votre fichier n’est pas reconnu, signalez-le pour qu’elle soit ajustée.',
-        ],
-      },
-      {
-        q: 'Les rendez-vous Doctolib arrivent-ils tout seuls par Gmail ?',
-        a: [
-          'Pas encore. La connexion à Gmail fonctionne : dans Paramètres > Messagerie Gmail, vous renseignez votre adresse et un mot de passe d’application, et « Tester la connexion » vérifie tout. Le bouton « Synchroniser » du Planning relève ensuite les e-mails du libellé « Doctolib », en lecture seule.',
-          'En revanche, la lecture des e-mails de Doctolib eux-mêmes n’est pas encore active : leur format exact doit être construit à partir de vrais exemples. Pour l’instant, ces e-mails sont simplement comptés comme « non reconnus » et rien n’est créé dans le planning.',
-          'Elle sera ajoutée dès que des exemples réels (anonymisés) de chaque type d’e-mail auront été fournis : nouveau RDV, modification et annulation. En attendant, utilisez « Importer un export Doctolib » ou « Nouveau RDV ».',
-          'L’envoi des factures par Gmail, lui, fonctionne déjà.',
+          'Il regroupe les doublons possibles : deux fiches qui semblent être la même personne (même date de naissance et même téléphone, même e-mail ou nom très proche). Le nombre de cas apparaît aussi en badge sur le menu Planning.',
+          '« Comparer les fiches » les affiche côte à côte : fusionnez-les, ou indiquez que ce sont deux personnes différentes.',
         ],
       },
     ],
@@ -430,7 +410,7 @@ export const GUIDE: GuideSection[] = [
         q: 'Mes données sont-elles protégées ?',
         a: [
           'Oui. La base est chiffrée sur le disque, et sa clé est protégée par Windows pour votre session. Le code d’accès protège l’écran en plus.',
-          'Rien ne part sur internet, sauf vers votre propre compte Gmail (envoi des factures, lecture du libellé Doctolib). Il n’y a aucune statistique d’utilisation.',
+          'Rien ne part sur internet, sauf vers votre propre compte Gmail (envoi des factures et des e-mails aux patients). Il n’y a aucune statistique d’utilisation.',
           'Le journal (Paramètres > Journal) note les actions importantes : patients créés, modifiés ou supprimés, factures, déverrouillages, réglages sensibles. Il ne contient jamais de contenu médical : ni motif, ni anamnèse, ni pratique, ni commentaire.',
           'Attention : l’export complet (« Exporter toutes les données (Excel) ») contient, lui, les notes cliniques et n’est pas chiffré. Gardez ce fichier en lieu sûr.',
         ],
@@ -449,6 +429,20 @@ export const GUIDE: GuideSection[] = [
           'Décochez une séance pour ne pas la compter ; les virements encore attendus apparaissent « En attente », décochés, et peuvent être cochés.',
           'Le moyen de paiement se corrige dans la liste : la correction ne vaut que pour le bilan, la séance et la facture ne changent pas.',
           '« Exporter (Excel) » produit un fichier avec le détail, le récapitulatif par moyen de paiement et le calcul.',
+        ],
+      },
+      {
+        q: 'Pourquoi le chiffre du tableau de bord diffère-t-il de celui du bilan ?',
+        a: [
+          'Ils ne mesurent pas la même chose. Le tableau de bord compte le chiffre d’affaires réalisé : les séances faites dans le mois, payées ou non. Le bilan compte l’argent encaissé dans le mois.',
+          'L’écart vient des virements encore attendus, des virements reçus un autre mois, et des séances que vous avez cochées ou décochées dans le bilan. L’encart « Réalisé et encaissé » du bilan détaille ce passage, montant par montant.',
+        ],
+      },
+      {
+        q: 'Comment comparer mon année avec la précédente ?',
+        a: [
+          'Sur le Tableau de bord, le graphique relie les points de chaque mois : l’année affichée en bleu, avec son montant au-dessus de chaque point, et la précédente en gris. Les pointillés horizontaux marquent les seuils (1 000 €, 2 000 €…). Survolez un mois pour lire les deux montants et l’évolution.',
+          'Pour l’année en cours, le résumé compare le total à ce jour avec l’année précédente à la même date, puis rappelle le total de l’année précédente. Les flèches ‹ › changent d’année.',
         ],
       },
       {

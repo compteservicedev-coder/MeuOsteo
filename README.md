@@ -1,6 +1,6 @@
 # MeuOsteo 2
 
-> **English summary** — MeuOsteo is a free, offline Windows desktop application for solo osteopaths: patient records, sessions, invoices (PDF, sent by Gmail), a planning fed by Doctolib e-mails, documents, a monthly statement and encrypted backups. All data stays on the computer in an encrypted SQLite database (SQLCipher). Built with Electron, React and TypeScript. The user interface and the documentation are in French. Licensed under the GNU AGPL-3.0.
+> **English summary** — MeuOsteo is a free, offline Windows desktop application for solo osteopaths: patient records, sessions, invoices (PDF, sent by Gmail), a weekly planning, documents, a monthly statement and encrypted backups. All data stays on the computer in an encrypted SQLite database (SQLCipher). Built with Electron, React and TypeScript. The user interface and the documentation are in French. Licensed under the GNU AGPL-3.0.
 
 Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopathie, qui remplace l'outil Excel VBA « MeuOsteo v1.04 ». Logiciel libre sous licence [GNU AGPL-3.0](LICENSE).
 
@@ -22,10 +22,10 @@ Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopa
 | 1 · Patients et fiche       | Recherche, fiche, séances, proches, journal, suppression             | ✅     |
 | 2 · Reprise de l'historique | Import du `.xlsm` avec rapport, doublons R-19 et fusion              | ✅     |
 | 3 · Facturation             | Émission, PDF, envoi Gmail, registre, avoirs, export comptable       | ✅     |
-| 4 · Planning et Doctolib    | Planning, blocages, nouveau RDV, rapprochement, Gmail IMAP, export   | ✅ (1) |
+| 4 · Planning                | Planning, blocages, nouveau RDV, doublons à rapprocher               | ✅ (1) |
 | 5 · Pilotage et finitions   | Tableau de bord, sauvegarde et restauration, journal, export complet | ✅ (2) |
 
-(1) Les vrais e-mails Doctolib ne sont pas encore lus : leur parseur attend des exemples `.eml` réels (seul un parseur de test existe). L'import de l'export Doctolib fonctionne.
+(1) La lecture des RDV Doctolib (e-mails Gmail et export) a été retirée en 0.2.0 pour garder l'outil simple : Gmail sert uniquement à l'envoi.
 
 (2) Pas de mise à jour automatique (`electron-updater`) : elle dépend du choix public ou privé du dépôt. Pour mettre à jour, réinstaller le nouvel `.exe` par-dessus : les données sont conservées.
 
@@ -96,7 +96,7 @@ resources/communes.csv
 | `docs/SPEC.md`                | Spécification fonctionnelle : écrans, règles métier numérotées, critères d'acceptation                |
 | `docs/DATA_MODEL.md`          | Schéma SQLite et règles d'intégrité                                                                   |
 | `docs/MIGRATION.md`           | Reprise de l'historique depuis le fichier Excel `.xlsm`                                               |
-| `docs/GMAIL_DOCTOLIB.md`      | Synchronisation des RDV Doctolib par Gmail, envoi des factures, rapprochement                         |
+| `docs/GMAIL.md`               | Envoi des factures et des e-mails aux patients par Gmail                                              |
 | `docs/DESIGN.md`              | Charte : couleurs, typographie, relief, animations, accessibilité                                     |
 | `docs/ROADMAP.md`             | Découpage en lots, avec ordre et critères de fin                                                      |
 | `docs/maquette/`              | Sources de la maquette interactive validée (référence visuelle)                                       |

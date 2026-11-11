@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import type { SendError, SendOutcome } from '@shared/types/invoices'
+import { connectionCodeOf } from '../systemCertificates'
 import type { InvoiceMailer, MailMessage } from './invoices'
 
 export interface GmailCredentials {
@@ -32,7 +33,7 @@ function transport(credentials: GmailCredentials) {
   })
 }
 
-/** SMTP Gmail (GMAIL_DOCTOLIB.md §2), with the application password kept by safeStorage. */
+/** SMTP Gmail (GMAIL.md), with the application password kept by safeStorage. */
 export function createGmailMailer(credentials: () => GmailCredentials | null): InvoiceMailer & {
   verify(): Promise<SendOutcome>
   sendTest(): Promise<SendOutcome>
@@ -70,7 +71,7 @@ export function createGmailMailer(credentials: () => GmailCredentials | null): I
         await transport(c).verify()
         return { ok: true, to: c.address }
       } catch (error) {
-        return { ok: false, error: sendErrorOf(error) }
+        return { ok: false, error: sendErrorOf(error), code: connectionCodeOf(error) }
       }
     },
     async sendTest() {
@@ -85,7 +86,7 @@ export function createGmailMailer(credentials: () => GmailCredentials | null): I
         })
         return { ok: true, to: c.address }
       } catch (error) {
-        return { ok: false, error: sendErrorOf(error) }
+        return { ok: false, error: sendErrorOf(error), code: connectionCodeOf(error) }
       }
     },
   }

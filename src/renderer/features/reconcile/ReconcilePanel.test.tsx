@@ -7,8 +7,6 @@ import { ToastProvider } from '../../components/toast/ToastProvider'
 import { ReconcilePanel } from './ReconcilePanel'
 
 const TASKS: ReconcileTasks = {
-  doctolib: [],
-  alerts: [],
   duplicates: [
     {
       a: { id: 'A', name: 'Sophie Lambert' },
@@ -84,7 +82,7 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('« À rapprocher » · doublon possible (Planning.dc.html)', () => {
   it('R-19 compare champ par champ et fusionne après confirmation', async () => {
-    const api = mockApi([TASKS, { doctolib: [], alerts: [], duplicates: [] }])
+    const api = mockApi([TASKS, { duplicates: [] }])
     renderPanel()
     expect(await screen.findByText('Sophie Lambert · Sophie Lambert-Durand')).toBeInTheDocument()
     expect(screen.getByText('Même date de naissance et même portable')).toBeInTheDocument()
@@ -113,11 +111,11 @@ describe('« À rapprocher » · doublon possible (Planning.dc.html)', () => {
         picks: { ...COMPARISON.picks, nom: 'b' },
       }),
     )
-    expect(await screen.findByText('Tout est rattaché, aucun doublon.')).toBeInTheDocument()
+    expect(await screen.findByText('Aucun doublon possible.')).toBeInTheDocument()
   })
 
   it('R-19 « Ce ne sont pas les mêmes personnes » mémorise la paire', async () => {
-    const api = mockApi([TASKS, { doctolib: [], alerts: [], duplicates: [] }])
+    const api = mockApi([TASKS, { duplicates: [] }])
     renderPanel()
     await userEvent.click(await screen.findByRole('button', { name: 'Comparer les fiches' }))
     const dialog = await screen.findByRole('dialog')
@@ -125,6 +123,6 @@ describe('« À rapprocher » · doublon possible (Planning.dc.html)', () => {
       await within(dialog).findByRole('button', { name: 'Ce ne sont pas les mêmes personnes' }),
     )
     expect(api.ignoreDuplicate).toHaveBeenCalledWith('A', 'B')
-    expect(await screen.findByText('Tout est rattaché, aucun doublon.')).toBeInTheDocument()
+    expect(await screen.findByText('Aucun doublon possible.')).toBeInTheDocument()
   })
 })

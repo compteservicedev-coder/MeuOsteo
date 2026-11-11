@@ -130,7 +130,7 @@ export class SeanceService {
 
   /**
    * « Nouvelle » (R-08): opens today's session if there is one, otherwise creates a `planned`
-   * session with the `manual` source (« Hors Doctolib »).
+   * session with the `manual` source.
    */
   createToday(patientId: string): CreateSeanceResult {
     const patient = this.db

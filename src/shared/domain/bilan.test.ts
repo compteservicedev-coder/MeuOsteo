@@ -5,6 +5,7 @@ import {
   encaissementDate,
   monthLabelFr,
   monthlyCents,
+  realisedBridge,
   parseAmountCents,
   parsePercentBp,
   recapByMode,
@@ -131,5 +132,49 @@ describe('R-27 · bilan mensuel', () => {
     expect(shiftMonth('2026-01', -1)).toBe('2025-12')
     expect(shiftMonth('2026-12', 1)).toBe('2027-01')
     expect(monthLabelFr('2026-08')).toBe('août 2026')
+  })
+
+  it('R-27 passage du chiffre réalisé (tableau de bord) au montant encaissé du bilan', () => {
+    const src: BilanSource[] = [
+      { seanceId: 'a', date: '2026-10-02', montantCents: 6000, paiement: 'cheque', recuLe: null },
+      {
+        seanceId: 'b',
+        date: '2026-10-20',
+        montantCents: 5500,
+        paiement: 'virement_attente',
+        recuLe: null,
+      },
+      {
+        seanceId: 'c',
+        date: '2026-10-28',
+        montantCents: 6000,
+        paiement: 'virement_recu',
+        recuLe: '2026-11-03',
+      },
+      {
+        seanceId: 'd',
+        date: '2026-09-25',
+        montantCents: 5000,
+        paiement: 'virement_recu',
+        recuLe: '2026-10-01',
+      },
+      { seanceId: 'e', date: '2026-10-10', montantCents: 6000, paiement: 'especes', recuLe: null },
+    ]
+    // 'e' unticked by hand: the statement keeps a + d.
+    const b = realisedBridge('2026-10', src, 11000)
+    expect(b).toEqual({
+      realisedCents: 23500,
+      pendingCents: 5500,
+      cashedOtherMonthCents: 6000,
+      earlierSessionsCents: 5000,
+      choicesCents: -6000,
+    })
+    expect(
+      b.realisedCents -
+        b.pendingCents -
+        b.cashedOtherMonthCents +
+        b.earlierSessionsCents +
+        b.choicesCents,
+    ).toBe(11000)
   })
 })

@@ -240,15 +240,13 @@ export function SeanceDetail(props: SeanceDetailProps) {
             )}
           </Banner>
         )}
-        {s.status === 'planned' && (status !== 'to_complete' || s.source !== 'doctolib') && (
+        {s.status === 'planned' && status !== 'to_complete' && (
           <Banner tone="cyan">
             <span className="flex items-center gap-2">
               <Icon name="calendar" size={15} strokeWidth={2.4} className="shrink-0" />
-              {s.source !== 'doctolib'
-                ? 'Séance créée à la main (hors Doctolib). Si le patient a aussi un RDV Doctolib ce jour-là, il sera rattaché à cette séance au lieu d’en créer une seconde.'
-                : status === 'today'
-                  ? `RDV Doctolib aujourd’hui${s.heure ? ` à ${s.heure}` : ''}, créé automatiquement. Préparez vos notes, puis validez une fois la séance réalisée.`
-                  : `RDV Doctolib du ${dateFr}${s.heure ? ` à ${s.heure}` : ''}, créé automatiquement. Vous pouvez déjà y noter ce que vous voulez préparer.`}
+              {status === 'today'
+                ? `RDV aujourd’hui${s.heure ? ` à ${s.heure}` : ''}. Préparez vos notes, puis validez une fois la séance réalisée.`
+                : `RDV du ${dateFr}${s.heure ? ` à ${s.heure}` : ''}. Vous pouvez déjà y noter ce que vous voulez préparer.`}
             </span>
           </Banner>
         )}
@@ -384,12 +382,6 @@ export function SeanceDetail(props: SeanceDetailProps) {
                   </button>
                 ))}
               </div>
-            )}
-            {bin === 'cancel' && s.source === 'doctolib' && (
-              <span className="text-[13px] font-semibold text-[#7A1015]">
-                Ce RDV vient de Doctolib : pensez à l’annuler aussi dans Doctolib, l’application ne
-                peut pas le faire à votre place.
-              </span>
             )}
             <div className="flex justify-end gap-2">
               <Button size="sm" onClick={props.onBackBin}>

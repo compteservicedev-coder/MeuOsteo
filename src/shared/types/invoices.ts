@@ -36,7 +36,13 @@ export interface InvoiceDocumentData {
 
 export type SendError = 'not_configured' | 'no_email' | 'auth' | 'network' | 'pdf' | 'other'
 
-export type SendOutcome = { ok: true; to: string } | { ok: false; error: SendError }
+export type SendOutcome =
+  | { ok: true; to: string }
+  | {
+      ok: false
+      error: SendError
+      /** Technical code, for « Tester la connexion ». */ code?: string
+    }
 
 export type InvoicePreview =
   | {
@@ -146,8 +152,6 @@ export type { UnlockReason }
 export interface GmailStatus {
   address: string
   hasPassword: boolean
-  label: string
-  frequency: 5 | 15 | 0
   connected: boolean
 }
 
@@ -155,11 +159,9 @@ export interface GmailSettingsInput {
   address: string
   /** New application password; `null` keeps the stored one. */
   password: string | null
-  label: string
-  frequency: 5 | 15 | 0
 }
 
-export type GmailTestStep = 'login' | 'label' | 'send'
+export type GmailTestStep = 'login' | 'send'
 
 export interface GmailTestResult {
   steps: Array<{ step: GmailTestStep; ok: boolean; detail: string }>

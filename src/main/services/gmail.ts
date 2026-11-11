@@ -1,7 +1,6 @@
 /**
- * Paramètres > Messagerie Gmail: address, application password (encrypted by safeStorage, never
- * logged nor sent to the renderer), label and frequency. Used by SMTP sending (lot 3) and the
- * IMAP synchronisation (lot 4).
+ * Paramètres > Messagerie Gmail: address and application password (encrypted by safeStorage,
+ * never logged nor sent to the renderer), used to send invoices and e-mails by SMTP.
  */
 import { SETTINGS_SUBJECT } from '@shared/domain/journal'
 import type { GmailSettingsInput, GmailStatus } from '@shared/types/invoices'
@@ -39,8 +38,6 @@ export class GmailSettingsService {
     return {
       address: s.address,
       hasPassword: s.passwordEnc !== null,
-      label: s.label,
-      frequency: s.frequency,
       connected: s.connected && s.passwordEnc !== null && s.address !== '',
     }
   }
@@ -53,11 +50,7 @@ export class GmailSettingsService {
       ...current,
       address,
       passwordEnc: password ? this.secrets.encrypt(password) : current.passwordEnc,
-      label: input.label.trim() || DEFAULT_GMAIL.label,
-      frequency: input.frequency,
       connected: Boolean(address && (password || current.passwordEnc)),
-      // Another account: start the reading again.
-      lastUid: address === current.address ? current.lastUid : {},
     })
     addJournalLine(
       this.db,
@@ -91,10 +84,5 @@ export class GmailSettingsService {
     } catch {
       return null
     }
-  }
-
-  setLastUid(mailboxKey: string, uid: number): void {
-    const s = this.setting()
-    this.write({ ...s, lastUid: { ...s.lastUid, [mailboxKey]: uid } })
   }
 }

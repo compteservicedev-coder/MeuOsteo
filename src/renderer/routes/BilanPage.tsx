@@ -16,6 +16,7 @@ import {
 import { formatIsoDateFr } from '@shared/domain/dates'
 import { formatEuros } from '@shared/domain/invoice'
 import type { BilanView } from '@shared/types/bilan'
+import type { RealisedBridge } from '@shared/domain/bilan'
 import { Page } from '../components/layout/Page'
 import { PageHeader } from '../components/layout/PageHeader'
 import { useToast } from '../components/toast/toastContext'
@@ -327,6 +328,8 @@ export function BilanPage() {
             </div>
           </section>
 
+          {view && <RealisedBridgeCard realised={view.realised} revenueCents={view.revenueCents} />}
+
           <section aria-labelledby="h-calcul" className={cn(card, 'px-5 py-4')}>
             <div className="flex items-center justify-between gap-2">
               <h2 id="h-calcul" className="text-section">
@@ -450,5 +453,58 @@ export function BilanPage() {
         }}
       />
     </Page>
+  )
+}
+
+/**
+ * R-27 « Réalisé et encaissé »: from the dashboard figure (sessions achieved in the month) to the
+ * statement (money cashed in the month), so the two screens can be read side by side.
+ */
+function RealisedBridgeCard({
+  realised: r,
+  revenueCents,
+}: {
+  realised: RealisedBridge
+  revenueCents: number
+}) {
+  const steps: Array<[string, number]> = [
+    ['Virements encore attendus', -r.pendingCents],
+    ['Virements reçus un autre mois', -r.cashedOtherMonthCents],
+    ['Virements reçus ce mois pour des séances antérieures', r.earlierSessionsCents],
+    ['Séances cochées ou décochées à la main', r.choicesCents],
+  ]
+  return (
+    <section aria-labelledby="h-realise" className={cn(card, 'px-5 py-4')}>
+      <h2 id="h-realise" className="text-section">
+        Réalisé et encaissé
+      </h2>
+      <p className="mt-1 text-[13px] leading-snug text-ink-500">
+        Le tableau de bord compte les séances réalisées dans le mois ; le bilan, l’argent encaissé.
+      </p>
+      <div className="mt-2 flex flex-col text-[14px]">
+        <div className="flex items-baseline justify-between border-b border-line py-2">
+          <span className="text-ink-600">Séances réalisées (tableau de bord)</span>
+          <span className="font-bold tabular-nums">{formatEuros(r.realisedCents)}</span>
+        </div>
+        {steps
+          .filter(([, cents]) => cents !== 0)
+          .map(([label, cents]) => (
+            <div
+              key={label}
+              className="flex items-baseline justify-between gap-3 border-b border-line py-2"
+            >
+              <span className="text-ink-600">{label}</span>
+              <span className="shrink-0 font-bold tabular-nums">
+                {cents > 0 ? '+ ' : '− '}
+                {formatEuros(Math.abs(cents))}
+              </span>
+            </div>
+          ))}
+        <div className="flex items-baseline justify-between pt-2 text-[15px] font-extrabold">
+          <span>Encaissé retenu (bilan)</span>
+          <span className="tabular-nums">{formatEuros(revenueCents)}</span>
+        </div>
+      </div>
+    </section>
   )
 }

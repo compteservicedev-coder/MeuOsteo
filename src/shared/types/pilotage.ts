@@ -1,4 +1,5 @@
 import type { JournalType } from '../domain/journal'
+import type { YearComparison } from '../domain/revenue'
 
 /** Tableau de bord (SPEC §7). Amounts in cents. */
 export interface DashboardView {
@@ -10,6 +11,12 @@ export interface DashboardView {
     totalPatients: number
   }
   yearRevenueCents: number
+  /** Sessions of the month still awaiting their transfer: achieved, not yet cashed. */
+  monthPendingCents: number
+  /** Current year next to the year before. */
+  years: YearComparison
+  /** Oldest year with a done session (limit of the year navigation). */
+  firstYear: number
   pendingCents: number
   /** 12 months, oldest first: `2026-10` and the revenue of done sessions. */
   revenueByMonth: Array<{ month: string; cents: number }>

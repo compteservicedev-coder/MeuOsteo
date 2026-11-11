@@ -16,6 +16,7 @@ import {
   unlockReasonSchema,
 } from '@shared/types/schemas'
 import { log } from '../logger'
+import { isCertificateCode } from '../systemCertificates'
 import type { createRegistrar } from './register'
 
 async function askSavePath(options: SaveDialogOptions): Promise<string | null> {
@@ -47,8 +48,24 @@ const SEND_DETAILS: Record<string, string> = {
   network: 'Gmail injoignable : vérifiez la connexion internet',
   other: 'Gmail a refusé l’envoi',
 }
-const detailOf = (o: SendOutcome, okText: string) =>
-  o.ok ? okText : (SEND_DETAILS[o.error] ?? SEND_DETAILS['other']!)
+const withCode = (text: string, code: string | undefined) =>
+  code ? `${text} (code ${code})` : text
+
+const certificateDetail = (code: string) =>
+  withCode(
+    'Connexion sécurisée refusée : un antivirus ou un pare-feu filtre la connexion à Gmail. Désactivez l’analyse des e-mails de l’antivirus, ou essayez sur un autre réseau',
+    code,
+  )
+
+/** « Tester la connexion »: the reason of a refusal, with its technical code. */
+function failureDetail(f: Extract<SendOutcome, { ok: false }>): string {
+  if (f.code && isCertificateCode(f.code)) return certificateDetail(f.code)
+  const text =
+    f.error === 'network'
+      ? 'Gmail injoignable : vérifiez la connexion internet (un pare-feu peut bloquer le port 465)'
+      : (SEND_DETAILS[f.error] ?? SEND_DETAILS['other']!)
+  return withCode(text, f.code)
+}
 
 /** Invoices (SPEC §5.5 – 6), R-04 unlock, Cabinet & factures and Gmail settings. */
 export function registerInvoiceHandlers(register: ReturnType<typeof createRegistrar>): void {
@@ -138,40 +155,23 @@ export function registerInvoiceHandlers(register: ReturnType<typeof createRegist
     gmail.save(input),
   )
   register('gmail:set-connected', z.tuple([z.boolean()]), ({ gmail }, c) => gmail.setConnected(c))
-  register('gmail:test', none, async ({ mailer, sync }): Promise<GmailTestResult> => {
-    // GMAIL_DOCTOLIB.md §2: IMAP login and label, then a test e-mail to the address itself.
+  register('gmail:test', none, async ({ mailer }): Promise<GmailTestResult> => {
+    // Paramètres > Messagerie Gmail: sign-in to Gmail (SMTP), then a test e-mail to the address.
     const steps: GmailTestResult['steps'] = []
-    const label = await sync.countLabel()
-    const LABEL_ERRORS: Record<string, string> = {
-      auth: 'Adresse ou mot de passe d’application refusé par Gmail',
-      network: 'Gmail injoignable : vérifiez la connexion internet',
-      label: 'Connexion réussie, mais le libellé est introuvable dans Gmail',
-      other: 'Connexion à Gmail impossible',
-    }
-    const loginOk = label.ok || label.error === 'label'
+    const login = await mailer.verify()
     steps.push({
       step: 'login',
-      ok: loginOk,
-      detail: loginOk
-        ? 'Connexion à Gmail réussie'
-        : LABEL_ERRORS[label.ok ? 'other' : label.error]!,
+      ok: login.ok,
+      detail: login.ok ? 'Connexion à Gmail réussie' : failureDetail(login),
     })
-    if (loginOk) {
-      steps.push({
-        step: 'label',
-        ok: label.ok,
-        detail: label.ok
-          ? `${label.count} e-mail${label.count > 1 ? 's' : ''} trouvé${label.count > 1 ? 's' : ''} sous le libellé`
-          : LABEL_ERRORS['label']!,
-      })
+    if (login.ok) {
       const sent = await mailer.sendTest()
       steps.push({
         step: 'send',
         ok: sent.ok,
-        detail: detailOf(sent, sent.ok ? `E-mail de test envoyé à ${sent.to}` : ''),
+        detail: sent.ok ? `E-mail de test envoyé à ${sent.to}` : failureDetail(sent),
       })
     }
-    if (steps.every((s) => s.ok)) void sync.run()
-    return { steps, ok: steps.length === 3 && steps.every((s) => s.ok) }
+    return { steps, ok: steps.length === 2 && steps.every((s) => s.ok) }
   })
 }

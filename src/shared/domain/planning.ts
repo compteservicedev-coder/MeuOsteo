@@ -47,7 +47,6 @@ export interface AgendaSettings {
   durationMinutes: 45 | 60 | 75
   weeks: 1 | 2
   /** R-18 automatic attachment when name and phone or e-mail match. */
-  autoAttach: boolean
 }
 
 export const DEFAULT_AGENDA: AgendaSettings = {
@@ -56,7 +55,6 @@ export const DEFAULT_AGENDA: AgendaSettings = {
   closing: '19:00',
   durationMinutes: 60,
   weeks: 2,
-  autoAttach: true,
 }
 
 export const toMinutes = (hhmm: string) => {
@@ -274,21 +272,15 @@ export function newRdvErrors(input: {
 
 // --- Cards --------------------------------------------------------------------------------
 
-export type CardKind = 'ok' | 'neu' | 'off' | 'past' | 'man'
+export type CardKind = 'ok' | 'off' | 'past'
 
-/**
- * Colour of an appointment card: cancelled (struck out), to reconcile (orange), past, created
- * by hand (« hors Doctolib », dashed blue) or matched.
- */
+/** Colour of an appointment card: cancelled (struck out), past, or to come. */
 export function cardKind(input: {
-  status: 'planned' | 'done' | 'cancelled' | 'pending'
-  source: 'doctolib' | 'manual' | 'import' | null
+  status: 'planned' | 'done' | 'cancelled'
   date: string
   today: string
 }): CardKind {
   if (input.status === 'cancelled') return 'off'
-  if (input.status === 'pending') return 'neu'
   if (input.date < input.today) return 'past'
-  if (input.source === 'manual') return 'man'
   return 'ok'
 }

@@ -4,27 +4,19 @@ import type { GmailStatus, GmailTestResult } from '@shared/types/invoices'
 import { useToast } from '../../components/toast/toastContext'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
-import { Field, Input, Select } from '../../components/ui/Field'
+import { Field, Input } from '../../components/ui/Field'
 import { Icon } from '../../components/ui/Icon'
 import { cn } from '../../lib/cn'
 import { EASE_SOFT } from '../../lib/motion'
 
-const FREQUENCIES = [
-  { value: 5, label: 'Toutes les 5 minutes' },
-  { value: 15, label: 'Toutes les 15 minutes' },
-  { value: 0, label: 'Au démarrage seulement' },
-] as const
-
 const isGmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
 
-/** Paramètres > Messagerie Gmail (SPEC §8.2, GMAIL_DOCTOLIB.md §2). */
+/** Paramètres > Messagerie Gmail (SPEC §8.2): the account used to send invoices and e-mails. */
 export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => void }) {
   const toast = useToast()
   const [status, setStatus] = useState<GmailStatus | null>(null)
   const [address, setAddress] = useState('')
   const [password, setPassword] = useState('')
-  const [label, setLabel] = useState('Doctolib')
-  const [frequency, setFrequency] = useState<5 | 15 | 0>(15)
   const [saving, setSaving] = useState(false)
   const [testing, setTesting] = useState(false)
   const [test, setTest] = useState<GmailTestResult | null>(null)
@@ -33,8 +25,6 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
   const apply = (s: GmailStatus) => {
     setStatus(s)
     setAddress(s.address)
-    setLabel(s.label)
-    setFrequency(s.frequency)
     setPassword('')
     onStatus?.(s)
   }
@@ -46,11 +36,7 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
   }, [])
 
   if (!status) return null
-  const dirty =
-    address.trim().toLowerCase() !== status.address ||
-    password !== '' ||
-    label !== status.label ||
-    frequency !== status.frequency
+  const dirty = address.trim().toLowerCase() !== status.address || password !== ''
   const addressError = tried && !isGmail(address) ? 'Adresse e-mail invalide' : undefined
   const passwordError =
     tried && !status.hasPassword && password.replace(/\s/g, '').length < 16
@@ -66,8 +52,6 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
     const next = await window.api.gmail.save({
       address,
       password: password ? password : null,
-      label,
-      frequency,
     })
     setSaving(false)
     apply(next)
@@ -89,7 +73,7 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
     <div className="flex flex-col gap-4">
       <Card
         title="Messagerie Gmail"
-        description="Lecture des e-mails Doctolib et envoi des factures"
+        description="Envoi des factures et des e-mails aux patients, depuis votre adresse Gmail"
         actions={
           <span
             className={cn(
@@ -127,21 +111,6 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
               placeholder={status.hasPassword ? '•••• •••• •••• ••••' : 'abcd efgh ijkl mnop'}
               autoComplete="new-password"
             />
-          </Field>
-          <Field label="Libellé Gmail à lire">
-            <Input value={label} onChange={(e) => setLabel(e.target.value)} />
-          </Field>
-          <Field label="Vérifier les e-mails">
-            <Select
-              value={String(frequency)}
-              onChange={(e) => setFrequency(Number(e.target.value) as 5 | 15 | 0)}
-            >
-              {FREQUENCIES.map((f) => (
-                <option key={f.value} value={f.value}>
-                  {f.label}
-                </option>
-              ))}
-            </Select>
           </Field>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -194,7 +163,7 @@ export function MessagerieTab({ onStatus }: { onStatus?: (s: GmailStatus) => voi
           {[
             'Activer la validation en deux étapes sur le compte Google.',
             'Ouvrir la page « Mots de passe des applications » du compte Google, créer « MeuOsteo » et copier le code de 16 lettres.',
-            'Dans Gmail, créer un filtre : expéditeur Doctolib → appliquer le libellé « Doctolib ».',
+            'Dans MeuOsteo, saisir l’adresse Gmail et ce code, puis « Tester la connexion ».',
           ].map((text, i) => (
             <li key={text} className="flex gap-3">
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-pill bg-royal-50 text-[13px] font-extrabold text-royal-700">

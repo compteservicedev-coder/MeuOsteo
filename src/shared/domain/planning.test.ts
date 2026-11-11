@@ -120,12 +120,8 @@ describe('R-24 · créneaux libres', () => {
 describe('Cartes de RDV', () => {
   it('couleur selon l’état', () => {
     const t = '2026-10-24'
-    expect(cardKind({ status: 'cancelled', source: 'doctolib', date: t, today: t })).toBe('off')
-    expect(cardKind({ status: 'pending', source: null, date: t, today: t })).toBe('neu')
-    expect(cardKind({ status: 'done', source: 'doctolib', date: '2026-10-20', today: t })).toBe(
-      'past',
-    )
-    expect(cardKind({ status: 'planned', source: 'manual', date: t, today: t })).toBe('man')
-    expect(cardKind({ status: 'planned', source: 'doctolib', date: t, today: t })).toBe('ok')
+    expect(cardKind({ status: 'cancelled', date: t, today: t })).toBe('off')
+    expect(cardKind({ status: 'done', date: '2026-10-20', today: t })).toBe('past')
+    expect(cardKind({ status: 'planned', date: t, today: t })).toBe('ok')
   })
 })

@@ -5,7 +5,7 @@ Ce guide accompagne une nouvelle utilisatrice ou un nouvel utilisateur, du tél�
 ## 1. Avant de commencer
 
 - Un ordinateur sous **Windows 10 ou 11 (64 bits)**.
-- Pour le planning Doctolib et l'envoi des factures : un compte **Gmail**, celui qui reçoit les e-mails de Doctolib.
+- Pour envoyer les factures par e-mail : un compte **Gmail**.
 - Pour les sauvegardes : de préférence une **clé USB** ou un dossier synchronisé (OneDrive, Google Drive…).
 
 ## 2. Télécharger
@@ -42,19 +42,17 @@ Aucun droit d'administrateur n'est demandé : MeuOsteo s'installe pour votre ses
 
 Cliquez sur **Enregistrer**.
 
-## 6. Relier Gmail (planning Doctolib et envoi des factures)
+## 6. Relier Gmail (envoi des factures)
 
-MeuOsteo lit uniquement les e-mails rangés sous un libellé Gmail, sans jamais les modifier, et envoie les factures depuis votre adresse.
+MeuOsteo envoie les factures et les e-mails aux patients depuis votre adresse. Il ne lit pas vos e-mails.
 
 **Côté Google (une seule fois, environ 5 minutes)** :
 1. Activez la **validation en deux étapes** sur votre compte Google (Gérer votre compte Google > Sécurité).
 2. Ouvrez la page **« Mots de passe des applications »** du compte Google, créez-en un nommé « MeuOsteo » et copiez le code de 16 lettres.
-3. Dans Gmail, créez un **filtre** : expéditeur contenant « doctolib », action « Appliquer le libellé » **Doctolib**.
 
 **Dans MeuOsteo, Paramètres > Messagerie Gmail** :
 1. Saisissez l'**Adresse Gmail** et le **Mot de passe d'application** (le code de 16 lettres).
-2. Laissez « Doctolib » dans **Libellé Gmail à lire**, choisissez la fréquence dans **Vérifier les e-mails**.
-3. Cliquez sur **Enregistrer**, puis **Tester la connexion** : les trois vérifications doivent passer, et un e-mail de test arrive dans votre boîte.
+2. Cliquez sur **Enregistrer**, puis **Tester la connexion** : les deux vérifications doivent passer, et un e-mail de test arrive dans votre boîte.
 
 Le mot de passe d'application est conservé chiffré sur votre ordinateur. Vous pouvez le révoquer à tout moment depuis votre compte Google.
 
@@ -76,7 +74,7 @@ MeuOsteo analyse le fichier sans rien écrire et affiche un rapport (patients, s
 1. **Patients > Nouveau patient** : nom, prénom, date de naissance, puis l'adresse complète (obligatoire pour facturer).
 2. Dans la fiche : **Nouvelle** crée une séance du jour. Renseignez le motif, l'anamnèse, la pratique, le tarif et le paiement, puis **Séance réalisée**.
 3. **Générer la facture** : la note d'honoraires est créée en PDF, à envoyer par e-mail ou à imprimer.
-4. Le **Planning** se remplit avec les rendez-vous Doctolib ; les cas à vérifier apparaissent dans **À rapprocher**.
+4. Le **Planning** : « Nouveau RDV » pose un rendez-vous ; les doublons possibles de fiches apparaissent dans **À rapprocher**.
 
 Le menu **Aide & FAQ** répond aux questions courantes, écran par écran.
 

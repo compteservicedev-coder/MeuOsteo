@@ -54,6 +54,12 @@ describe('Tableau de bord (SPEC §7)', () => {
     expect(v.revenueByMonth.at(-1)).toEqual({ month: '2026-10', cents: 11500 })
     expect(v.pending.map((x) => x.seanceId)).toEqual([pending])
     expect(v.pendingCents).toBe(5500)
+    expect(v.monthPendingCents).toBe(5500)
+    expect(v.years.year).toBe(2026)
+    expect(v.years.months[9]).toEqual({ month: 10, cents: 11500, previousCents: 0 })
+    expect(v.years.months[8]!.cents).toBe(6000)
+    expect(v.years.months[10]!.cents).toBe(0) // November not reached yet
+    expect(dashboard.year(2027).months[9]!.previousCents).toBe(11500)
     expect(await dashboard.markReceived(pending)).toBe(true)
     expect(db.select().from(seances).where(eq(seances.id, pending)).get()!.paiement).toBe(
       'virement_recu',

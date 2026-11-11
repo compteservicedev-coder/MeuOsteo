@@ -5,9 +5,12 @@ import { initLogger, log } from './logger'
 import { configureUserDataPath } from './paths'
 import { startRuntime, stopRuntime, type RuntimeResult } from './runtime'
 import { hardenApp, hardenSession } from './security'
+import { trustSystemCertificates } from './systemCertificates'
 import { createMainWindow, isTrustedSender } from './window'
 
 configureUserDataPath()
+// Before any Gmail connection: antivirus e-mail scanning uses an authority installed in Windows.
+trustSystemCertificates()
 // French UI everywhere, including native date fields (JJ/MM/AAAA).
 app.commandLine.appendSwitch('lang', 'fr-FR')
 
@@ -54,8 +57,6 @@ function startApp(): void {
       started = startRuntime({ allowUnprotectedKey: !app.isPackaged })
       clearOpenedDocuments()
       resolveStartup(started)
-      // Gmail: at start-up, then at the chosen frequency (GMAIL_DOCTOLIB.md §2).
-      if (started.ok) started.runtime.sync.start()
       // R-28: is a newer version published? At start-up, then each day (installed app only:
       // development and end-to-end runs stay offline).
       if (started.ok && app.isPackaged) {

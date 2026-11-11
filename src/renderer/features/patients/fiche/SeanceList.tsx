@@ -46,8 +46,8 @@ export function SeanceList({
         </Button>
       </div>
       <p className="px-4 pb-2 text-[12px] leading-snug text-ink-500">
-        Les RDV Doctolib apparaissent ici tout seuls. « Nouvelle » sert aux séances prises hors
-        Doctolib.
+        « Nouvelle » crée une séance du jour ; les RDV posés dans le Planning apparaissent aussi
+        ici.
       </p>
       <ul
         className="flex flex-col gap-1 overflow-y-auto px-2.5 pb-3"

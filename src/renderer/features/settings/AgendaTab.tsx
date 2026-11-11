@@ -9,7 +9,6 @@ import { useToast } from '../../components/toast/toastContext'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Field, Input, Select } from '../../components/ui/Field'
-import { Switch } from '../../components/ui/Switch'
 import { cn } from '../../lib/cn'
 
 /** Paramètres > Agenda (SPEC §8.4). */
@@ -103,16 +102,6 @@ export function AgendaTab() {
             <option value="2">2 semaines</option>
           </Select>
         </Field>
-      </div>
-      <div className="flex items-center justify-between gap-3 rounded-2xl bg-surface-mist px-4 py-3">
-        <span id="l-auto" className="text-[14px] font-semibold">
-          Rattacher automatiquement les RDV quand nom, téléphone et e-mail concordent
-        </span>
-        <Switch
-          aria-labelledby="l-auto"
-          checked={value.autoAttach}
-          onCheckedChange={(autoAttach) => setValue({ ...value, autoAttach })}
-        />
       </div>
       <div className="flex justify-end gap-2">
         <Button disabled={!dirty} onClick={() => setValue(saved)}>

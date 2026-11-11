@@ -1,6 +1,6 @@
 /**
- * Planning (SPEC §3): two weeks of appointments built from the sessions and the Doctolib
- * appointments still to reconcile, blocked periods (R-23) and « Nouveau RDV » (R-24).
+ * Planning (SPEC §3): two weeks of appointments built from the sessions, blocked periods (R-23)
+ * and « Nouveau RDV » (R-24).
  */
 import { and, asc, between, eq, inArray, isNull, ne } from 'drizzle-orm'
 import { ulid } from 'ulid'
@@ -32,7 +32,7 @@ import type {
 } from '@shared/types/planning'
 import type { AppDatabase } from '../db/client'
 import { getSetting, setSetting } from '../db/repositories/settingsRepository'
-import { blocages, doctolibRdv, patients, seances } from '../db/schema'
+import { blocages, patients, seances } from '../db/schema'
 import { DEFAULT_TARIFS_SETTING, agendaSettingSchema, tarifsSettingSchema } from './settingsSchemas'
 
 const byTime = (a: { heure: string | null }, b: { heure: string | null }) =>
@@ -77,53 +77,27 @@ export class PlanningService {
         motif: seances.motif,
         nom: patients.nom,
         prenom: patients.prenom,
-        doctolibKey: seances.doctolibKey,
       })
       .from(seances)
       .innerJoin(patients, eq(patients.id, seances.patientId))
       .where(and(between(seances.date, from, to), isNull(patients.deletedAt)))
       .all()
-    const pending = this.db
-      .select()
-      .from(doctolibRdv)
-      .where(
-        and(
-          between(doctolibRdv.date, from, to),
-          inArray(doctolibRdv.match, ['pending_new', 'pending_multi']),
-          ne(doctolibRdv.etat, 'annule'),
-        ),
-      )
-      .all()
     const map = new Map<string, PlanningCard[]>()
     const push = (date: string, card: PlanningCard) =>
       map.set(date, [...(map.get(date) ?? []), card])
     for (const r of rows) {
-      const cancelledByDoctolib = r.status === 'cancelled'
+      const cancelled = r.status === 'cancelled'
       push(r.date, {
         id: r.id,
         seanceId: r.id,
         patientId: r.patientId,
-        rdvKey: r.doctolibKey,
         heure: r.heure,
         nom: `${r.prenom} ${r.nom}`,
         motif:
-          (cancelledByDoctolib ? 'Annulé' : r.motif || 'RDV') +
-          (r.source === 'manual' && !cancelledByDoctolib ? ' · hors Doctolib' : '') +
+          (cancelled ? 'Annulé' : r.motif || 'RDV') +
           // Imported history has no time: shown at the top of its day, marked as such.
           (r.source === 'import' ? ' · historique' : ''),
-        kind: cardKind({ status: r.status, source: r.source, date: r.date, today }),
-      })
-    }
-    for (const r of pending) {
-      push(r.date, {
-        id: r.key,
-        seanceId: null,
-        patientId: null,
-        rdvKey: r.key,
-        heure: r.heure,
-        nom: r.nomAffiche,
-        motif: 'À rapprocher',
-        kind: 'neu',
+        kind: cardKind({ status: r.status, date: r.date, today }),
       })
     }
     for (const list of map.values()) list.sort(byTime)
@@ -228,22 +202,8 @@ export class PlanningService {
       .innerJoin(patients, eq(patients.id, seances.patientId))
       .where(and(eq(seances.date, date), ne(seances.status, 'cancelled')))
       .all()
-    const pending = this.db
-      .select({ heure: doctolibRdv.heure, nom: doctolibRdv.nomAffiche })
-      .from(doctolibRdv)
-      .where(
-        and(
-          eq(doctolibRdv.date, date),
-          inArray(doctolibRdv.match, ['pending_new', 'pending_multi']),
-          ne(doctolibRdv.etat, 'annule'),
-        ),
-      )
-      .all()
     const blocks = this.blocksBetween(date, date)
-    const busy = [
-      ...appointments.map((a) => ({ heure: a.heure, nom: `${a.prenom} ${a.nom}` })),
-      ...pending,
-    ]
+    const busy = appointments.map((a) => ({ heure: a.heure, nom: `${a.prenom} ${a.nom}` }))
     const slots = isOpenDay(date, agenda) ? slotGrid(agenda, busy, blocks) : []
     const parts = [`${busy.length} RDV ce jour-là`]
     for (const b of blocks) parts.push(BLOCK_CARD_LABELS[b.creneau as Creneau].toLowerCase())
@@ -255,7 +215,7 @@ export class PlanningService {
     }
   }
 
-  /** R-24: a `planned` session, `source = manual`, with date and time. Never written to Doctolib. */
+  /** R-24: a `planned` session, `source = manual`, with date and time. */
   createRdv(input: NewRdvInput): NewRdvResult {
     const heure = input.heure ? normalizeTime(input.heure) : ''
     const day = this.daySlots(input.date, input.patientId)

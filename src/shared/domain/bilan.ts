@@ -116,6 +116,51 @@ export function bilanLines(
   return lines.sort((a, b) => (a.encaisseLe ?? a.date).localeCompare(b.encaisseLe ?? b.date))
 }
 
+/**
+ * R-27 bridge from the dashboard figure (sessions achieved in the month, by session date) to the
+ * statement (money cashed in the month, as ticked). The parts always add up exactly:
+ * realised − pending − cashedOtherMonth + earlierSessions + choices = statement revenue.
+ */
+export interface RealisedBridge {
+  realisedCents: number
+  /** Sessions of the month whose transfer is still awaited. */
+  pendingCents: number
+  /** Sessions of the month whose transfer came in another month. */
+  cashedOtherMonthCents: number
+  /** Transfers cashed this month for sessions of earlier months. */
+  earlierSessionsCents: number
+  /** Lines ticked or unticked by hand (the rest). */
+  choicesCents: number
+}
+
+export function realisedBridge(
+  month: string,
+  sources: BilanSource[],
+  revenueCents: number,
+): RealisedBridge {
+  let realisedCents = 0
+  let pendingCents = 0
+  let cashedOtherMonthCents = 0
+  let earlierSessionsCents = 0
+  for (const s of sources) {
+    const cashed = encaissementDate(s)
+    const ofMonth = s.date.startsWith(month)
+    if (ofMonth) {
+      realisedCents += s.montantCents
+      if (cashed === null) pendingCents += s.montantCents
+      else if (!cashed.startsWith(month)) cashedOtherMonthCents += s.montantCents
+    } else if (cashed?.startsWith(month)) earlierSessionsCents += s.montantCents
+  }
+  const automatic = realisedCents - pendingCents - cashedOtherMonthCents + earlierSessionsCents
+  return {
+    realisedCents,
+    pendingCents,
+    cashedOtherMonthCents,
+    earlierSessionsCents,
+    choicesCents: revenueCents - automatic,
+  }
+}
+
 export interface ModeRecap {
   mode: BilanMode
   count: number
