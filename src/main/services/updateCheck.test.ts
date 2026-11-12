@@ -34,7 +34,7 @@ describe('R-28 · nouvelle version', () => {
     const status = await checker().check()
     expect(status.available).toEqual({ version: '0.3.0', url: `${RELEASES_URL}/tag/v0.3.0` })
     expect(calls).toEqual([
-      'https://api.github.com/repos/compteservicedev-coder/Repo1/releases/latest',
+      'https://api.github.com/repos/compteservicedev-coder/MeuOsteo/releases/latest',
     ])
   })
 

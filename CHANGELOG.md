@@ -4,7 +4,7 @@ Les nouveautés de chaque version publiée, en résumé. Le texte de la section 
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), numérotation [SemVer](https://semver.org/lang/fr/).
 
-## [0.2.0] - 2026-11-06
+## [0.2.0] - 2026-11-12
 
 Première version publiée : l'application couvre le quotidien du cabinet.
 
@@ -38,4 +38,4 @@ Première version publiée : l'application couvre le quotidien du cabinet.
 
 - Installateur non signé : le navigateur et Windows affichent un avertissement (voir le [guide d'installation](docs/INSTALLATION.md)).
 
-[0.2.0]: https://github.com/compteservicedev-coder/Repo1/releases/tag/v0.2.0
+[0.2.0]: https://github.com/compteservicedev-coder/MeuOsteo/releases/tag/v0.2.0

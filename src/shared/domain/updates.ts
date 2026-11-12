@@ -4,7 +4,7 @@
  */
 
 /** The GitHub repository that publishes MeuOsteo (`owner/name`). */
-export const SOURCE_REPOSITORY = 'compteservicedev-coder/Repo1'
+export const SOURCE_REPOSITORY = 'compteservicedev-coder/MeuOsteo'
 export const SOURCE_URL = `https://github.com/${SOURCE_REPOSITORY}`
 export const RELEASES_URL = `${SOURCE_URL}/releases`
 export const LATEST_RELEASE_API = `https://api.github.com/repos/${SOURCE_REPOSITORY}/releases/latest`
