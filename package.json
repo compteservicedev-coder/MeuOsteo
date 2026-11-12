@@ -92,10 +92,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/compteservicedev-coder/Repo1.git"
+    "url": "https://github.com/compteservicedev-coder/MeuOsteo.git"
   },
-  "homepage": "https://github.com/compteservicedev-coder/Repo1",
+  "homepage": "https://github.com/compteservicedev-coder/MeuOsteo",
   "bugs": {
-    "url": "https://github.com/compteservicedev-coder/Repo1/issues"
+    "url": "https://github.com/compteservicedev-coder/MeuOsteo/issues"
   }
 }

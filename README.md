@@ -4,7 +4,7 @@
 
 Application de bureau Windows de suivi de patientèle pour un cabinet d'ostéopathie, qui remplace l'outil Excel VBA « MeuOsteo v1.04 ». Logiciel libre sous licence [GNU AGPL-3.0](LICENSE).
 
-> ### ⬇️ [Télécharger MeuOsteo pour Windows](https://github.com/compteservicedev-coder/Repo1/releases/latest)
+> ### ⬇️ [Télécharger MeuOsteo pour Windows](https://github.com/compteservicedev-coder/MeuOsteo/releases/latest)
 >
 > Gratuit, sans compte ni abonnement. Première installation : suivez le **[guide d'installation](docs/INSTALLATION.md)** (20 à 30 minutes, réglage de Gmail compris).
 
@@ -33,7 +33,7 @@ Le détail des lots est dans `docs/ROADMAP.md`.
 
 ## Installer l'application (utilisatrice)
 
-1. Télécharger `MeuOsteo-Setup-x.y.z.exe` sur la page **[Releases](https://github.com/compteservicedev-coder/Repo1/releases/latest)** (dernière version).
+1. Télécharger `MeuOsteo-Setup-x.y.z.exe` sur la page **[Releases](https://github.com/compteservicedev-coder/MeuOsteo/releases/latest)** (dernière version).
 2. Suivre le **[guide d'installation](docs/INSTALLATION.md)** : avertissements de Windows, code d'accès, réglages du cabinet, Gmail, sauvegardes, mises à jour.
 
 Les données sont dans `%APPDATA%\MeuOsteo` (base `meuosteo.db`, clé `meuosteo.key` protégée par Windows, factures PDF dans `factures\AAAA\`). Elles ne sont jamais dans le dossier d'installation, et une réinstallation par-dessus ne les touche pas.

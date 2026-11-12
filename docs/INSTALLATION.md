@@ -10,7 +10,7 @@ Ce guide accompagne une nouvelle utilisatrice ou un nouvel utilisateur, du tél�
 
 ## 2. Télécharger
 
-1. Ouvrez la page des versions : **[Dernière version de MeuOsteo](https://github.com/compteservicedev-coder/Repo1/releases/latest)**.
+1. Ouvrez la page des versions : **[Dernière version de MeuOsteo](https://github.com/compteservicedev-coder/MeuOsteo/releases/latest)**.
 2. Dans la partie **Assets**, cliquez sur **`MeuOsteo-Setup-x.y.z.exe`** (x.y.z est le numéro de version).
 
 **Si le navigateur bloque le fichier** (« peut être dangereux ») : l'installateur n'est pas encore signé par un certificat payant, d'où cet avertissement.
@@ -80,7 +80,7 @@ Le menu **Aide & FAQ** répond aux questions courantes, écran par écran.
 
 ## 10. Mettre à jour
 
-Quand une nouvelle version paraît, MeuOsteo l'annonce par l'encart **« Nouvelle version · Télécharger »** en bas du menu latéral (réglable dans Paramètres > Données & import). Les nouveautés sont résumées sur la [page des versions](https://github.com/compteservicedev-coder/Repo1/releases). Pour l'installer :
+Quand une nouvelle version paraît, MeuOsteo l'annonce par l'encart **« Nouvelle version · Télécharger »** en bas du menu latéral (réglable dans Paramètres > Données & import). Les nouveautés sont résumées sur la [page des versions](https://github.com/compteservicedev-coder/MeuOsteo/releases). Pour l'installer :
 1. **Fermez MeuOsteo** (une sauvegarde est faite à la fermeture).
 2. Téléchargez et lancez le nouvel installateur, **par-dessus** l'ancienne version. Inutile de désinstaller.
 
@@ -99,5 +99,5 @@ Paramètres Windows > Applications > MeuOsteo > Désinstaller. Les données et l
 ## Besoin d'aide ?
 
 - Dans l'application : menu **Aide & FAQ**.
-- Un problème ou une idée : [ouvrir une issue](https://github.com/compteservicedev-coder/Repo1/issues/new/choose), **sans aucune donnée de patient**.
+- Un problème ou une idée : [ouvrir une issue](https://github.com/compteservicedev-coder/MeuOsteo/issues/new/choose), **sans aucune donnée de patient**.
 - Une faille de sécurité : en privé, voir [SECURITY.md](../SECURITY.md).
